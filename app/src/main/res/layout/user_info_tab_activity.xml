@@ -200,7 +200,7 @@
         app:hasBorder="false"
         app:layout_anchor="@+id/appbar"
         app:layout_anchorGravity="end|right"
-        app:layout_behavior="com.mibarim.main.ui.ImageBehavior" />
+        app:layout_behavior="com.mibarim.driver.ui.ImageBehavior" />
 
 
 </android.support.design.widget.CoordinatorLayout>

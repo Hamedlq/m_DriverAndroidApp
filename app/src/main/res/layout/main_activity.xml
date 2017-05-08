@@ -4,7 +4,7 @@
     android:id="@+id/main_activity_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activities.MainActivity">
+    tools:context=".ui.activities.MainActivity0">
 
     <LinearLayout
         android:layout_width="match_parent"

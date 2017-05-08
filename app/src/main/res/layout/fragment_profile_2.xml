@@ -26,7 +26,7 @@
 
             <FrameLayout
                 android:id="@+id/scores_fragment"
-                android:name="com.mibarim.main.ui.fragments.userInfoFragments.ScoresFragment"
+                android:name="driverer.ui.fragments.userInfoFragments.ScoresFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:layout="@layout/fragment_scores">
@@ -256,7 +256,7 @@
         app:hasBorder="false"
         app:layout_anchor="@+id/appbar"
         app:layout_anchorGravity="end|right"
-        app:layout_behavior="com.mibarim.main.ui.ImageBehavior" />
+        app:layout_behavior="com.mibarim.driver.ui.ImageBehavior" />
 
 
     <!--<com.github.clans.fab.FloatingActionMenu

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.mibarim.main"
+    package="com.mibarim.driver"
     android:versionCode="25"
     android:versionName="@string/version">
 
@@ -14,17 +14,17 @@
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <!--<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
     <!--<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!--<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!--<uses-permission android:name="android.permission.CAMERA" />-->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <!--<uses-permission android:name="com.mibarim.main.permission.C2D_MESSAGE" />
+    <!--<uses-permission android:name="driverer.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.SEND" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />-->
 
     <application
-        android:name=".BootstrapApplicationImpl"
+        android:name="com.mibarim.driver.BootstrapApplicationImpl"
         android:label="@string/app_name"
         android:icon="@mipmap/ic_circle_logo"
         android:supportsRtl="true"
@@ -37,7 +37,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".ui.activities.SplashActivity"
+            android:name="com.mibarim.driver.ui.activities.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -48,120 +48,121 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activities.MainActivity"
+            android:name="com.mibarim.driver.ui.activities.MainActivity0"
             android:label=""
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.activities.MainCardActivity"
+            android:name="com.mibarim.driver.ui.activities.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.activities.AddMapActivity"
+            android:name="com.mibarim.driver.ui.activities.StationRouteListActivity"
+            android:label="@string/route_list"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.mibarim.driver.ui.activities.AddMapActivity"
             android:label="@string/title_new_route"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.UserInfoDetailActivity"
+            android:name="com.mibarim.driver.ui.activities.UserInfoDetailActivity"
             android:label="@string/user_info"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.HelpingActivity"
+            android:name="com.mibarim.driver.ui.activities.HelpingActivity"
             android:label="@string/help"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.AddMainActivity"
+            android:name="com.mibarim.driver.ui.activities.AddMainActivity"
             android:label="@string/title_new_route"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.RideRequestMapActivity"
+            android:name="com.mibarim.driver.ui.activities.RideRequestMapActivity"
             android:label="@string/title_new_route"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.RouteStepActivity"
+            android:name="com.mibarim.driver.ui.activities.RouteStepActivity"
             android:label="@string/title_new_route"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.HomeWorkStepActivity"
+            android:name="com.mibarim.driver.ui.activities.HomeWorkStepActivity"
             android:label="@string/title_new_route"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.RideMainActivity"
+            android:name="com.mibarim.driver.ui.activities.RideMainActivity"
             android:label="@string/title_new_route"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.VerifyStepperActivity"
-            android:label="@string/verify"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activities.UserContactActivity"
+            android:name="com.mibarim.driver.ui.activities.UserContactActivity"
             android:label="@string/user_page"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.TripActivity"
+            android:name="com.mibarim.driver.ui.activities.TripActivity"
             android:label="@string/Trip_time"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.SuggestRouteActivity"
+            android:name="com.mibarim.driver.ui.activities.SuggestRouteActivity"
             android:label="@string/suggest_route"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.SuggestRouteCardActivity"
+            android:name="com.mibarim.driver.ui.activities.SuggestRouteCardActivity"
             android:label="@string/suggest_route"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.TripProfileActivity"
+            android:name="com.mibarim.driver.ui.activities.TripProfileActivity"
             android:label="@string/trip_info"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.CheckSuggestRouteActivity"
+            android:name="com.mibarim.driver.ui.activities.CheckSuggestRouteActivity"
             android:label="@string/check_suggest"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.WeekTimeActivity"
+            android:name="com.mibarim.driver.ui.activities.WeekTimeActivity"
             android:label="@string/week_sch"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.MessagingActivity"
+            android:name="com.mibarim.driver.ui.activities.MessagingActivity"
             android:label="@string/message"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.HomeWorkActivity"
+            android:name="com.mibarim.driver.ui.activities.HomeWorkActivity"
             android:label="@string/work_home"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.WorkHomeActivity"
+            android:name="com.mibarim.driver.ui.activities.WorkHomeActivity"
             android:label="@string/home_work"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".authenticator.TokenRefreshActivity"
+            android:name="com.mibarim.driver.authenticator.TokenRefreshActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.HelpActivity"
+            android:name="com.mibarim.driver.ui.activities.HelpActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.MobileValidationActivity"
+            android:name="com.mibarim.driver.ui.activities.MobileValidationActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.SmsValidationActivity"
+            android:name="com.mibarim.driver.ui.activities.SmsValidationActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.MobileActivity"
+            android:name="com.mibarim.driver.ui.activities.MobileActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.EventMapActivity"
+            android:name="com.mibarim.driver.ui.activities.EventMapActivity"
             android:label="@string/event"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.UserInfoActivity"
+            android:name="com.mibarim.driver.ui.activities.UserInfoActivity"
             android:label="@string/user_info"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.DriveActivity"
+            android:name="com.mibarim.driver.ui.activities.DriveActivity"
             android:label="@string/driver_passenger"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.LocationSearchActivity"
+            android:name="com.mibarim.driver.ui.activities.LocationSearchActivity"
             android:label="@string/location_search"
             android:screenOrientation="portrait" />
 
@@ -178,7 +179,7 @@
         -->
 
         <service
-            android:name=".authenticator.AccountAuthenticatorService"
+            android:name="com.mibarim.driver.authenticator.AccountAuthenticatorService"
             android:process=":auth">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
@@ -190,7 +191,7 @@
         </service>
 
         <activity
-            android:name=".authenticator.AuthenticatorActivity"
+            android:name="com.mibarim.driver.authenticator.AuthenticatorActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppFullScreenTheme">
@@ -201,7 +202,7 @@
             -->
         </activity>
         <activity
-            android:name=".ui.activities.RegisterActivity"
+            android:name="com.mibarim.driver.ui.activities.RegisterActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppFullScreenTheme" />
@@ -218,24 +219,24 @@
         </receiver>
 
         <service
-            android:name=".google.MyGcmListenerService"
+            android:name="com.mibarim.driver.google.MyGcmListenerService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
         <service
-            android:name=".google.MyInstanceIDListenerService"
+            android:name="com.mibarim.driver.google.MyInstanceIDListenerService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
-        <service android:name=".locationServices.LocationService" />
-        <service android:name=".locationServices.GoogleLocationService" />
-        <service android:name=".locationServices.LocationSender" />
+        <service android:name="com.mibarim.driver.locationServices.LocationService" />
+        <service android:name="com.mibarim.driver.locationServices.GoogleLocationService" />
+        <service android:name="com.mibarim.driver.locationServices.LocationSender" />
 
-        <receiver android:name=".receiver.LocationReceiver">
+        <receiver android:name="com.mibarim.driver.receiver.LocationReceiver">
             <intent-filter>
                 <action android:name="LOCATION_RECEIVER_INTENT" />
             </intent-filter>

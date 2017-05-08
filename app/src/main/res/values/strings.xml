@@ -42,7 +42,7 @@
     <string name="no_news">No News</string>
     <string name="avatar">Avatar</string>
     <string name="choose">Choose</string>
-    <string name="version">3.0</string>
+    <string name="version">0.1</string>
     <string name="testVersion">نسخه آزمایشی</string>
 
     <!-- AuthenticatorActivity -->
@@ -382,4 +382,8 @@
     <string name="trip_info">اطلاعات سفر</string>
     <string name="text_station">ایستگاه مبدا</string>
     <string name="book_trip">رزرو صندلی</string>
+    <string name="route_list">لیست مسیرها</string>
+    <string name="confirm_Msg">با تعیین دقیق زمان ملاقات، متعهد می‌شوید که در این زمان در مبدا مشخص شده حضور داشته باشید و به مدت ۵ دقیقه منتظر مسافرانی که صندلی رزرو کرده‌اند بمانید.</string>
+    <string name="driver_time">زمان دقیق حضور در مبدا</string>
+    <string name="empty_seats">تعداد صندلی خالی</string>
 </resources>

@@ -1,112 +1,113 @@
-package com.mibarim.main;
+package com.mibarim.driver;
 
-import com.mibarim.main.ui.activities.EventMapActivity;
-import com.mibarim.main.ui.activities.HelpingActivity;
-import com.mibarim.main.ui.activities.HomeWorkStepActivity;
-import com.mibarim.main.ui.activities.MainCardActivity;
-import com.mibarim.main.ui.activities.MobileActivity;
-import com.mibarim.main.ui.activities.RegisterActivity;
-import com.mibarim.main.ui.activities.CheckSuggestRouteActivity;
-import com.mibarim.main.ui.activities.HelpActivity;
-import com.mibarim.main.ui.activities.MessagingActivity;
-import com.mibarim.main.ui.activities.MobileValidationActivity;
-import com.mibarim.main.ui.activities.RouteStepActivity;
-import com.mibarim.main.ui.activities.SplashActivity;
-import com.mibarim.main.ui.activities.RideMainActivity;
-import com.mibarim.main.ui.activities.RideRequestMapActivity;
-import com.mibarim.main.ui.activities.SmsValidationActivity;
-import com.mibarim.main.ui.activities.SuggestRouteActivity;
-import com.mibarim.main.ui.activities.AddMainActivity;
-import com.mibarim.main.ui.activities.AddMapActivity;
-import com.mibarim.main.ui.activities.DriveActivity;
-import com.mibarim.main.ui.activities.HomeWorkActivity;
-import com.mibarim.main.ui.activities.LocationSearchActivity;
-import com.mibarim.main.ui.activities.SuggestRouteCardActivity;
-import com.mibarim.main.ui.activities.TripActivity;
-import com.mibarim.main.ui.activities.TripProfileActivity;
-import com.mibarim.main.ui.activities.UserContactActivity;
-import com.mibarim.main.ui.activities.UserInfoActivity;
-import com.mibarim.main.authenticator.AuthenticatorActivity;
-import com.mibarim.main.authenticator.TokenRefreshActivity;
-import com.mibarim.main.ui.BootstrapActivity;
-import com.mibarim.main.ui.BootstrapFragmentActivity;
-import com.mibarim.main.ui.activities.MainActivity;
-import com.mibarim.main.ui.activities.UserInfoDetailActivity;
-import com.mibarim.main.ui.activities.VerifyStepperActivity;
-import com.mibarim.main.ui.activities.WeekTimeActivity;
-import com.mibarim.main.ui.activities.WorkHomeActivity;
-import com.mibarim.main.ui.fragments.HelpFragment;
-import com.mibarim.main.ui.fragments.PlusFragments.PassengerCardFragment;
-import com.mibarim.main.ui.fragments.TripProfileFragments.ProfileRouteInfoFragment;
-import com.mibarim.main.ui.fragments.TripProfileFragments.ProfileScoreInfoFragment;
-import com.mibarim.main.ui.fragments.TripProfileFragments.ProfileUserInfoFragment;
-import com.mibarim.main.ui.fragments.TripProfileFragments.TripProfileMainFragment;
-import com.mibarim.main.ui.fragments.WeekRouteCardFragment;
-import com.mibarim.main.ui.fragments.addRouteStepper.MainRouteStepFragment;
-import com.mibarim.main.ui.fragments.addRouteStepper.StepAddressFlagFragment;
-import com.mibarim.main.ui.fragments.addRouteStepper.StepSrcDstFragment;
-import com.mibarim.main.ui.fragments.ContactCardFragment;
-import com.mibarim.main.ui.fragments.InfoMessageFragment;
-import com.mibarim.main.ui.fragments.MainGroupFragment;
-import com.mibarim.main.ui.fragments.RequestRideFragment;
-import com.mibarim.main.ui.fragments.RouteCardFragment;
-import com.mibarim.main.ui.fragments.addRouteFragments.AddressFlagFragment;
-import com.mibarim.main.ui.fragments.addRouteFragments.DriveFragment;
-import com.mibarim.main.ui.fragments.addRouteFragments.LocationListFragment;
-import com.mibarim.main.ui.fragments.addRouteFragments.LocationSearchMainFragment;
-import com.mibarim.main.ui.fragments.addRouteFragments.MainAddMapFragment;
-import com.mibarim.main.ui.fragments.addRouteFragments.SrcDstFragment;
-import com.mibarim.main.ui.fragments.addRouteFragments.WeekTimesFragment;
-import com.mibarim.main.ui.fragments.eventFragments.EventMainFragment;
-import com.mibarim.main.ui.fragments.helpFragments.FeedbackFragment;
-import com.mibarim.main.ui.fragments.mainFragments.AddTimeFragment;
-import com.mibarim.main.ui.fragments.mainFragments.ContactListFragment;
-import com.mibarim.main.ui.fragments.eventFragments.EventListFragment;
-import com.mibarim.main.ui.fragments.mainFragments.AddMainFragment;
-import com.mibarim.main.ui.fragments.mainFragments.MainFragment;
-import com.mibarim.main.ui.fragments.mainFragments.MainMapFragment;
-import com.mibarim.main.ui.fragments.UpdateMessageFragment;
-import com.mibarim.main.ui.fragments.addRouteFragments.AddMapFragment;
-import com.mibarim.main.ui.fragments.ConfirmFragment;
-import com.mibarim.main.ui.fragments.MapFragment;
-import com.mibarim.main.ui.fragments.mainFragments.SplashFragment;
-import com.mibarim.main.ui.fragments.messagingFragments.MainMessagingFragment;
-import com.mibarim.main.ui.fragments.messagingFragments.MessageListFragment;
-import com.mibarim.main.ui.fragments.messagingFragments.SendMessageFragment;
-import com.mibarim.main.ui.fragments.messagingFragments.ToggleContactTripFragment;
-import com.mibarim.main.ui.fragments.rideRequestFragment.RideFlagFragment;
-import com.mibarim.main.ui.fragments.rideRequestFragment.RideMainFragment;
-import com.mibarim.main.ui.fragments.rideRequestFragment.RideRequestMainFragment;
-import com.mibarim.main.ui.fragments.rideRequestFragment.RideRequestMapFragment;
-import com.mibarim.main.ui.fragments.routeFragments.CheckButtonsFragment;
-import com.mibarim.main.ui.fragments.routeFragments.CheckSuggestListFragment;
-import com.mibarim.main.ui.fragments.routeFragments.SuggestRouteButtonsFragment;
-import com.mibarim.main.ui.fragments.routeFragments.SuggestRouteCardFragment;
-import com.mibarim.main.ui.fragments.routeFragments.SuggestRouteListFragment;
-import com.mibarim.main.ui.fragments.tripFragments.MainTripFragment;
-import com.mibarim.main.ui.fragments.tripFragments.TripInfoFragment;
-import com.mibarim.main.ui.fragments.tripFragments.TripMapFragment;
-import com.mibarim.main.ui.fragments.userInfoFragments.AboutMeMainFragment;
-import com.mibarim.main.ui.fragments.userInfoFragments.BankFragment;
-import com.mibarim.main.ui.fragments.userInfoFragments.CarInfoFragment;
-import com.mibarim.main.ui.fragments.userInfoFragments.CommentContactFragment;
-import com.mibarim.main.ui.fragments.userInfoFragments.DiscountListFragment;
-import com.mibarim.main.ui.fragments.userInfoFragments.DiscountMainFragment;
-import com.mibarim.main.ui.fragments.userInfoFragments.InviteFragment;
-import com.mibarim.main.ui.fragments.userInfoFragments.LicenseFragment;
-import com.mibarim.main.ui.fragments.userInfoFragments.MainProfileFragment;
-import com.mibarim.main.ui.fragments.userInfoFragments.OperationFragment;
-import com.mibarim.main.ui.fragments.userInfoFragments.ProfileFragment;
-import com.mibarim.main.ui.fragments.userInfoFragments.ScoresFragment;
-import com.mibarim.main.ui.fragments.userInfoFragments.UserContactFragment;
-import com.mibarim.main.ui.fragments.userInfoFragments.UserInfoCardFragment;
-import com.mibarim.main.ui.fragments.userInfoFragments.UserInfoDetailMainFragment;
-import com.mibarim.main.ui.fragments.userInfoFragments.UserInfoFragment;
-import com.mibarim.main.ui.fragments.userInfoFragments.UserInfoMainFragment;
-import com.mibarim.main.ui.fragments.userInfoFragments.UserPersonFragment;
-import com.mibarim.main.ui.fragments.userInfoFragments.VerifyStepperFragment;
-import com.mibarim.main.ui.fragments.userInfoFragments.WithdrawListFragment;
-import com.mibarim.main.ui.fragments.userInfoFragments.WithdrawMainFragment;
+import com.mibarim.driver.ui.activities.EventMapActivity;
+import com.mibarim.driver.ui.activities.HelpingActivity;
+import com.mibarim.driver.ui.activities.HomeWorkStepActivity;
+import com.mibarim.driver.ui.activities.MainActivity;
+import com.mibarim.driver.ui.activities.MobileActivity;
+import com.mibarim.driver.ui.activities.RegisterActivity;
+import com.mibarim.driver.ui.activities.CheckSuggestRouteActivity;
+import com.mibarim.driver.ui.activities.HelpActivity;
+import com.mibarim.driver.ui.activities.MessagingActivity;
+import com.mibarim.driver.ui.activities.MobileValidationActivity;
+import com.mibarim.driver.ui.activities.RouteStepActivity;
+import com.mibarim.driver.ui.activities.SplashActivity;
+import com.mibarim.driver.ui.activities.RideMainActivity;
+import com.mibarim.driver.ui.activities.RideRequestMapActivity;
+import com.mibarim.driver.ui.activities.SmsValidationActivity;
+import com.mibarim.driver.ui.activities.StationRouteListActivity;
+import com.mibarim.driver.ui.activities.SuggestRouteActivity;
+import com.mibarim.driver.ui.activities.AddMainActivity;
+import com.mibarim.driver.ui.activities.AddMapActivity;
+import com.mibarim.driver.ui.activities.DriveActivity;
+import com.mibarim.driver.ui.activities.HomeWorkActivity;
+import com.mibarim.driver.ui.activities.LocationSearchActivity;
+import com.mibarim.driver.ui.activities.SuggestRouteCardActivity;
+import com.mibarim.driver.ui.activities.TripActivity;
+import com.mibarim.driver.ui.activities.TripProfileActivity;
+import com.mibarim.driver.ui.activities.UserContactActivity;
+import com.mibarim.driver.ui.activities.UserInfoActivity;
+import com.mibarim.driver.authenticator.AuthenticatorActivity;
+import com.mibarim.driver.authenticator.TokenRefreshActivity;
+import com.mibarim.driver.ui.BootstrapActivity;
+import com.mibarim.driver.ui.BootstrapFragmentActivity;
+import com.mibarim.driver.ui.activities.MainActivity0;
+import com.mibarim.driver.ui.activities.UserInfoDetailActivity;
+import com.mibarim.driver.ui.activities.WeekTimeActivity;
+import com.mibarim.driver.ui.activities.WorkHomeActivity;
+import com.mibarim.driver.ui.fragments.DriverFragments.DriverCardFragment;
+import com.mibarim.driver.ui.fragments.DriverFragments.FabFragment;
+import com.mibarim.driver.ui.fragments.DriverFragments.RoutesCardFragment;
+import com.mibarim.driver.ui.fragments.HelpFragment;
+import com.mibarim.driver.ui.fragments.TripProfileFragments.ProfileRouteInfoFragment;
+import com.mibarim.driver.ui.fragments.TripProfileFragments.ProfileScoreInfoFragment;
+import com.mibarim.driver.ui.fragments.TripProfileFragments.ProfileUserInfoFragment;
+import com.mibarim.driver.ui.fragments.TripProfileFragments.TripProfileMainFragment;
+import com.mibarim.driver.ui.fragments.WeekRouteCardFragment;
+import com.mibarim.driver.ui.fragments.addRouteStepper.MainRouteStepFragment;
+import com.mibarim.driver.ui.fragments.addRouteStepper.StepAddressFlagFragment;
+import com.mibarim.driver.ui.fragments.addRouteStepper.StepSrcDstFragment;
+import com.mibarim.driver.ui.fragments.ContactCardFragment;
+import com.mibarim.driver.ui.fragments.InfoMessageFragment;
+import com.mibarim.driver.ui.fragments.MainGroupFragment;
+import com.mibarim.driver.ui.fragments.RequestRideFragment;
+import com.mibarim.driver.ui.fragments.RouteCardFragment;
+import com.mibarim.driver.ui.fragments.addRouteFragments.AddressFlagFragment;
+import com.mibarim.driver.ui.fragments.addRouteFragments.DriveFragment;
+import com.mibarim.driver.ui.fragments.addRouteFragments.LocationListFragment;
+import com.mibarim.driver.ui.fragments.addRouteFragments.LocationSearchMainFragment;
+import com.mibarim.driver.ui.fragments.addRouteFragments.MainAddMapFragment;
+import com.mibarim.driver.ui.fragments.addRouteFragments.SrcDstFragment;
+import com.mibarim.driver.ui.fragments.addRouteFragments.WeekTimesFragment;
+import com.mibarim.driver.ui.fragments.eventFragments.EventMainFragment;
+import com.mibarim.driver.ui.fragments.helpFragments.FeedbackFragment;
+import com.mibarim.driver.ui.fragments.mainFragments.AddTimeFragment;
+import com.mibarim.driver.ui.fragments.mainFragments.ContactListFragment;
+import com.mibarim.driver.ui.fragments.eventFragments.EventListFragment;
+import com.mibarim.driver.ui.fragments.mainFragments.AddMainFragment;
+import com.mibarim.driver.ui.fragments.mainFragments.MainFragment;
+import com.mibarim.driver.ui.fragments.mainFragments.MainMapFragment;
+import com.mibarim.driver.ui.fragments.UpdateMessageFragment;
+import com.mibarim.driver.ui.fragments.addRouteFragments.AddMapFragment;
+import com.mibarim.driver.ui.fragments.ConfirmFragment;
+import com.mibarim.driver.ui.fragments.MapFragment;
+import com.mibarim.driver.ui.fragments.mainFragments.SplashFragment;
+import com.mibarim.driver.ui.fragments.messagingFragments.MainMessagingFragment;
+import com.mibarim.driver.ui.fragments.messagingFragments.MessageListFragment;
+import com.mibarim.driver.ui.fragments.messagingFragments.SendMessageFragment;
+import com.mibarim.driver.ui.fragments.messagingFragments.ToggleContactTripFragment;
+import com.mibarim.driver.ui.fragments.rideRequestFragment.RideFlagFragment;
+import com.mibarim.driver.ui.fragments.rideRequestFragment.RideMainFragment;
+import com.mibarim.driver.ui.fragments.rideRequestFragment.RideRequestMainFragment;
+import com.mibarim.driver.ui.fragments.rideRequestFragment.RideRequestMapFragment;
+import com.mibarim.driver.ui.fragments.routeFragments.CheckButtonsFragment;
+import com.mibarim.driver.ui.fragments.routeFragments.CheckSuggestListFragment;
+import com.mibarim.driver.ui.fragments.routeFragments.SuggestRouteButtonsFragment;
+import com.mibarim.driver.ui.fragments.routeFragments.SuggestRouteCardFragment;
+import com.mibarim.driver.ui.fragments.routeFragments.SuggestRouteListFragment;
+import com.mibarim.driver.ui.fragments.tripFragments.MainTripFragment;
+import com.mibarim.driver.ui.fragments.tripFragments.TripInfoFragment;
+import com.mibarim.driver.ui.fragments.tripFragments.TripMapFragment;
+import com.mibarim.driver.ui.fragments.userInfoFragments.AboutMeMainFragment;
+import com.mibarim.driver.ui.fragments.userInfoFragments.BankFragment;
+import com.mibarim.driver.ui.fragments.userInfoFragments.CarInfoFragment;
+import com.mibarim.driver.ui.fragments.userInfoFragments.CommentContactFragment;
+import com.mibarim.driver.ui.fragments.userInfoFragments.DiscountListFragment;
+import com.mibarim.driver.ui.fragments.userInfoFragments.DiscountMainFragment;
+import com.mibarim.driver.ui.fragments.userInfoFragments.InviteFragment;
+import com.mibarim.driver.ui.fragments.userInfoFragments.LicenseFragment;
+import com.mibarim.driver.ui.fragments.userInfoFragments.MainProfileFragment;
+import com.mibarim.driver.ui.fragments.userInfoFragments.OperationFragment;
+import com.mibarim.driver.ui.fragments.userInfoFragments.ProfileFragment;
+import com.mibarim.driver.ui.fragments.userInfoFragments.ScoresFragment;
+import com.mibarim.driver.ui.fragments.userInfoFragments.UserContactFragment;
+import com.mibarim.driver.ui.fragments.userInfoFragments.UserInfoCardFragment;
+import com.mibarim.driver.ui.fragments.userInfoFragments.UserInfoDetailMainFragment;
+import com.mibarim.driver.ui.fragments.userInfoFragments.UserInfoFragment;
+import com.mibarim.driver.ui.fragments.userInfoFragments.UserInfoMainFragment;
+import com.mibarim.driver.ui.fragments.userInfoFragments.UserPersonFragment;
+import com.mibarim.driver.ui.fragments.userInfoFragments.WithdrawListFragment;
+import com.mibarim.driver.ui.fragments.userInfoFragments.WithdrawMainFragment;
 
 import javax.inject.Singleton;
 
@@ -129,13 +130,19 @@ public interface BootstrapComponent {
 
     void inject(AddMainActivity target);
 
+    void inject(StationRouteListActivity target);
+
     void inject(TripProfileActivity target);
 
     void inject(MobileActivity target);
 
+    void inject(RoutesCardFragment target);
+
     void inject(ProfileUserInfoFragment target);
 
     void inject(ProfileRouteInfoFragment target);
+
+    void inject(FabFragment target);
 
     void inject(ProfileScoreInfoFragment target);
 
@@ -149,9 +156,9 @@ public interface BootstrapComponent {
 
     void inject(MainTripFragment target);
 
-    void inject(PassengerCardFragment target);
+    void inject(DriverCardFragment target);
 
-    void inject(MainCardActivity target);
+    void inject(MainActivity target);
 
     void inject(SplashFragment target);
 
@@ -175,9 +182,6 @@ public interface BootstrapComponent {
 
     void inject(RideFlagFragment target);
 
-    void inject(VerifyStepperFragment target);
-
-    void inject(VerifyStepperActivity target);
 
     void inject(InviteFragment target);
 
@@ -213,7 +217,7 @@ public interface BootstrapComponent {
 
     void inject(SmsValidationActivity target);
 
-    void inject(MainActivity target);
+    void inject(MainActivity0 target);
 
     void inject(MainFragment target);
 

@@ -29,21 +29,21 @@
 
     <!--<FrameLayout
         android:id="@+id/newRoute_dst_fragment"
-        android:name="com.mibarim.main.ui.fragments.DstFragment"
+        android:name="driverer.ui.fragments.DstFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_dst" />-->
 
     <!--<FrameLayout
         android:id="@+id/event_list_fragment"
-        android:name="com.mibarim.main.ui.fragments.addRouteFragments.RouteListFragment"
+        android:name="driverer.ui.fragments.addRouteFragments.RouteListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />-->
 
 <!--
     <FrameLayout
         android:id="@+id/info_submit_fragment"
-        android:name="com.mibarim.main.ui.fragments.InfoMessageFragment"
+        android:name="driverer.ui.fragments.InfoMessageFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_info_message"/>

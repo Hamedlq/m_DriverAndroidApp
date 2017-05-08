@@ -84,6 +84,7 @@
     <color name="secondary">#7C4DFF</color>
     <color name="gold">#FFEB3B</color>
     <color name="silver">#607D8B</color>
+    <color name="white">#FFFFFF</color>
     <color name="active_row">#FFEB3B</color>
     <color name="active_trip">#8BC34A</color>
     <color name="splash_back">#512da8</color>

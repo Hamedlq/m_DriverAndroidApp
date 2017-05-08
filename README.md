@@ -20,18 +20,18 @@ There will be *no upgrade path* as Mibarim is mean to act as a starting point fo
 [![Build Status](https://travis-ci.org/AndroidBootstrap/com-mibarim-main.svg?branch=master)](https://travis-ci.org/AndroidBootstrap/com-mibarim-main)
 
 This repository contains the source code for the [Mibarim](http://www.androidbootstrap.com/)
-Android app available from [Google Play](https://play.google.com/store/apps/details?id=com.mibarim.main).
+Android app available from [Google Play](https://play.google.com/store/apps/details?id=driver).
 
-Please see the [issues](https://github.com.mibarim.main/com-mibarim-main/issues) section
+Please see the [issues](https://github.driver/com-mibarim-main/issues) section
 to report any bugs or feature requests and to see the list of known issues.
 
 Have a questions about Mibarim? Ask away on the [com-mibarim-main discussion forum](https://groups.google.com/forum/#!forum/com-mibarim-main).
 
-<a href="https://play.google.com/store/apps/details?id=com.mibarim.main" alt="Download from Google Play">
+<a href="https://play.google.com/store/apps/details?id=driver" alt="Download from Google Play">
   <img src="http://f.cl.ly/items/3V0K1s1i402W0c193v2w/Image%202013.07.08%201%3A45%3A25%20PM.png">
 </a>
 
-<a href="https://play.google.com/store/apps/details?id=com.mibarim.main" alt="Download from Google Play">
+<a href="https://play.google.com/store/apps/details?id=driver" alt="Download from Google Play">
   <img src="http://f.cl.ly/items/0e3T2F2x3M0K2l1X0A0u/Image%202013.07.08%201%3A46%3A09%20PM.png">
 </a>
 
@@ -66,7 +66,7 @@ code for the app will change:
 At that point all the source files that were located in ____com.mibarim.main__ will be moved to the
 new folder __com/notify/app/mobile__.
 
-All import statments that reference the old resources (__R.com.mibarim.main.R__) will now be renamed
+All import statments that reference the old resources (__R.driver.R__) will now be renamed
 to the correct package. The artifact id's in the *pom.xml* (and various other places) will be replaced. The App Name
 will be replaced in the strings/etc.
 
@@ -157,14 +157,14 @@ and uses many great open-source libraries from the Android dev community:
 
 
 ## Contributors
-Thank you to all the [contributors](http://www.github.com.mibarim.main/com-mibarim-main/contributors) on
+Thank you to all the [contributors](http://www.github.driver/com-mibarim-main/contributors) on
 this project. Your help is much appreciated.
 
 
 ## Contributing
 
 Please fork this repository and contribute back using
-[pull requests](https://github.com.mibarim.main/com-mibarim-main/pulls).
+[pull requests](https://github.driver/com-mibarim-main/pulls).
 
 Any contributions, large or small, major features, bug fixes, additional
 language translations, unit/integration tests are welcomed and appreciated

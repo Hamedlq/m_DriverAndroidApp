@@ -4,14 +4,14 @@
     android:id="@+id/three_buttons_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activities.MainActivity">
+    tools:context=".ui.activities.MainActivity0">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#fff">
 
-        <com.mibarim.main.ui.view.CustomViewPager
+        <com.mibarim.driver.ui.view.CustomViewPager
             android:id="@+id/cf_pages"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
@@ -96,14 +96,14 @@
 
         <!--<FrameLayout
             android:id="@+id/main_map_fragment"
-            android:name="com.mibarim.main.ui.fragments.mainFragments.MainMapfragment"
+            android:name="driverer.ui.fragments.mainFragments.MainMapfragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:layout="@layout/fragment_main_map" />
 
         <FrameLayout
             android:id="@+id/event_list_fragment"
-            android:name="com.mibarim.main.ui.fragments.eventFragments.EventListFragment"
+            android:name="driverer.ui.fragments.eventFragments.EventListFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />-->
 

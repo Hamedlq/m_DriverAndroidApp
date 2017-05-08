@@ -1,7 +1,7 @@
-package com.mibarim.main;
+package com.mibarim.driver;
 
 import com.crashlytics.android.Crashlytics;
-import com.mibarim.main.logging.CrashlyticsTree;
+import com.mibarim.driver.logging.CrashlyticsTree;
 
 import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
