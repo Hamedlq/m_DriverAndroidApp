@@ -63,8 +63,8 @@ public class InfoMessageFragment extends Fragment {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (getActivity() instanceof RouteListActivity) {
-                        ((RouteListActivity) getActivity()).hideMsg();
+                    if (getActivity() instanceof StationRouteListActivity) {
+                        ((StationRouteListActivity) getActivity()).hideMsg();
                     }
                     return true;
                 }

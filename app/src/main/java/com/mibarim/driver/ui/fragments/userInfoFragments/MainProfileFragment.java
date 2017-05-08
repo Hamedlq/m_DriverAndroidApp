@@ -17,7 +17,7 @@ import com.mibarim.driver.BootstrapApplication;
 import com.mibarim.driver.R;
 import com.mibarim.driver.models.ScoreModel;
 import com.mibarim.driver.models.UserInfoModel;
-import com.mibarim.driver.ui.activities.MainActivity;
+import com.mibarim.driver.ui.activities.MainActivity0;
 
 import butterknife.ButterKnife;
 
@@ -100,17 +100,17 @@ public class MainProfileFragment extends Fragment {
         ButterKnife.bind(this, getView());
 
         UserInfoModel userInfo = null;
-        if (getActivity() instanceof MainActivity) {
-            userInfo = ((MainActivity) getActivity()).getUserInfo();
+        if (getActivity() instanceof MainActivity0) {
+            userInfo = ((MainActivity0) getActivity()).getUserInfo();
         }
         if (userInfo != null && userInfo.Gender != null) {
-            //user_image.setImageBitmap(((MainActivity) getActivity()).getImageById(userInfo.UserImageId,R.mipmap.ic_camera));
+            //user_image.setImageBitmap(((MainActivity0) getActivity()).getImageById(userInfo.UserImageId,R.mipmap.ic_camera));
         }
 
-//        ((MainActivity)getActivity()).setSupportActionBar(toolbar);
+//        ((MainActivity0)getActivity()).setSupportActionBar(toolbar);
 
 /*
-        ActionBar actionBar = ((MainActivity)getActivity()).getSupportActionBar();
+        ActionBar actionBar = ((MainActivity0)getActivity()).getSupportActionBar();
         if (actionBar != null) {
             //actionBar.setHomeAsUpIndicator(R.mipmap.ic_menu_forward);
             actionBar.setDisplayHomeAsUpEnabled(false);
@@ -120,14 +120,14 @@ public class MainProfileFragment extends Fragment {
 */
 
 /*        UserInfoModel userInfo = null;
-        ((MainActivity) getActivity()).getUserScore();
-        if (getActivity() instanceof MainActivity) {
-            userInfo = ((MainActivity) getActivity()).getUserInfo();
-            ((MainActivity) context).hideActionBar();
+        ((MainActivity0) getActivity()).getUserScore();
+        if (getActivity() instanceof MainActivity0) {
+            userInfo = ((MainActivity0) getActivity()).getUserInfo();
+            ((MainActivity0) context).hideActionBar();
         }
         if (userInfo != null && userInfo.Gender != null) {
             name_family.setText(userInfo.Name + " " + userInfo.Family);
-            user_image.setImageBitmap(((MainActivity) getActivity()).getImageById(userInfo.UserImageId));
+            user_image.setImageBitmap(((MainActivity0) getActivity()).getImageById(userInfo.UserImageId));
             *//*if (userInfo.Base64UserPic != null && !userInfo.Base64UserPic.equals("")) {
                 byte[] decodedString = Base64.decode(userInfo.Base64UserPic, Base64.DEFAULT);
                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
@@ -140,13 +140,13 @@ public class MainProfileFragment extends Fragment {
             company_image.setVisibility(View.VISIBLE);
             company_name.setVisibility(View.VISIBLE);
             company_name.setText(userInfo.CompanyName);
-            ((MainActivity) context).getCompanyImage(userInfo.CompanyImageId);
+            ((MainActivity0) context).getCompanyImage(userInfo.CompanyImageId);
         }
         fa_edit.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    ((MainActivity) getActivity()).goToUserActivity();
+                    ((MainActivity0) getActivity()).goToUserActivity();
                     return true;
                 }
                 return false;
@@ -156,7 +156,7 @@ public class MainProfileFragment extends Fragment {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    ((MainActivity) getActivity()).gotoMibarimWebsite();
+                    ((MainActivity0) getActivity()).gotoMibarimWebsite();
                     return true;
                 }
                 return false;
@@ -170,13 +170,13 @@ public class MainProfileFragment extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (context != null && context instanceof MainActivity) {
+        if (context != null && context instanceof MainActivity0) {
             if (isVisibleToUser) {
-                ((MainActivity) context).profileVisible();
-                ((MainActivity) context).hideActionBar();
+                ((MainActivity0) context).profileVisible();
+                ((MainActivity0) context).hideActionBar();
             } else {
-                ((MainActivity) context).profileInVisible();
-                ((MainActivity) context).showActionBar();
+                ((MainActivity0) context).profileInVisible();
+                ((MainActivity0) context).showActionBar();
             }
         }
     }
@@ -188,9 +188,9 @@ public class MainProfileFragment extends Fragment {
     }
 
     public void reloadUserImage() {
-        /*UserInfoModel userInfo = ((MainActivity) getActivity()).getUserInfo();
+        /*UserInfoModel userInfo = ((MainActivity0) getActivity()).getUserInfo();
         if (userInfo != null && userInfo.Gender != null) {
-            user_image.setImageBitmap(((MainActivity) getActivity()).getImageById(userInfo.UserImageId));
+            user_image.setImageBitmap(((MainActivity0) getActivity()).getImageById(userInfo.UserImageId));
         }*/
     }
 

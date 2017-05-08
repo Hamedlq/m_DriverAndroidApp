@@ -19,7 +19,7 @@ import com.mibarim.driver.models.ApiResponse;
 import com.mibarim.driver.models.ContactModel;
 import com.mibarim.driver.ui.ItemListFragment;
 import com.mibarim.driver.ui.ThrowableLoader;
-import com.mibarim.driver.ui.activities.MainActivity;
+import com.mibarim.driver.ui.activities.MainActivity0;
 import com.mibarim.driver.util.SingleTypeAdapter;
 
 import java.util.ArrayList;
@@ -57,8 +57,8 @@ public class ContactListFragment extends ItemListFragment<ContactModel> {
         mTracker.setScreenName("ContactListFragment");
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
         mTracker.send(new HitBuilders.EventBuilder().setCategory("Fragment").setAction("ContactListFragment").build());
-        /*if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).showActionBar();
+        /*if (getActivity() instanceof MainActivity0) {
+            ((MainActivity0) getActivity()).showActionBar();
         }*/
     }
 
@@ -90,8 +90,8 @@ public class ContactListFragment extends ItemListFragment<ContactModel> {
                     latest = new ArrayList<ContactModel>();
                     latest = userData.contactModelListQuery();
                     if (latest != null && latest.size()>0) {
-//                        ((RouteListActivity) getActivity()).setRouteList(latest);
-//                        ((RouteListActivity) getActivity()).showAnnouncingMsg();
+//                        ((StationRouteListActivity) getActivity()).setRouteList(latest);
+//                        ((StationRouteListActivity) getActivity()).showAnnouncingMsg();
                         return latest;
                     } else {
                         return Collections.emptyList();
@@ -107,7 +107,7 @@ public class ContactListFragment extends ItemListFragment<ContactModel> {
 
     public void onListItemClick(final ListView l, final View v, final int position, final long id) {
         final ContactModel contactModel = ((ContactModel) l.getItemAtPosition(position));
-        ((MainActivity)getActivity()).goToContactActivity(contactModel);
+        ((MainActivity0)getActivity()).goToContactActivity(contactModel);
 
     }
 
@@ -133,12 +133,12 @@ public class ContactListFragment extends ItemListFragment<ContactModel> {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (getActivity() != null && getActivity() instanceof MainActivity) {
+        if (getActivity() != null && getActivity() instanceof MainActivity0) {
             if (isVisibleToUser) {
-                ((MainActivity)getActivity()).hideMenu();
+                ((MainActivity0)getActivity()).hideMenu();
                 refresh();
             } else {
-                ((MainActivity)getActivity()).showMenu();
+                ((MainActivity0)getActivity()).showMenu();
             }
         }
     }

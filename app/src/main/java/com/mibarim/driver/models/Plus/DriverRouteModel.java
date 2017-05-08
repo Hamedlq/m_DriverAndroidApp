@@ -6,24 +6,17 @@ import java.io.Serializable;
  * Created by Hamed on 4/6/2016.
  */
 public class DriverRouteModel implements Serializable {
-    public int TripId;
-    public String Name;
-    public String Family;
-    public String UserImageId;
+    public long  DriverRouteId;
     public String  TimingString;
+    public int  TimingHour;
+    public int  TimingMin;
     public String  PricingString;
     public String  CarString;
     public String SrcAddress;
-    public String SrcDistance;
-    public String SrcLatitude;
-    public String SrcLongitude;
+    public String SrcLat;
+    public String SrcLng;
     public String DstAddress;
-    public String DstDistance;
-    public String DstLatitude;
-    public String DstLongitude;
-    public int EmptySeat;
-    public int CarSeats;
-    public boolean IsVerified;
-    public boolean IsBooked;
-
+    public String DstLat;
+    public String DstLng;
+    public boolean IsOn;
 }

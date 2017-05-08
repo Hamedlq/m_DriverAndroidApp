@@ -109,7 +109,7 @@ public class WithdrawListFragment extends ItemListFragment<WithdrawRequestModel>
 //        Intent intent = new Intent(getActivity(), RouteActivity.class);
 //        intent.putExtra("EventResponse", latest.get(position - 1));
         //((AddMapActivity)getActivity()).selectEvent(eventResponse);
-//        ((RouteListActivity)getActivity()).startActivityForResult(intent, RELOAD_REQUEST);
+//        ((StationRouteListActivity)getActivity()).startActivityForResult(intent, RELOAD_REQUEST);
     }
 
     @Override

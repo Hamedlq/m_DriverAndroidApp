@@ -503,13 +503,13 @@ public class MainMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (getActivity() != null && getActivity() instanceof MainActivity) {
+        if (getActivity() != null && getActivity() instanceof MainActivity0) {
             if (isVisibleToUser) {
-                ((MainActivity) getActivity()).showActionBar();
-                ((MainActivity)getActivity()).showMenu();
-                ((MainActivity)getActivity()).showRouteListOnMap();
+                ((MainActivity0) getActivity()).showActionBar();
+                ((MainActivity0)getActivity()).showMenu();
+                ((MainActivity0)getActivity()).showRouteListOnMap();
             } else {
-                ((MainActivity)getActivity()).hideMenu();
+                ((MainActivity0)getActivity()).hideMenu();
             }
         }
     }

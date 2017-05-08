@@ -19,10 +19,11 @@ import com.google.gson.Gson;
 import com.mibarim.driver.BootstrapApplication;
 import com.mibarim.driver.BootstrapServiceProvider;
 import com.mibarim.driver.R;
-import com.mibarim.driver.adapters.PassengerRouteRecyclerAdapter;
+import com.mibarim.driver.adapters.DriverRouteRecyclerAdapter;
 import com.mibarim.driver.authenticator.LogoutService;
 import com.mibarim.driver.data.UserData;
 import com.mibarim.driver.models.ApiResponse;
+import com.mibarim.driver.models.Plus.DriverRouteModel;
 import com.mibarim.driver.models.Plus.PassRouteModel;
 import com.mibarim.driver.models.Route.RouteResponse;
 import com.mibarim.driver.services.RouteResponseService;
@@ -36,7 +37,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class DriverCardFragment extends Fragment
-        implements LoaderManager.LoaderCallbacks<List<PassRouteModel>> {
+        implements LoaderManager.LoaderCallbacks<List<DriverRouteModel>> {
 
     @Inject
     UserData userData;
@@ -48,8 +49,8 @@ public class DriverCardFragment extends Fragment
     protected LogoutService logoutService;
 
     private int RELOAD_REQUEST = 1234;
-    List<PassRouteModel> items;
-    List<PassRouteModel> latest;
+    List<DriverRouteModel> items;
+    List<DriverRouteModel> latest;
     private Tracker mTracker;
     private RouteResponse routeResponse;
     private ApiResponse suggestRouteResponse;
@@ -59,7 +60,7 @@ public class DriverCardFragment extends Fragment
     SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView mEmptyView;
     //private ProgressBar mProgressView;
-    private PassengerRouteRecyclerAdapter mAdapter;
+    private DriverRouteRecyclerAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private int selectedRow;
     ItemTouchListener itemTouchListener;
@@ -100,25 +101,20 @@ public class DriverCardFragment extends Fragment
         itemTouchListener = new ItemTouchListener() {
 
             @Override
-            public void onBookBtnClick(View view, int position) {
-                if(getActivity() instanceof MainActivity){
-                    PassRouteModel selectedItem = ((PassRouteModel) items.get(position));
-                    ((MainActivity) getActivity()).BookSeat(selectedItem);
+            public void onSwitchCard(View view, int position) {
+                if (getActivity() instanceof MainActivity) {
+                    DriverRouteModel selectedItem = ((DriverRouteModel) items.get(position));
+                    ((MainActivity) getActivity()).ToggleTrip(selectedItem);
                 }
             }
-            /*@Override
-            public void onCardViewTap(View view, int position) {
-                //PassRouteModel selectedItem = ((PassRouteModel) items.get(position));
-                *//*String srcLat = latest.get(position).SrcLatitude;
-                String srcLng = latest.get(position).SrcLongitude;
-                String dstLat = latest.get(position).DstLatitude;
-                String dstLng = latest.get(position).DstLongitude;
-                PathPoint pathRoute= latest.get(position).PathRoute;*//*
-                *//*((SuggestRouteActivity) getActivity()).setSelectedRoute(selectedItem);
-                ((SuggestRouteActivity) getActivity()).setRouteSrcDst(srcLat, srcLng, dstLat, dstLng,pathRoute, position);*//*
-                //((SuggestRouteCardActivity) getActivity()).gotoTripProfile(selectedItem);
 
-            }*/
+            @Override
+            public void onCardViewTap(View view, int position) {
+                if (getActivity() instanceof MainActivity) {
+                    DriverRouteModel selectedItem = ((DriverRouteModel) items.get(position));
+                    ((MainActivity) getActivity()).ToggleTrip(selectedItem);
+                }
+            }
 
             /*@Override
             public void onUserImageClick(View view, int position) {
@@ -142,7 +138,7 @@ public class DriverCardFragment extends Fragment
     public void refresh() {
         getLoaderManager().restartLoader(0, null, this);
         //showState(1);
-        mAdapter = new PassengerRouteRecyclerAdapter(getActivity(), items, itemTouchListener);
+        mAdapter = new DriverRouteRecyclerAdapter(getActivity(), items, itemTouchListener);
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -179,23 +175,23 @@ public class DriverCardFragment extends Fragment
     }*/
 
     @Override
-    public Loader<List<PassRouteModel>> onCreateLoader(int id, Bundle args) {
+    public Loader<List<DriverRouteModel>> onCreateLoader(int id, Bundle args) {
         mEmptyView.setVisibility(View.GONE);
         mSwipeRefreshLayout.setRefreshing(true);
-        items = new ArrayList<PassRouteModel>();
-        return new ThrowableLoader<List<PassRouteModel>>(getActivity(), items) {
+        items = new ArrayList<DriverRouteModel>();
+        return new ThrowableLoader<List<DriverRouteModel>>(getActivity(), items) {
             @Override
-            public List<PassRouteModel> loadData() throws Exception {
-                latest = new ArrayList<PassRouteModel>();
+            public List<DriverRouteModel> loadData() throws Exception {
+                latest = new ArrayList<DriverRouteModel>();
                 if (getActivity() instanceof MainActivity) {
                     Gson gson = new Gson();
-                    routeResponse = ((MainActivity) getActivity()).getRoute();
+                    //routeResponse = ((MainActivity) getActivity()).getRoute();
                     String authToken = serviceProvider.getAuthToken(getActivity());
                     if (getActivity() != null) {
-                        suggestRouteResponse = routeResponseService.GetPassengerRoutes(authToken, 1);
+                        suggestRouteResponse = routeResponseService.GetDriverRoutes(authToken, 1);
                         if (suggestRouteResponse != null) {
                             for (String routeJson : suggestRouteResponse.Messages) {
-                                PassRouteModel route = gson.fromJson(routeJson, PassRouteModel.class);
+                                DriverRouteModel route = gson.fromJson(routeJson, DriverRouteModel.class);
                                 latest.add(route);
                             }
                         }
@@ -211,13 +207,13 @@ public class DriverCardFragment extends Fragment
     }
 
     @Override
-    public void onLoadFinished(Loader<List<PassRouteModel>> loader, List<PassRouteModel> data) {
+    public void onLoadFinished(Loader<List<DriverRouteModel>> loader, List<DriverRouteModel> data) {
         items = data;
         if (items.size() == 0) {
             mEmptyView.setVisibility(View.VISIBLE);
         }
         // specify an adapter (see also next example)
-        mAdapter = new PassengerRouteRecyclerAdapter(getActivity(), items, itemTouchListener);
+        mAdapter = new DriverRouteRecyclerAdapter(getActivity(), items, itemTouchListener);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addOnItemTouchListener(new SwipeableRecyclerViewTouchListener(mRecyclerView,
                 new SwipeableRecyclerViewTouchListener.SwipeListener() {
@@ -243,13 +239,14 @@ public class DriverCardFragment extends Fragment
     }
 
     @Override
-    public void onLoaderReset(Loader<List<PassRouteModel>> loader) {
+    public void onLoaderReset(Loader<List<DriverRouteModel>> loader) {
 
     }
 
     public interface ItemTouchListener {
-        //public void onCardViewTap(View view, int position);
-        public void onBookBtnClick(View view, int position);
+        public void onCardViewTap(View view, int position);
+
+        public void onSwitchCard(View view, int position);
         //public void onUserImageClick(View view, int position);
 
     }

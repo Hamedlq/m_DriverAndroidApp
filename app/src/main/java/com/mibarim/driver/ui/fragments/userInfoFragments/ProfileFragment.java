@@ -27,7 +27,7 @@ import com.mibarim.driver.core.ImageUtils;
 import com.mibarim.driver.models.AboutMeModel;
 import com.mibarim.driver.models.ScoreModel;
 import com.mibarim.driver.models.UserInfoModel;
-import com.mibarim.driver.ui.activities.MainActivity;
+import com.mibarim.driver.ui.activities.MainActivity0;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -117,18 +117,18 @@ public class ProfileFragment extends Fragment {
         String Mobile = prefs.getString("UserMobile", "");*/
         UserInfoModel userInfo = null;
         AboutMeModel aboutMeModel = null;
-        ((MainActivity) getActivity()).getUserScore();
-        if (getActivity() instanceof MainActivity) {
-            userInfo = ((MainActivity) getActivity()).getUserInfo();
-            aboutMeModel=((MainActivity) context).getAboutMe();
+        ((MainActivity0) getActivity()).getUserScore();
+        if (getActivity() instanceof MainActivity0) {
+            userInfo = ((MainActivity0) getActivity()).getUserInfo();
+            aboutMeModel=((MainActivity0) context).getAboutMe();
             about_me.setText(aboutMeModel.Desc);
-            //((MainActivity) context).hideActionBar();
+            //((MainActivity0) context).hideActionBar();
         }
         if (userInfo != null && userInfo.Gender != null) {
             //name_family.setText(userInfo.Name + " " + userInfo.Family);
             Bitmap icon = BitmapFactory.decodeResource(getResources(),
                     R.mipmap.ic_camera);
-            Bitmap img=((MainActivity) getActivity()).getImageById(userInfo.UserImageId,R.mipmap.ic_camera);
+            Bitmap img=((MainActivity0) getActivity()).getImageById(userInfo.UserImageId,R.mipmap.ic_camera);
             if(!img.sameAs(icon)){
                 user_image.setImageBitmap(img);
                 header.setImageBitmap(ImageUtils.darkenBitMap(img));
@@ -149,13 +149,13 @@ public class ProfileFragment extends Fragment {
             company_image.setVisibility(View.VISIBLE);
             company_name.setVisibility(View.VISIBLE);
             company_name.setText(userInfo.CompanyName);
-            ((MainActivity) context).getCompanyImage(userInfo.CompanyImageId);
+            ((MainActivity0) context).getCompanyImage(userInfo.CompanyImageId);
         }*/
         /*fa_edit.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    ((MainActivity) getActivity()).goToUserActivity();
+                    ((MainActivity0) getActivity()).goToUserActivity();
                     return true;
                 }
                 return false;
@@ -165,7 +165,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    ((MainActivity) getActivity()).gotoMibarimWebsite();
+                    ((MainActivity0) getActivity()).gotoMibarimWebsite();
                     return true;
                 }
                 return false;
@@ -175,7 +175,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    ((MainActivity) getActivity()).gotoVerify();
+                    ((MainActivity0) getActivity()).gotoVerify();
                     return true;
                 }
                 return false;
@@ -189,13 +189,13 @@ public class ProfileFragment extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (context != null && context instanceof MainActivity) {
+        if (context != null && context instanceof MainActivity0) {
             if (isVisibleToUser) {
-                ((MainActivity) context).profileVisible();
-                ((MainActivity) context).hideActionBar();
+                ((MainActivity0) context).profileVisible();
+                ((MainActivity0) context).hideActionBar();
             } else {
-                ((MainActivity) context).profileInVisible();
-                ((MainActivity) context).showActionBar();
+                ((MainActivity0) context).profileInVisible();
+                ((MainActivity0) context).showActionBar();
             }
         }
     }
@@ -207,9 +207,9 @@ public class ProfileFragment extends Fragment {
     }
 
     public void reloadUserImage() {
-        UserInfoModel userInfo = ((MainActivity) getActivity()).getUserInfo();
+        UserInfoModel userInfo = ((MainActivity0) getActivity()).getUserInfo();
         if (userInfo != null && userInfo.Gender != null) {
-            user_image.setImageBitmap(((MainActivity) getActivity()).getImageById(userInfo.UserImageId,R.mipmap.ic_camera));
+            user_image.setImageBitmap(((MainActivity0) getActivity()).getImageById(userInfo.UserImageId,R.mipmap.ic_camera));
         }
     }
 

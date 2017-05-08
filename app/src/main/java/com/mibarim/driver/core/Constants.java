@@ -29,6 +29,10 @@ public final class Constants {
          */
         public static final String AUTHTOKEN_TYPE = BOOTSTRAP_ACCOUNT_TYPE;
         /**
+         * Auth token
+         */
+        public static final String AUTH_TOKEN = "AuthToken";
+        /**
          * mobile login
          */
         public static final String REG_MOBILE = "mobile";
@@ -85,6 +89,8 @@ public final class Constants {
         public static final String URL_BOOK_REQUEST = "/RequestBooking";
         public static final String URL_ACCEPT_RIDE_SHARE = "/AcceptRideShare";
         public static final String URL_GET_ROUTE_INFO = "/GetRouteInfo";
+        public static final String URL_SET_USER_ROUTE = "/SetUserRoute";
+        public static final String URL_SET_ROUTE_TRIP = "/SetRouteTrip";
         public static final String URL_INSERT_RIDE_REQUEST = "/InsertRideRequest";
         /**
          * UserInfoService
@@ -136,25 +142,6 @@ public final class Constants {
         public static final String URL_USER_TRIP_LOCATION = "/SendUserTripLocation";
         public static final String URL_GET_TRIP_INFO = "/GetTripInfo";
         public static final String URL_END_TRIP = "/EndTripRequest";
-        /**
-         * List Users URL
-         */
-        public static final String URL_USERS_FRAG =  "/1/users";
-        public static final String URL_USERS = URL_BASE + URL_USERS_FRAG;
-
-
-        /**
-         * List News URL
-         */
-        public static final String URL_NEWS_FRAG = "/1/classes/News";
-        public static final String URL_NEWS = URL_BASE + URL_NEWS_FRAG;
-
-
-        /**
-         * List Checkin's URL
-         */
-        public static final String URL_CHECKINS_FRAG = "/1/classes/Locations";
-        public static final String URL_CHECKINS = URL_BASE + URL_CHECKINS_FRAG;
 
         /**
          * PARAMS for auth
@@ -185,6 +172,8 @@ public final class Constants {
         public static final String ROUTE_IMAGE_URL = "/GetRouteUserImage";
         public static final String SUGGEST_ROUTE_URL = "/GetSuggestWeekRoute";
         public static final String GET_PASSENGER_ROUTE_URL = "/GetPassengerRoutes";
+        public static final String GET_DRIVER_ROUTE_URL = "/GetDriverRoutes";
+        public static final String GET_STATION_ROUTE_URL = "/GetStationRoutes";
         public static final String SIMILAR_SUGGEST_ROUTE_URL = "/GetSimilarSuggestRoute";
         public static final String TRIP_PROFILE_URL = "/GetTripProfile";
 

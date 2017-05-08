@@ -20,14 +20,17 @@ import com.mibarim.driver.BootstrapApplication;
 import com.mibarim.driver.BootstrapServiceProvider;
 import com.mibarim.driver.R;
 import com.mibarim.driver.adapters.DriverRouteRecyclerAdapter;
+import com.mibarim.driver.adapters.RoutesRecyclerAdapter;
 import com.mibarim.driver.authenticator.LogoutService;
 import com.mibarim.driver.data.UserData;
 import com.mibarim.driver.models.ApiResponse;
 import com.mibarim.driver.models.Plus.PassRouteModel;
+import com.mibarim.driver.models.Plus.StationRouteModel;
 import com.mibarim.driver.models.Route.RouteResponse;
 import com.mibarim.driver.services.RouteResponseService;
 import com.mibarim.driver.ui.ThrowableLoader;
 import com.mibarim.driver.ui.activities.MainActivity;
+import com.mibarim.driver.ui.activities.StationRouteListActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,30 +39,30 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class RoutesCardFragment extends Fragment
-        implements LoaderManager.LoaderCallbacks<List<PassRouteModel>> {
+        implements LoaderManager.LoaderCallbacks<List<StationRouteModel>> {
 
-    @Inject
+/*    @Inject
     UserData userData;
     @Inject
-    protected BootstrapServiceProvider serviceProvider;
+    protected BootstrapServiceProvider serviceProvider;*/
     @Inject
     protected RouteResponseService routeResponseService;
-    @Inject
-    protected LogoutService logoutService;
+/*    @Inject
+    protected LogoutService logoutService;*/
 
     private int RELOAD_REQUEST = 1234;
-    List<PassRouteModel> items;
-    List<PassRouteModel> latest;
+    List<StationRouteModel> items;
+    List<StationRouteModel> latest;
     private Tracker mTracker;
     private RouteResponse routeResponse;
-    private ApiResponse suggestRouteResponse;
+    private ApiResponse stationRouteResponse;
 
     private View mRecycler;
     private RecyclerView mRecyclerView;
     SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView mEmptyView;
     //private ProgressBar mProgressView;
-    private DriverRouteRecyclerAdapter mAdapter;
+    private RoutesRecyclerAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private int selectedRow;
     ItemTouchListener itemTouchListener;
@@ -100,10 +103,10 @@ public class RoutesCardFragment extends Fragment
         itemTouchListener = new ItemTouchListener() {
 
             @Override
-            public void onBookBtnClick(View view, int position) {
-                if(getActivity() instanceof MainActivity){
-                    PassRouteModel selectedItem = ((PassRouteModel) items.get(position));
-                    ((MainActivity) getActivity()).BookSeat(selectedItem);
+            public void onCardViewTap(View view, int position) {
+                if (getActivity() instanceof StationRouteListActivity) {
+                    StationRouteModel selectedItem = ((StationRouteModel) items.get(position));
+                    ((StationRouteListActivity) getActivity()).setRoute(selectedItem);
                 }
             }
             /*@Override
@@ -142,62 +145,36 @@ public class RoutesCardFragment extends Fragment
     public void refresh() {
         getLoaderManager().restartLoader(0, null, this);
         //showState(1);
-        mAdapter = new DriverRouteRecyclerAdapter(getActivity(), items, itemTouchListener);
+        mAdapter = new RoutesRecyclerAdapter(getActivity(), items, itemTouchListener);
         mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mTracker.setScreenName("SuggestRouteCardFragment");
+        mTracker.setScreenName("RoutesCardFragment");
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-        mTracker.send(new HitBuilders.EventBuilder().setCategory("Fragment").setAction("SuggestRouteCardFragment").build());
+        mTracker.send(new HitBuilders.EventBuilder().setCategory("Fragment").setAction("RoutesCardFragment").build());
         getLoaderManager().initLoader(0, null, this);
         //setEmptyText(R.string.no_routes);
     }
 
-    /*public void showState(int showState) {
-        mEmptyView.setVisibility(View.GONE);
-        mRecyclerView.setVisibility(View.GONE);
-        mProgressView.setVisibility(View.GONE);
-        //1 progress
-        //2 show result list
-        //3 no result
-        switch (showState) {
-            case 1:
-                mProgressView.setVisibility(View.VISIBLE);
-                break;
-            case 2:
-                mRecyclerView.setVisibility(View.VISIBLE);
-                break;
-            case 3:
-                mEmptyView.setVisibility(View.VISIBLE);
-                break;
-            default:
-                mEmptyView.setVisibility(View.VISIBLE);
-        }
-    }*/
-
     @Override
-    public Loader<List<PassRouteModel>> onCreateLoader(int id, Bundle args) {
+    public Loader<List<StationRouteModel>> onCreateLoader(int id, Bundle args) {
         mEmptyView.setVisibility(View.GONE);
         mSwipeRefreshLayout.setRefreshing(true);
-        items = new ArrayList<PassRouteModel>();
-        return new ThrowableLoader<List<PassRouteModel>>(getActivity(), items) {
+        items = new ArrayList<StationRouteModel>();
+        return new ThrowableLoader<List<StationRouteModel>>(getActivity(), items) {
             @Override
-            public List<PassRouteModel> loadData() throws Exception {
-                latest = new ArrayList<PassRouteModel>();
-                if (getActivity() instanceof MainActivity) {
-                    Gson gson = new Gson();
-                    routeResponse = ((MainActivity) getActivity()).getRoute();
-                    String authToken = serviceProvider.getAuthToken(getActivity());
-                    if (getActivity() != null) {
-                        suggestRouteResponse = routeResponseService.GetPassengerRoutes(authToken, 1);
-                        if (suggestRouteResponse != null) {
-                            for (String routeJson : suggestRouteResponse.Messages) {
-                                PassRouteModel route = gson.fromJson(routeJson, PassRouteModel.class);
-                                latest.add(route);
-                            }
+            public List<StationRouteModel> loadData() throws Exception {
+                latest = new ArrayList<StationRouteModel>();
+                Gson gson = new Gson();
+                if (getActivity() != null) {
+                    stationRouteResponse = routeResponseService.GetStationRoutes( 1);
+                    if (stationRouteResponse != null) {
+                        for (String routeJson : stationRouteResponse.Messages) {
+                            StationRouteModel route = gson.fromJson(routeJson, StationRouteModel.class);
+                            latest.add(route);
                         }
                     }
                 }
@@ -211,13 +188,13 @@ public class RoutesCardFragment extends Fragment
     }
 
     @Override
-    public void onLoadFinished(Loader<List<PassRouteModel>> loader, List<PassRouteModel> data) {
+    public void onLoadFinished(Loader<List<StationRouteModel>> loader, List<StationRouteModel> data) {
         items = data;
-        if (items.size() == 0) {
+        /*if (items.size() == 0) {
             mEmptyView.setVisibility(View.VISIBLE);
-        }
+        }*/
         // specify an adapter (see also next example)
-        mAdapter = new DriverRouteRecyclerAdapter(getActivity(), items, itemTouchListener);
+        mAdapter = new RoutesRecyclerAdapter(getActivity(), items, itemTouchListener);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addOnItemTouchListener(new SwipeableRecyclerViewTouchListener(mRecyclerView,
                 new SwipeableRecyclerViewTouchListener.SwipeListener() {
@@ -243,16 +220,14 @@ public class RoutesCardFragment extends Fragment
     }
 
     @Override
-    public void onLoaderReset(Loader<List<PassRouteModel>> loader) {
+    public void onLoaderReset(Loader<List<StationRouteModel>> loader) {
 
     }
 
     public interface ItemTouchListener {
-        //public void onCardViewTap(View view, int position);
-        public void onBookBtnClick(View view, int position);
+        public void onCardViewTap(View view, int position);
+        //public void onBookBtnClick(View view, int position);
         //public void onUserImageClick(View view, int position);
 
     }
-
-
 }

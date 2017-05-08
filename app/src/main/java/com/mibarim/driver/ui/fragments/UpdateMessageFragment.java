@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.mibarim.driver.BootstrapApplication;
 import com.mibarim.driver.R;
-import com.mibarim.driver.ui.activities.MainActivity;
+import com.mibarim.driver.ui.activities.MainActivity0;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -58,7 +58,7 @@ public class UpdateMessageFragment extends Fragment {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    ((MainActivity) getActivity()).closeUpdatePanel();
+                    ((MainActivity0) getActivity()).closeUpdatePanel();
                     return true;
                 }
                 return false;
@@ -68,7 +68,7 @@ public class UpdateMessageFragment extends Fragment {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    ((MainActivity) getActivity()).gotoUpdate();
+                    ((MainActivity0) getActivity()).gotoUpdate();
                     return true;
                 }
                 return false;

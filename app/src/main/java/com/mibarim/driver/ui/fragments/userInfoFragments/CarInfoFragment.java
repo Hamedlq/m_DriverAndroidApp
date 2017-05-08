@@ -138,7 +138,7 @@ public class CarInfoFragment extends Fragment {
                     if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
                             != PackageManager.PERMISSION_GRANTED) {
                         // Check Permissions Now
-                        // Callback onRequestPermissionsResult interceptado na Activity MainActivity
+                        // Callback onRequestPermissionsResult interceptado na Activity MainActivity0
                         ActivityCompat.requestPermissions(getActivity(),
                                 new String[]{Manifest.permission.CAMERA},
                                 CAR_REQUEST_CAMERA);
@@ -173,7 +173,7 @@ public class CarInfoFragment extends Fragment {
                     if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
                             != PackageManager.PERMISSION_GRANTED) {
                         // Check Permissions Now
-                        // Callback onRequestPermissionsResult interceptado na Activity MainActivity
+                        // Callback onRequestPermissionsResult interceptado na Activity MainActivity0
                         ActivityCompat.requestPermissions(getActivity(),
                                 new String[]{Manifest.permission.CAMERA},
                                 CARBK_REQUEST_CAMERA);

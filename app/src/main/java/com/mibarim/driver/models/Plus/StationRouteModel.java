@@ -6,24 +6,15 @@ import java.io.Serializable;
  * Created by Hamed on 4/6/2016.
  */
 public class StationRouteModel implements Serializable {
-    public int TripId;
-    public String Name;
-    public String Family;
-    public String UserImageId;
-    public String  TimingString;
-    public String  PricingString;
-    public String  CarString;
-    public String SrcAddress;
-    public String SrcDistance;
-    public String SrcLatitude;
-    public String SrcLongitude;
-    public String DstAddress;
-    public String DstDistance;
-    public String DstLatitude;
-    public String DstLongitude;
-    public int EmptySeat;
-    public int CarSeats;
-    public boolean IsVerified;
-    public boolean IsBooked;
-
+    public long StRouteId ;
+    public long SrcStId;
+    public String SrcStAdd;
+    public String SrcStLat ;
+    public String SrcStLng ;
+    public long DstStId ;
+    public String DstStAdd ;
+    public String DstStLat ;
+    public String DstStLng ;
+    public String StRoutePrice;
+    public String StRouteDuration;
 }

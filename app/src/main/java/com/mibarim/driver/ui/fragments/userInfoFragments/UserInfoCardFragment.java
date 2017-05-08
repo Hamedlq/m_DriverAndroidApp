@@ -115,7 +115,7 @@ public class UserInfoCardFragment extends Fragment {
                     @Override
                     public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
                         *//*for (int position : reverseSortedPositions) {
-                            ((MainActivity) getActivity()).shareRoute(String.valueOf(items.get(position).RouteId));
+                            ((MainActivity0) getActivity()).shareRoute(String.valueOf(items.get(position).RouteId));
                             //items.remove(position);
                             //mAdapter.notifyItemRemoved(position);
                         }*//*
@@ -144,7 +144,7 @@ public class UserInfoCardFragment extends Fragment {
         public void onClick(DialogInterface dialog, int which) {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:
-                    ((MainActivity) getActivity()).deleteRoute(String.valueOf(items.get(selectedRow).RouteId));
+                    ((MainActivity0) getActivity()).deleteRoute(String.valueOf(items.get(selectedRow).RouteId));
                     items.remove(selectedRow);
                     mAdapter.notifyItemRemoved(selectedRow);
                     mAdapter.notifyDataSetChanged();

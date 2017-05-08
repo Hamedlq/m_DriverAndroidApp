@@ -446,12 +446,12 @@ public class TripActivity extends BootstrapActivity {
                 "com.mibarim.driver", Context.MODE_PRIVATE);
         prefs.edit().putLong("TripId", 0).apply();
         stopService();
-        Intent intent=new Intent(this,MainActivity.class);
+        Intent intent=new Intent(this,MainActivity0.class);
         startActivity(intent);
     }
 
     public void gotoMain() {
-        Intent intent=new Intent(this,MainActivity.class);
+        Intent intent=new Intent(this,MainActivity0.class);
         startActivity(intent);
     }
 

@@ -175,7 +175,7 @@ public class UserContactActivity extends BootstrapActivity {
                 user_image.setImageBitmap(img);
                 header.setBackgroundResource(R.color.secondary);
             }
-            if (OriginActivity.equals("MainActivity")){
+            if (OriginActivity.equals("MainActivity0")){
                 getUserScoreByContact(contactModel);
             }else {
                 getUserScoreByRoute(contactModel);
@@ -365,7 +365,7 @@ public class UserContactActivity extends BootstrapActivity {
         about_me.setText(scoreModel.AboutMe);
         pb_loading.setVisibility(View.GONE);
         //do_rating.setVisibility(View.VISIBLE);
-        if (OriginActivity.equals("MainActivity")){
+        if (OriginActivity.equals("MainActivity0")){
             do_rating.setVisibility(View.VISIBLE);
         }else {
             do_rating.setVisibility(View.GONE);

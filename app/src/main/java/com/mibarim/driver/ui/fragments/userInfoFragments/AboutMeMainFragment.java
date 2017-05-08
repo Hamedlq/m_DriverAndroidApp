@@ -17,7 +17,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.mibarim.driver.BootstrapApplication;
 import com.mibarim.driver.R;
 import com.mibarim.driver.models.AboutMeModel;
-import com.mibarim.driver.ui.activities.MainActivity;
+import com.mibarim.driver.ui.activities.MainActivity0;
 import com.mibarim.driver.ui.activities.UserInfoActivity;
 import com.mibarim.driver.ui.activities.UserInfoDetailActivity;
 
@@ -85,8 +85,8 @@ public class AboutMeMainFragment extends Fragment {
             about_me_form.setVisibility(View.GONE);
             edit_about_me.setVisibility(View.GONE);
         }
-        if (getActivity() instanceof MainActivity) {
-            model = ((MainActivity) getActivity()).getAboutMe();
+        if (getActivity() instanceof MainActivity0) {
+            model = ((MainActivity0) getActivity()).getAboutMe();
             about_me_txtview.setText(model.Desc);
             about_me_form.setVisibility(View.GONE);
 

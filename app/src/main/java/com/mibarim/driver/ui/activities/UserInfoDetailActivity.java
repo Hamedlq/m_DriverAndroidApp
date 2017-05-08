@@ -802,7 +802,7 @@ public class UserInfoDetailActivity extends BootstrapActivity {
                     if (ActivityCompat.checkSelfPermission(UserInfoDetailActivity.this, Manifest.permission.CAMERA)
                             != PackageManager.PERMISSION_GRANTED) {
                         // Check Permissions Now
-                        // Callback onRequestPermissionsResult interceptado na Activity MainActivity
+                        // Callback onRequestPermissionsResult interceptado na Activity MainActivity0
                         ActivityCompat.requestPermissions(UserInfoDetailActivity.this,
                                 new String[]{Manifest.permission.CAMERA},
                                 USER_REQUEST_CAMERA);

@@ -29,7 +29,7 @@ import android.util.Log;
 import com.google.android.gms.gcm.GcmListenerService;
 import com.mibarim.driver.R;
 import com.mibarim.driver.models.enums.MainTabs;
-import com.mibarim.driver.ui.activities.MainActivity;
+import com.mibarim.driver.ui.activities.MainActivity0;
 
 public class
         MyGcmListenerService extends GcmListenerService {
@@ -83,7 +83,7 @@ public class
      */
     private void sendNotification(String message) {
         if (message.equals("SuggestRoute")) {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, MainActivity0.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("selectedTab", MainTabs.Route.toInt());
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
@@ -102,7 +102,7 @@ public class
             notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
             //startActivity(intent);
         } else if (message.equals("RideShareRequest")) {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, MainActivity0.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("selectedTab", MainTabs.Message.toInt());
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 1 /* Request code */, intent,
@@ -121,7 +121,7 @@ public class
 
             notificationManager.notify(1 /* ID of notification */, notificationBuilder.build());
         } else if (message.equals("RideShareAccepted")) {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, MainActivity0.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("selectedTab", MainTabs.Message.toInt());
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 2 /* Request code */, intent,
@@ -140,7 +140,7 @@ public class
 
             notificationManager.notify(2 /* ID of notification */, notificationBuilder.build());
         } else if (message.equals("NewMessage")) {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, MainActivity0.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("selectedTab", MainTabs.Message.toInt());
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 3 /* Request code */, intent,
@@ -159,7 +159,7 @@ public class
 
             notificationManager.notify(3 /* ID of notification */, notificationBuilder.build());
         } else if (message.equals("NewTrip")) {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, MainActivity0.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("selectedTab", MainTabs.Route.toInt());
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 4 /* Request code */, intent,
@@ -178,7 +178,7 @@ public class
 
             notificationManager.notify(4 /* ID of notification */, notificationBuilder.build());
         } else if (message.equals("StartTrip")) {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, MainActivity0.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("selectedTab", MainTabs.Route.toInt());
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 4 /* Request code */, intent,
@@ -197,7 +197,7 @@ public class
 
             notificationManager.notify(4 /* ID of notification */, notificationBuilder.build());
         } else if (message.equals("NewDriver")) {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, MainActivity0.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("selectedTab", MainTabs.Message.toInt());
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 5 /* Request code */, intent,
@@ -216,7 +216,7 @@ public class
 
             notificationManager.notify(5 /* ID of notification */, notificationBuilder.build());
         } else if (message.equals("NewEvent")) {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, MainActivity0.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("selectedTab", 1);//MainTabs.Event.toInt()
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 6 /* Request code */, intent,
@@ -235,7 +235,7 @@ public class
 
             notificationManager.notify(6 /* ID of notification */, notificationBuilder.build());
         } else if (message.equals("GiftInvite")) {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, MainActivity0.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("selectedTab", MainTabs.Profile.toInt());
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 7 /* Request code */, intent,
@@ -259,7 +259,7 @@ public class
 
     private void showNotification(String title, String body, String action, int tab, int requestCode, int notificationId, String link) {
 
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, MainActivity0.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("selectedTab", tab);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, requestCode, intent,

@@ -189,7 +189,7 @@ public class UserPersonFragment extends Fragment {
                     if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
                             != PackageManager.PERMISSION_GRANTED) {
                         // Check Permissions Now
-                        // Callback onRequestPermissionsResult interceptado na Activity MainActivity
+                        // Callback onRequestPermissionsResult interceptado na Activity MainActivity0
                         ActivityCompat.requestPermissions(getActivity(),
                                 new String[]{Manifest.permission.CAMERA},
                                 NATIONAL_CARD_REQUEST_CAMERA);

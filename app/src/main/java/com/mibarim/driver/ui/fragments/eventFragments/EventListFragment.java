@@ -20,7 +20,7 @@ import com.mibarim.driver.services.EventService;
 import com.mibarim.driver.ui.HandleApiMessages;
 import com.mibarim.driver.ui.ItemListFragment;
 import com.mibarim.driver.ui.ThrowableLoader;
-import com.mibarim.driver.ui.activities.MainActivity;
+import com.mibarim.driver.ui.activities.MainActivity0;
 import com.mibarim.driver.util.SingleTypeAdapter;
 
 import java.util.ArrayList;
@@ -93,8 +93,8 @@ public class EventListFragment extends ItemListFragment<EventResponse> {
                         }
                     }
                     if (latest != null) {
-//                        ((RouteListActivity) getActivity()).setRouteList(latest);
-//                        ((RouteListActivity) getActivity()).showAnnouncingMsg();
+//                        ((StationRouteListActivity) getActivity()).setRouteList(latest);
+//                        ((StationRouteListActivity) getActivity()).showAnnouncingMsg();
                         return latest;
                     } else {
                         return Collections.emptyList();
@@ -113,8 +113,8 @@ public class EventListFragment extends ItemListFragment<EventResponse> {
 //        Intent intent = new Intent(getActivity(), RouteActivity.class);
 //        intent.putExtra("EventResponse", latest.get(position - 1));
 //        ((AddMapActivity)getActivity()).selectEvent(eventResponse);
-//        ((RouteListActivity)getActivity()).startActivityForResult(intent, RELOAD_REQUEST);
-        ((MainActivity)getActivity()).gotoEventActivity(eventResponse);
+//        ((StationRouteListActivity)getActivity()).startActivityForResult(intent, RELOAD_REQUEST);
+        ((MainActivity0)getActivity()).gotoEventActivity(eventResponse);
     }
 
     @Override
@@ -139,13 +139,13 @@ public class EventListFragment extends ItemListFragment<EventResponse> {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (getActivity() != null && getActivity() instanceof MainActivity) {
+        if (getActivity() != null && getActivity() instanceof MainActivity0) {
             if (isVisibleToUser) {
-                ((MainActivity) getActivity()).showActionBar();
-                ((MainActivity)getActivity()).hideMenu();
+                ((MainActivity0) getActivity()).showActionBar();
+                ((MainActivity0)getActivity()).hideMenu();
                 refresh();
             } else {
-                ((MainActivity)getActivity()).showMenu();
+                ((MainActivity0)getActivity()).showMenu();
             }
         }
     }

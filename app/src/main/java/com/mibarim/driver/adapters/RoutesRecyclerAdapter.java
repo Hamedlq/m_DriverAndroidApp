@@ -11,7 +11,9 @@ import android.widget.TextView;
 
 import com.mibarim.driver.R;
 import com.mibarim.driver.models.Plus.PassRouteModel;
+import com.mibarim.driver.models.Plus.StationRouteModel;
 import com.mibarim.driver.ui.fragments.DriverFragments.DriverCardFragment;
+import com.mibarim.driver.ui.fragments.DriverFragments.RoutesCardFragment;
 
 import java.util.List;
 
@@ -21,9 +23,9 @@ import cn.nekocode.badge.BadgeDrawable;
  * Created by Hamed on 10/16/2016.
  */
 public class RoutesRecyclerAdapter extends RecyclerView.Adapter<RoutesRecyclerAdapter.ViewHolder> {
-    private List<PassRouteModel> items;
+    private List<StationRouteModel> items;
     private Activity _activity;
-    private DriverCardFragment.ItemTouchListener onItemTouchListener;
+    private RoutesCardFragment.ItemTouchListener onItemTouchListener;
     //private RelativeLayout lastLayout;
 
     // Provide a reference to the views for each data item
@@ -38,6 +40,7 @@ public class RoutesRecyclerAdapter extends RecyclerView.Adapter<RoutesRecyclerAd
         public TextView src_address;
         public TextView dst_address;
         public TextView carString;
+        public TextView route_price;
         /*public TextView src_distance;
         public TextView dst_distance;*/
         //public BootstrapCircleThumbnail userimage;
@@ -53,6 +56,7 @@ public class RoutesRecyclerAdapter extends RecyclerView.Adapter<RoutesRecyclerAd
             src_address = (TextView) v.findViewById(R.id.src_address);
             dst_address = (TextView) v.findViewById(R.id.dst_address);
             carString = (TextView) v.findViewById(R.id.carString);
+            route_price = (TextView) v.findViewById(R.id.route_price);
             /*src_distance = (TextView) v.findViewById(R.id.src_distance);
             dst_distance = (TextView) v.findViewById(R.id.dst_distance);*/
 //            userimage = (BootstrapCircleThumbnail) v.findViewById(R.id.userimage);
@@ -65,18 +69,13 @@ public class RoutesRecyclerAdapter extends RecyclerView.Adapter<RoutesRecyclerAd
             });*/
 
 
-            /*v.setOnClickListener(new View.OnClickListener() {
+            v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onItemTouchListener.onCardViewTap(v, getPosition());
-                    *//*if (lastLayout != null) {
-                        lastLayout.setSelected(false);
-                    }
-                    row_layout.setSelected(true);
-                    lastLayout = row_layout;*//*
                 }
             });
-            userimage.setOnClickListener(new View.OnClickListener() {
+            /*userimage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onItemTouchListener.onUserImageClick(v, getPosition());
@@ -86,7 +85,7 @@ public class RoutesRecyclerAdapter extends RecyclerView.Adapter<RoutesRecyclerAd
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public RoutesRecyclerAdapter(Activity activity, List<PassRouteModel> list, DriverCardFragment.ItemTouchListener onItemTouchListener) {
+    public RoutesRecyclerAdapter(Activity activity, List<StationRouteModel> list, RoutesCardFragment.ItemTouchListener onItemTouchListener) {
         _activity = activity;
         items = list;
         this.onItemTouchListener = onItemTouchListener;
@@ -98,7 +97,7 @@ public class RoutesRecyclerAdapter extends RecyclerView.Adapter<RoutesRecyclerAd
                                                                int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.driver_card_item, parent, false);
+                .inflate(R.layout.station_route_card_item, parent, false);
         // set the view's size, margins, paddings and layout parameters
         ViewHolder vh = new ViewHolder(v);
         return vh;
@@ -110,7 +109,7 @@ public class RoutesRecyclerAdapter extends RecyclerView.Adapter<RoutesRecyclerAd
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        if (items.get(position).IsBooked) {
+        /*if (items.get(position).IsBooked) {
             BadgeDrawable drawableBadge =
                     new BadgeDrawable.Builder()
                             .type(BadgeDrawable.TYPE_ONLY_ONE_TEXT)
@@ -143,10 +142,10 @@ public class RoutesRecyclerAdapter extends RecyclerView.Adapter<RoutesRecyclerAd
                 //holder.book_trip.setVisibility(View.GONE);
             } else {
                 holder.timing.setText(items.get(position).TimingString);
-                /*holder.book_trip.setVisibility(View.VISIBLE);
-                holder.book_trip.setText("رزرو صندلی (" + items.get(position).PricingString + " تومان) ");*/
+                *//*holder.book_trip.setVisibility(View.VISIBLE);
+                holder.book_trip.setText("رزرو صندلی (" + items.get(position).PricingString + " تومان) ");*//*
             }
-        }
+        }*/
         /*if (items.get(position).IsVerified) {
             BadgeDrawable drawableBadge =
                     new BadgeDrawable.Builder()
@@ -169,9 +168,10 @@ public class RoutesRecyclerAdapter extends RecyclerView.Adapter<RoutesRecyclerAd
         }*/
         //holder.userimage.setImageBitmap(((MainActivity) _activity).getImageById(items.get(position).UserImageId, R.mipmap.ic_user_black));
 
-        holder.src_address.setText(items.get(position).SrcAddress);
-        holder.dst_address.setText(items.get(position).DstAddress);
-        holder.carString.setText(items.get(position).CarString);
+        holder.src_address.setText(items.get(position).SrcStAdd);
+        holder.dst_address.setText(items.get(position).DstStAdd);
+        holder.route_price.setText(items.get(position).StRoutePrice + " تومان ");
+        /*holder.carString.setText(items.get(position).CarString);*/
         //holder.seats.setText("ظرفیت: " + items.get(position).EmptySeat + " از " + items.get(position).CarSeats);
         /*holder.src_distance.setText(items.get(position).SrcDistance);
         holder.dst_distance.setText(items.get(position).DstDistance);*/

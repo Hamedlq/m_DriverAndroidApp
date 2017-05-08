@@ -172,8 +172,8 @@ public class SplashActivity extends ActionBarAccountAuthenticatorActivity {
     }
 
     private void gotoMainActivity() {
-        Intent intent = new Intent(SplashActivity.this, MainCardActivity.class);
-        //Intent intent = new Intent(MainActivity.this, HomeWorkStepActivity.class);
+        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+        //Intent intent = new Intent(MainActivity0.this, HomeWorkStepActivity.class);
         this.startActivity(intent);
         finishIt();
     }
