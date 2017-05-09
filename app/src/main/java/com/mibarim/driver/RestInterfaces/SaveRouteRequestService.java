@@ -111,10 +111,10 @@ public interface SaveRouteRequestService {
                                       @Field("SelfRouteId") String selRouteId
     );
 
-    @POST(Constants.Http.URL_DELETE_ROUTE)
+    @POST(Constants.Http.URL_DELETE_DRIVER_ROUTE)
     @FormUrlEncoded
     ApiResponse deleteRoute(@Header(Constants.Http.PARAM_AUTHORIZATION) String authToken,
-                                      @Field("RouteRequestId") String routeId
+                                      @Field("DriverRouteId") long driverRouteId
     );
     @POST(Constants.Http.URL_SHARE_ROUTE)
     @FormUrlEncoded
@@ -207,7 +207,7 @@ public interface SaveRouteRequestService {
     @FormUrlEncoded
     ApiResponse setRouteTrip(@Header(Constants.Http.PARAM_AUTHORIZATION) String authToken,
                              @Field("DriverRouteId") long driverRouteId,
-                             @Field("EmptySeats") int emptySeats,
+                             @Field("CarSeats") int carSeats,
                              @Field("TimingHour") int hour,
                              @Field("TimingMin") int min);
 

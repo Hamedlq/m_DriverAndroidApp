@@ -618,7 +618,8 @@ public class MainActivity extends BootstrapActivity {
         this.startActivityForResult(intent, ROUTESELECTED);
     }
 
-    public void deleteRoute(final String routeId) {
+    public void deleteRoute(final long driverRouteId) {
+        showProgress();
         new SafeAsyncTask<Boolean>() {
             @Override
             public Boolean call() throws Exception {
@@ -626,21 +627,22 @@ public class MainActivity extends BootstrapActivity {
                     serviceProvider.invalidateAuthToken();
                     authToken = serviceProvider.getAuthToken(MainActivity.this);
                 }
-                deleteRes = routeRequestService.deleteRoute(authToken, routeId);
+                deleteRes = routeRequestService.deleteRoute(authToken, driverRouteId);
                 return true;
             }
 
             @Override
             protected void onException(final Exception e) throws RuntimeException {
                 super.onException(e);
+                hideProgress();
             }
 
             @Override
             protected void onSuccess(final Boolean state) throws Exception {
                 super.onSuccess(state);
-                new HandleApiMessages(MainActivity.this, deleteRes).showMessages();
+                hideProgress();
+                new HandleApiMessagesBySnackbar(parentLayout, deleteRes).showMessages();
                 refreshList();
-
             }
         }.execute();
     }
@@ -649,15 +651,14 @@ public class MainActivity extends BootstrapActivity {
         if (selectedItem.HasTrip) {
             Snackbar.make(parentLayout, R.string.NoCancel, Snackbar.LENGTH_LONG).show();
         } else {
-            String msg = getString(R.string.confirm_Msg);
             selectedRouteTrip = selectedItem;
-            showConfirmDialog(msg);
+            showSetTime();
         }
     }
 
     private void showConfirmDialog(String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(msg).setPositiveButton("متعهد می‌شوم", ConfirmDialogClickListener)
+        builder.setMessage(msg).setPositiveButton("تعهد می‌دهم", ConfirmDialogClickListener)
                 .setNegativeButton("بیخیال", ConfirmDialogClickListener).show();
     }
 
@@ -666,7 +667,8 @@ public class MainActivity extends BootstrapActivity {
         public void onClick(DialogInterface dialog, int which) {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:
-                    showSetTime();
+                    //showSetTime();
+                    setTripTime();
                     break;
                 case DialogInterface.BUTTON_NEGATIVE:
                     dialog.dismiss();
@@ -701,7 +703,7 @@ public class MainActivity extends BootstrapActivity {
         builder.setCancelable(false);
         builder.setPositiveButton("تایید زمان", TimeDialogClickListener)
                 .setNegativeButton("خیر", TimeDialogClickListener).show();*/
-        Calendar mcurrentTime = Calendar.getInstance();
+        //Calendar mcurrentTime = Calendar.getInstance();
         int hour = selectedRouteTrip.TimingHour;
         int minute = selectedRouteTrip.TimingMin;
         TimePickerDialog mTimePicker;
@@ -713,7 +715,15 @@ public class MainActivity extends BootstrapActivity {
                 setEmptySeats();
             }
 
+
         }, hour, minute, true);
+        mTimePicker.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                refreshList();
+            }
+        });
+
         mTimePicker.setTitle("زمان دقیق حضور در مبدا");
         mTimePicker.setButton(DialogInterface.BUTTON_POSITIVE, "تایید زمان", mTimePicker);
         mTimePicker.setButton(DialogInterface.BUTTON_NEGATIVE, "بیخیال", mTimePicker);
@@ -771,7 +781,7 @@ public class MainActivity extends BootstrapActivity {
         builder.setTitle(R.string.empty_seats);
         builder.setView(alertLayout);
         builder.setCancelable(false);
-        builder.setPositiveButton("تایید نهایی", FinalDialogClickListener)
+        builder.setPositiveButton("تایید", FinalDialogClickListener)
                 .setNegativeButton("بیخیال", FinalDialogClickListener).show();
     }
 
@@ -780,7 +790,8 @@ public class MainActivity extends BootstrapActivity {
         public void onClick(DialogInterface dialog, int which) {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:
-                    setTripTime();
+                    String msg = getString(R.string.confirm_Msg);
+                    showConfirmDialog(msg);
                     break;
                 case DialogInterface.BUTTON_NEGATIVE:
                     dialog.dismiss();

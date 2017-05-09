@@ -8,9 +8,11 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.beardedhen.androidbootstrap.AwesomeTextView;
 import com.beardedhen.androidbootstrap.BootstrapCircleThumbnail;
 import com.mibarim.driver.R;
 import com.mibarim.driver.models.Plus.DriverRouteModel;
@@ -43,7 +45,10 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
         public TextView src_address;
         public TextView dst_address;
         public TextView carString;
+        public TextView seats;
         public Switch switch_trip;
+        public LinearLayout delete_btn;
+        public AwesomeTextView fa_trash;
         /*public TextView src_distance;
         public TextView dst_distance;*/
         //public BootstrapCircleThumbnail userimage;
@@ -59,7 +64,10 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
             src_address = (TextView) v.findViewById(R.id.src_address);
             dst_address = (TextView) v.findViewById(R.id.dst_address);
             carString = (TextView) v.findViewById(R.id.carString);
+            seats = (TextView) v.findViewById(R.id.seats);
             switch_trip = (Switch) v.findViewById(R.id.switch_trip);
+            delete_btn = (LinearLayout) v.findViewById(R.id.delete_btn);
+            fa_trash = (AwesomeTextView) v.findViewById(R.id.fa_trash);
             /*src_distance = (TextView) v.findViewById(R.id.src_distance);
             dst_distance = (TextView) v.findViewById(R.id.dst_distance);*/
 //            userimage = (BootstrapCircleThumbnail) v.findViewById(R.id.userimage);
@@ -83,6 +91,18 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
                 @Override
                 public void onClick(View v) {
                     onItemTouchListener.onSwitchCard(v, getPosition());
+                }
+            });
+            delete_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemTouchListener.onDeleteCard(v, getPosition());
+                }
+            });
+            fa_trash.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemTouchListener.onDeleteCard(v, getPosition());
                 }
             });
         }
@@ -118,6 +138,10 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
         holder.dst_address.setText(items.get(position).DstAddress);
         holder.carString.setText(items.get(position).CarString);
         holder.switch_trip.setChecked(items.get(position).HasTrip);
+        if (items.get(position).HasTrip) {
+            holder.seats.setText("رزرو: " + items.get(position).FilledSeats + " از " + items.get(position).CarSeats);
+        }
+
     }
 
     // Return the size of your dataset (invoked by the layout manager)

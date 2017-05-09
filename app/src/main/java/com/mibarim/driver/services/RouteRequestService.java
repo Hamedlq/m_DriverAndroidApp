@@ -138,9 +138,9 @@ public class RouteRequestService {
     }
 
 
-    public ApiResponse deleteRoute(String authToken, String routeId) {
+    public ApiResponse deleteRoute(String authToken, long driverRouteId) {
         ApiResponse res = getService().deleteRoute("Bearer " + authToken,
-                routeId
+                driverRouteId
         );
         return res;
     }
@@ -244,9 +244,9 @@ public class RouteRequestService {
         return res;
     }
 
-    public ApiResponse setRouteTrip(String authToken, long driverRouteId, int emptySeats, int hour, int min) {
+    public ApiResponse setRouteTrip(String authToken, long driverRouteId, int carSeats, int hour, int min) {
         ApiResponse res = getService().setRouteTrip("Bearer " + authToken,
-                driverRouteId,emptySeats,hour,min);
+                driverRouteId,carSeats,hour,min);
         return res;
     }
 }

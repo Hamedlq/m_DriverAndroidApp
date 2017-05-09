@@ -984,7 +984,7 @@ public class MainActivity0 extends BootstrapActivity implements MainMapFragment.
         return selectedTab;
     }
 
-    public void deleteRoute(final String routeId) {
+    /*public void deleteRoute(final String routeId) {
         new SafeAsyncTask<Boolean>() {
             @Override
             public Boolean call() throws Exception {
@@ -1008,7 +1008,7 @@ public class MainActivity0 extends BootstrapActivity implements MainMapFragment.
                 getRouteRequestsFromServer();
             }
         }.execute();
-    }
+    }*/
 
     public void shareRoute(final String routeId) {
         new SafeAsyncTask<Boolean>() {

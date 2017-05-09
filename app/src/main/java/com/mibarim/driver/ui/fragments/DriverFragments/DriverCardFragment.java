@@ -116,6 +116,14 @@ public class DriverCardFragment extends Fragment
                 }
             }
 
+            @Override
+            public void onDeleteCard(View view, int position) {
+                if (getActivity() instanceof MainActivity) {
+                    DriverRouteModel selectedItem = ((DriverRouteModel) items.get(position));
+                    ((MainActivity) getActivity()).deleteRoute(selectedItem.DriverRouteId);
+                }
+            }
+
             /*@Override
             public void onUserImageClick(View view, int position) {
                 *//*PassRouteModel model = items.get(position);
@@ -247,7 +255,7 @@ public class DriverCardFragment extends Fragment
         public void onCardViewTap(View view, int position);
 
         public void onSwitchCard(View view, int position);
-        //public void onUserImageClick(View view, int position);
+        public void onDeleteCard(View view, int position);
 
     }
 

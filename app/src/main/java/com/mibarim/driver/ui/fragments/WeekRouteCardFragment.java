@@ -197,7 +197,7 @@ public class WeekRouteCardFragment extends Fragment {
         public void onClick(DialogInterface dialog, int which) {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:
-                    ((MainActivity0) getActivity()).deleteRoute(String.valueOf(items.get(selectedRow).RouteId));
+                    //((MainActivity0) getActivity()).deleteRoute(String.valueOf(items.get(selectedRow).RouteId));
                     items.remove(selectedRow);
                     mAdapter.notifyItemRemoved(selectedRow);
                     mAdapter.notifyDataSetChanged();

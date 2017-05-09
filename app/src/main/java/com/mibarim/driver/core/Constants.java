@@ -81,7 +81,7 @@ public final class Constants {
         public static final String URL_LEAVE_GROUP = "/LeaveGroup";
         public static final String URL_ACCEPT_ROUTE = "/AcceptSuggestedRoute";
         public static final String URL_DELETE_ROUTE_SUGGESTION = "/DeleteRouteSuggest";
-        public static final String URL_DELETE_ROUTE = "/DeleteRoute";
+        public static final String URL_DELETE_DRIVER_ROUTE = "/DeleteDriverRoute";
         public static final String URL_SHARE_ROUTE = "/ShareRoute";
         public static final String URL_GET_ROUTE = "/GetUserWeekRoutes";
         public static final String URL_NOTIFY_EVENT = "/NotifyEvents";
