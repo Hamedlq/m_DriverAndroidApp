@@ -60,10 +60,10 @@ As an example, you know that you want your app name and package to the following
 After generating the app on [AndroidBootstrap.com](http://www.androidbootstrap.com) the folder structure of the source
 code for the app will change:
 
-  - From: __com.mibarim.main__
+  - From: __com.mibarim.driver__
   - To: __com/notify/app/mobile__
 
-At that point all the source files that were located in ____com.mibarim.main__ will be moved to the
+At that point all the source files that were located in ____com.mibarim.driver__ will be moved to the
 new folder __com/notify/app/mobile__.
 
 All import statments that reference the old resources (__R.driver.R__) will now be renamed

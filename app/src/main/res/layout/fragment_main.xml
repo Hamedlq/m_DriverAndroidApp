@@ -80,7 +80,7 @@
         -->
         <FrameLayout
             android:id="@+id/update_message_fragment"
-            android:name="com.mibarim.main.ui.fragments.UpdateMessageFragment"
+            android:name="com.mibarim.driver.ui.fragments.UpdateMessageFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:layout="@layout/fragment_update_message">
@@ -89,7 +89,7 @@
 
         <FrameLayout
             android:id="@+id/ride_request_fragment"
-            android:name="com.mibarim.main.ui.fragments.RideRequestFragment"
+            android:name="com.mibarim.driver.ui.fragments.RideRequestFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:layout="@layout/fragment_request_ride" />

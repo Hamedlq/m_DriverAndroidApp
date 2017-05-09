@@ -227,7 +227,7 @@
 
     <FrameLayout
         android:id="@+id/feedback_fragment"
-        android:name="com.mibarim.main.ui.fragments.FeedbackFragment"
+        android:name="com.mibarim.driver.ui.fragments.FeedbackFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"

@@ -20,32 +20,32 @@
 
             <FrameLayout
                 android:id="@+id/user_person_fragment"
-                android:name="com.mibarim.main.ui.fragments.userInfoFragments.UserPersonFragment"
+                android:name="com.mibarim.driver.ui.fragments.userInfoFragments.UserPersonFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
             <FrameLayout
                 android:id="@+id/license_fragment"
-                android:name="com.mibarim.main.ui.fragments.userInfoFragments.LicenseFragment"
+                android:name="com.mibarim.driver.ui.fragments.userInfoFragments.LicenseFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
             <FrameLayout
                 android:id="@+id/car_info_fragment"
-                android:name="com.mibarim.main.ui.fragments.userInfoFragments.CarInfoFragment"
+                android:name="com.mibarim.driver.ui.fragments.userInfoFragments.CarInfoFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
 
             <FrameLayout
                 android:id="@+id/bank_info_fragment"
-                android:name="com.mibarim.main.ui.fragments.userInfoFragments.BankFragment"
+                android:name="com.mibarim.driver.ui.fragments.userInfoFragments.BankFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
             <FrameLayout
                 android:id="@+id/user_info_card_fragment"
-                android:name="com.mibarim.main.ui.fragments.UserInfoCardFragment"
+                android:name="com.mibarim.driver.ui.fragments.UserInfoCardFragment"
                 android:layout_width="match_parent"
                 android:layout_marginTop="20dp"
                 android:layout_height="match_parent" />

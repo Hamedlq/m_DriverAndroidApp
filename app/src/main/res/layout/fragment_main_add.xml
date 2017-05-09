@@ -7,7 +7,7 @@
 
     <FrameLayout
         android:id="@+id/message_fragment"
-        android:name="com.mibarim.main.ui.fragments.InfoMessageFragment"
+        android:name="com.mibarim.driver.ui.fragments.InfoMessageFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_info_message" />

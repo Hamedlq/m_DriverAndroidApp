@@ -64,6 +64,7 @@ import com.mibarim.driver.services.RouteResponseService;
 import com.mibarim.driver.services.UserInfoService;
 import com.mibarim.driver.ui.BootstrapActivity;
 import com.mibarim.driver.ui.HandleApiMessages;
+import com.mibarim.driver.ui.HandleApiMessagesBySnackbar;
 import com.mibarim.driver.ui.fragments.DriverFragments.DriverCardFragment;
 import com.mibarim.driver.ui.fragments.DriverFragments.FabFragment;
 import com.mibarim.driver.util.SafeAsyncTask;
@@ -171,7 +172,7 @@ public class MainActivity extends BootstrapActivity {
         getUserInfoFromServer();
         final FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .add(R.id.main_container, new DriverCardFragment(),DRIVE_FRAGMENT_TAG)
+                .add(R.id.main_container, new DriverCardFragment(), DRIVE_FRAGMENT_TAG)
                 .commit();
         fragmentManager.beginTransaction()
                 .add(R.id.main_container, new FabFragment())
@@ -645,10 +646,13 @@ public class MainActivity extends BootstrapActivity {
     }
 
     public void ToggleTrip(DriverRouteModel selectedItem) {
-        String msg = getString(R.string.confirm_Msg);
-        selectedRouteTrip=selectedItem;
-        showConfirmDialog(msg);
-
+        if (selectedItem.HasTrip) {
+            Snackbar.make(parentLayout, R.string.NoCancel, Snackbar.LENGTH_LONG).show();
+        } else {
+            String msg = getString(R.string.confirm_Msg);
+            selectedRouteTrip = selectedItem;
+            showConfirmDialog(msg);
+        }
     }
 
     private void showConfirmDialog(String msg) {
@@ -704,8 +708,8 @@ public class MainActivity extends BootstrapActivity {
         mTimePicker = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                selectedRouteHour=selectedHour;
-                selectedRouteMin=selectedMinute;
+                selectedRouteHour = selectedHour;
+                selectedRouteMin = selectedMinute;
                 setEmptySeats();
             }
 
@@ -795,7 +799,7 @@ public class MainActivity extends BootstrapActivity {
                     authToken = serviceProvider.getAuthToken(MainActivity.this);
                 }
                 tripRes = routeRequestService.setRouteTrip(authToken, selectedRouteTrip.DriverRouteId,
-                        seat_picker.getValue(),selectedRouteHour,selectedRouteMin);
+                        seat_picker.getValue(), selectedRouteHour, selectedRouteMin);
                 return true;
             }
 
@@ -807,7 +811,7 @@ public class MainActivity extends BootstrapActivity {
             @Override
             protected void onSuccess(final Boolean state) throws Exception {
                 super.onSuccess(state);
-                new HandleApiMessages(MainActivity.this, tripRes).showMessages();
+                new HandleApiMessagesBySnackbar(parentLayout, tripRes).showMessages();
                 refreshList();
             }
         }.execute();

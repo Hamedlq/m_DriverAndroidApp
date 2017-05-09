@@ -6,21 +6,21 @@
 
     <FrameLayout
         android:id="@+id/map_fragment"
-        android:name="com.mibarim.main.ui.fragments.rideRequestFragment.RideRequestMapFragment"
+        android:name="com.mibarim.driver.ui.fragments.rideRequestFragment.RideRequestMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_map" />
 
     <FrameLayout
         android:id="@+id/ride_flag_fragment"
-        android:name="com.mibarim.main.ui.fragments.rideRequestFragment."
+        android:name="com.mibarim.driver.ui.fragments.rideRequestFragment."
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_ride_flag" />
 
     <FrameLayout
         android:id="@+id/route_src_dst_fragment"
-        android:name="com.mibarim.main.ui.fragments.addRouteFragments.SrcDstFragment"
+        android:name="com.mibarim.driver.ui.fragments.addRouteFragments.SrcDstFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_src_dst" />

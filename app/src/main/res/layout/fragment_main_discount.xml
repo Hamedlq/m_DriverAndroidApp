@@ -47,7 +47,7 @@
 
     <FrameLayout
         android:id="@+id/discount_list"
-        android:name="com.mibarim.main.ui.fragments.userInfoFragments.DiscountListFragment"
+        android:name="com.mibarim.driver.ui.fragments.userInfoFragments.DiscountListFragment"
         android:layout_width="match_parent"
         android:layout_height="500dp"
         android:layout_below="@id/discount_form" />

@@ -90,7 +90,7 @@ public final class Constants {
         public static final String URL_ACCEPT_RIDE_SHARE = "/AcceptRideShare";
         public static final String URL_GET_ROUTE_INFO = "/GetRouteInfo";
         public static final String URL_SET_USER_ROUTE = "/SetUserRoute";
-        public static final String URL_SET_ROUTE_TRIP = "/SetRouteTrip";
+        public static final String URL_SET_ROUTE_TRIP = "/SetTrip";
         public static final String URL_INSERT_RIDE_REQUEST = "/InsertRideRequest";
         /**
          * UserInfoService

@@ -117,6 +117,7 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
         holder.src_address.setText(items.get(position).SrcAddress);
         holder.dst_address.setText(items.get(position).DstAddress);
         holder.carString.setText(items.get(position).CarString);
+        holder.switch_trip.setChecked(items.get(position).HasTrip);
     }
 
     // Return the size of your dataset (invoked by the layout manager)

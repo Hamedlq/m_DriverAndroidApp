@@ -7,13 +7,13 @@
 
     <FrameLayout
         android:id="@+id/message_list_fragment"
-        android:name="com.mibarim.main.ui.fragments.messagingFragment.MessageListFragment"
+        android:name="com.mibarim.driver.ui.fragments.messagingFragment.MessageListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <FrameLayout
         android:id="@+id/toggle_fragment"
-        android:name="com.mibarim.main.ui.fragments.messagingFragments.ToggleContactTripFragment"
+        android:name="com.mibarim.driver.ui.fragments.messagingFragments.ToggleContactTripFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -22,7 +22,7 @@
         android:paddingBottom="10dp" />
     <FrameLayout
         android:id="@+id/send_message_fragment"
-        android:name="com.mibarim.main.ui.fragments.SendMessageFragment"
+        android:name="com.mibarim.driver.ui.fragments.SendMessageFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/message_list_fragment"

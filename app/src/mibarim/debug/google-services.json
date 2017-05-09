@@ -8,7 +8,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:723613288557:android:0333885a2cbe2282",
         "android_client_info": {
-          "package_name": "com.mibarim.main.debug"
+          "package_name": "com.mibarim.driver.debug"
         }
       },
       "oauth_client": [],

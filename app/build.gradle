@@ -64,7 +64,7 @@ android {
 
         //testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        applicationId "com.mibarim.main"
+        applicationId "com.mibarim.driver"
         // Enabling multidex support.
 //        multiDexEnabled true
         // Stops the Gradle plugin's automatic rasterization of vectors
@@ -109,7 +109,7 @@ android {
             proguardFile '../proguard.cfg'
 //             signingConfig signingConfigs.release
             zipAlignEnabled true // this is default for release
-//            testPackageName 'com.mibarim.main.tests'
+//            testPackageName 'com.mibarim.driver.tests'
 //            testInstrumentationRunner 'android.test.InstrumentationTestRunner'
             // this is the default
         }
@@ -119,13 +119,13 @@ android {
             resValue "string", "update_link", "http://mibarim.ir/androidapp/download/"
         }
         cafeBazar {
-            resValue "string", "update_link", "https://cafebazaar.ir/app/com.mibarim.main/?l=fa"
+            resValue "string", "update_link", "https://cafebazaar.ir/app/com.mibarim.driver/?l=fa"
         }
         myket {
-            resValue "string", "update_link", "https://myket.ir/app/com.mibarim.main"
+            resValue "string", "update_link", "https://myket.ir/app/com.mibarim.driver"
         }
         iranapps {
-            resValue "string", "update_link", "http://iranapps.com/app/com.mibarim.main"
+            resValue "string", "update_link", "http://iranapps.com/app/com.mibarim.driver"
         }
         avvalmarket {
             resValue "string", "update_link", "http://mibarim.ir/androidapp/download/"

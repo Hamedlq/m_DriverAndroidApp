@@ -18,5 +18,6 @@ public class DriverRouteModel implements Serializable {
     public String DstAddress;
     public String DstLat;
     public String DstLng;
-    public boolean IsOn;
+    public short EmptySeats;
+    public boolean HasTrip;
 }

@@ -3,7 +3,7 @@ package com.mibarim.driver;
 import com.mibarim.driver.ui.activities.EventMapActivity;
 import com.mibarim.driver.ui.activities.HelpingActivity;
 import com.mibarim.driver.ui.activities.HomeWorkStepActivity;
-import com.mibarim.driver.ui.activities.MainCardActivity;
+import com.mibarim.driver.ui.activities.MainActivity;
 import com.mibarim.driver.ui.activities.MobileActivity;
 import com.mibarim.driver.ui.activities.RegisterActivity;
 import com.mibarim.driver.ui.activities.CheckSuggestRouteActivity;
@@ -15,6 +15,7 @@ import com.mibarim.driver.ui.activities.SplashActivity;
 import com.mibarim.driver.ui.activities.RideMainActivity;
 import com.mibarim.driver.ui.activities.RideRequestMapActivity;
 import com.mibarim.driver.ui.activities.SmsValidationActivity;
+import com.mibarim.driver.ui.activities.StationRouteListActivity;
 import com.mibarim.driver.ui.activities.SuggestRouteActivity;
 import com.mibarim.driver.ui.activities.AddMainActivity;
 import com.mibarim.driver.ui.activities.AddMapActivity;
@@ -30,12 +31,14 @@ import com.mibarim.driver.authenticator.AuthenticatorActivity;
 import com.mibarim.driver.authenticator.TokenRefreshActivity;
 import com.mibarim.driver.ui.BootstrapActivity;
 import com.mibarim.driver.ui.BootstrapFragmentActivity;
-import com.mibarim.driver.ui.activities.MainActivity;
+import com.mibarim.driver.ui.activities.MainActivity0;
 import com.mibarim.driver.ui.activities.UserInfoDetailActivity;
 import com.mibarim.driver.ui.activities.WeekTimeActivity;
 import com.mibarim.driver.ui.activities.WorkHomeActivity;
+import com.mibarim.driver.ui.fragments.DriverFragments.DriverCardFragment;
+import com.mibarim.driver.ui.fragments.DriverFragments.FabFragment;
+import com.mibarim.driver.ui.fragments.DriverFragments.RoutesCardFragment;
 import com.mibarim.driver.ui.fragments.HelpFragment;
-import com.mibarim.driver.ui.fragments.DriverFragments.PassengerCardFragment;
 import com.mibarim.driver.ui.fragments.TripProfileFragments.ProfileRouteInfoFragment;
 import com.mibarim.driver.ui.fragments.TripProfileFragments.ProfileScoreInfoFragment;
 import com.mibarim.driver.ui.fragments.TripProfileFragments.ProfileUserInfoFragment;
@@ -127,13 +130,19 @@ public interface BootstrapComponent {
 
     void inject(AddMainActivity target);
 
+    void inject(StationRouteListActivity target);
+
     void inject(TripProfileActivity target);
 
     void inject(MobileActivity target);
 
+    void inject(RoutesCardFragment target);
+
     void inject(ProfileUserInfoFragment target);
 
     void inject(ProfileRouteInfoFragment target);
+
+    void inject(FabFragment target);
 
     void inject(ProfileScoreInfoFragment target);
 
@@ -147,9 +156,9 @@ public interface BootstrapComponent {
 
     void inject(MainTripFragment target);
 
-    void inject(PassengerCardFragment target);
+    void inject(DriverCardFragment target);
 
-    void inject(MainCardActivity target);
+    void inject(MainActivity target);
 
     void inject(SplashFragment target);
 
@@ -173,9 +182,6 @@ public interface BootstrapComponent {
 
     void inject(RideFlagFragment target);
 
-    void inject(VerifyStepperFragment target);
-
-    void inject(VerifyStepperActivity target);
 
     void inject(InviteFragment target);
 
@@ -211,7 +217,7 @@ public interface BootstrapComponent {
 
     void inject(SmsValidationActivity target);
 
-    void inject(MainActivity target);
+    void inject(MainActivity0 target);
 
     void inject(MainFragment target);
 
