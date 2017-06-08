@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.mibarim.driver.BootstrapApplication;
 import com.mibarim.driver.R;
+import com.mibarim.driver.ui.activities.CreditActivity;
 import com.mibarim.driver.ui.activities.UserInfoDetailActivity;
 
 import butterknife.Bind;
@@ -59,13 +60,19 @@ public class WithdrawMainFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ButterKnife.bind(this, getView());
+        String remain=((CreditActivity)getActivity()).getRemain();
+        withdraw_txt.setHint(remain);
         withdraw_txt.requestFocus();
         withdraw_btn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     String withdrawAmount = withdraw_txt.getText().toString();
-                    ((UserInfoDetailActivity) getActivity()).submitWithdrawRequest(withdrawAmount);
+                    if(withdrawAmount.equals(""))
+                    {
+                        withdrawAmount=((CreditActivity)getActivity()).getRemain();
+                    }
+                    ((CreditActivity) getActivity()).submitWithdrawRequest(withdrawAmount);
                     return true;
                 }
                 return false;

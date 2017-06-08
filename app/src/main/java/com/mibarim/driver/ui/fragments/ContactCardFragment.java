@@ -20,7 +20,6 @@ import com.mibarim.driver.adapters.ContactListRecyclerAdapter;
 import com.mibarim.driver.authenticator.LogoutService;
 import com.mibarim.driver.data.UserData;
 import com.mibarim.driver.models.ContactModel;
-import com.mibarim.driver.ui.activities.MainActivity0;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -83,13 +82,13 @@ public class ContactCardFragment extends Fragment {
             public void onCardViewTap(View view, int position) {
                 //Toaster.showLong(getActivity(), "tap"+position);
                 ContactModel contactModel = ((ContactModel) items.get(position));
-                ((MainActivity0) getActivity()).goToMessaging(contactModel);
+                //((MainActivity0) getActivity()).goToMessaging(contactModel);
             }
 
             @Override
             public void onUserImageClick(View view, int position) {
                 ContactModel contactModel = ((ContactModel) items.get(position));
-                ((MainActivity0) getActivity()).goToContactActivity(contactModel);
+                //((MainActivity0) getActivity()).goToContactActivity(contactModel);
 
             }
 

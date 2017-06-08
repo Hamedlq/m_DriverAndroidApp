@@ -13,7 +13,6 @@ import com.google.android.gms.analytics.Tracker;
 import com.mibarim.driver.BootstrapApplication;
 import com.mibarim.driver.R;
 import com.mibarim.driver.models.UserInfoModel;
-import com.mibarim.driver.ui.activities.MainActivity0;
 
 import butterknife.ButterKnife;
 
@@ -52,9 +51,9 @@ public class UserInfoFragment extends Fragment {
                 "com.mibarim.driver", Context.MODE_PRIVATE);
         String Mobile = prefs.getString("UserMobile", "");*/
         UserInfoModel userInfo = null;
-        if (getActivity() instanceof MainActivity0) {
+        /*if (getActivity() instanceof MainActivity0) {
             userInfo = ((MainActivity0) getActivity()).getUserInfo();
-        }
+        }*/
 
         mTracker.setScreenName("ProfileFragment");
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());

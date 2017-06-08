@@ -266,12 +266,12 @@ public class TripActivity extends BootstrapActivity {
                     serviceProvider.invalidateAuthToken();
                     authToken = serviceProvider.getAuthToken(TripActivity.this);
                 }
-                tripApiResponse = tripService.getTripInfo(authToken,tripId);
+                /*tripApiResponse = tripService.getTripInfo(authToken,tripId);
                 if (tripApiResponse != null) {
                     for (String tripJson : tripApiResponse.Messages) {
                         tripResponse = new Gson().fromJson(tripJson, TripResponse.class);
                     }
-                }
+                }*/
                 return true;
             }
 
@@ -446,13 +446,13 @@ public class TripActivity extends BootstrapActivity {
                 "com.mibarim.driver", Context.MODE_PRIVATE);
         prefs.edit().putLong("TripId", 0).apply();
         stopService();
-        Intent intent=new Intent(this,MainActivity0.class);
-        startActivity(intent);
+        //Intent intent=new Intent(this,MainActivity0.class);
+        //startActivity(intent);
     }
 
     public void gotoMain() {
-        Intent intent=new Intent(this,MainActivity0.class);
-        startActivity(intent);
+        //Intent intent=new Intent(this,MainActivity0.class);
+        //startActivity(intent);
     }
 
 

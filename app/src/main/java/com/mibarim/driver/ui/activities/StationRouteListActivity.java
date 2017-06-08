@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.os.OperationCanceledException;
 import android.support.v7.app.ActionBar;
@@ -51,6 +52,7 @@ import com.mibarim.driver.models.ImageResponse;
 import com.mibarim.driver.models.Plus.PassRouteModel;
 import com.mibarim.driver.models.Plus.PaymentDetailModel;
 import com.mibarim.driver.models.Plus.StationRouteModel;
+import com.mibarim.driver.models.Plus.SubStationModel;
 import com.mibarim.driver.models.Route.BriefRouteModel;
 import com.mibarim.driver.models.Route.RouteResponse;
 import com.mibarim.driver.models.SubmitResult;
@@ -64,6 +66,7 @@ import com.mibarim.driver.ui.HandleApiMessages;
 import com.mibarim.driver.ui.HandleApiMessagesBySnackbar;
 import com.mibarim.driver.ui.fragments.DriverFragments.DriverCardFragment;
 import com.mibarim.driver.ui.fragments.DriverFragments.RoutesCardFragment;
+import com.mibarim.driver.ui.fragments.DriverFragments.StationCardFragment;
 import com.mibarim.driver.util.SafeAsyncTask;
 import com.squareup.otto.Subscribe;
 
@@ -95,6 +98,7 @@ public class StationRouteListActivity extends BootstrapActivity {
     UserData userData;
 
 
+    private static final String SubStationFragment="SubStationFragment";
     private CharSequence title;
     private Toolbar toolbar;
     private String authToken;
@@ -102,6 +106,7 @@ public class StationRouteListActivity extends BootstrapActivity {
     private ApiResponse setRes;
     private View parentLayout;
     private boolean netErrorMsg = false;
+    private StationRouteModel stationRouteModel;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -123,8 +128,8 @@ public class StationRouteListActivity extends BootstrapActivity {
         mTracker.send(new HitBuilders.EventBuilder().setCategory("Activity").setAction("StationRouteListActivity").build());
 
 
-        setContentView(R.layout.main_activity);
-        parentLayout = findViewById(R.id.main_activity_root);
+        setContentView(R.layout.container_activity);
+        parentLayout = findViewById(R.id.container_activity_root);
         // View injection with Butterknife
         ButterKnife.bind(this);
 
@@ -154,7 +159,7 @@ public class StationRouteListActivity extends BootstrapActivity {
     private void initScreen() {
         final FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .add(R.id.main_container, new RoutesCardFragment())
+                .add(R.id.container, new RoutesCardFragment())
                 .commit();
     }
 
@@ -275,8 +280,15 @@ public class StationRouteListActivity extends BootstrapActivity {
     }
 
 
+    public void selectStation(final StationRouteModel selectedItem) {
+        stationRouteModel = selectedItem;
+        final FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .add(R.id.container, new StationCardFragment(),SubStationFragment)
+                .commit();
+    }
+    public void setRoute(final SubStationModel selectedItem) {
 
-    public void setRoute(final StationRouteModel selectedItem) {
         showProgress();
         new SafeAsyncTask<Boolean>() {
             @Override
@@ -285,7 +297,7 @@ public class StationRouteListActivity extends BootstrapActivity {
                     serviceProvider.invalidateAuthToken();
                     authToken = serviceProvider.getAuthToken(StationRouteListActivity.this);
                 }
-                setRes = routeRequestService.setUserRoute(authToken, selectedItem.StRouteId);
+                setRes = routeRequestService.setUserRoute(authToken, getRoute().StRouteId,selectedItem.StationId);
                 return true;
             }
 
@@ -305,7 +317,7 @@ public class StationRouteListActivity extends BootstrapActivity {
                 for (String shareJson : setRes.Messages) {
                     submitResult = gson.fromJson(shareJson, SubmitResult.class);
                 }
-                if(submitResult.IsSubmited){
+                if (submitResult.IsSubmited) {
                     finishIt();
                 }
             }
@@ -316,5 +328,24 @@ public class StationRouteListActivity extends BootstrapActivity {
         final Intent intent = getIntent();
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    public void gotoSuggestStation() {
+        Intent i = new Intent(StationRouteListActivity.this, WebViewActivity.class);
+        i.putExtra("URL", "https://goo.gl/forms/igP3kx2E3ilzGYDf1");
+        startActivity(i);
+    }
+
+    public StationRouteModel getRoute() {
+        return stationRouteModel;
+    }
+
+    public void removeSubStation() {
+        final FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentByTag(SubStationFragment);
+        if (fragment != null) {
+            fragmentManager.beginTransaction().remove(fragment).commit();
+        }
+
     }
 }

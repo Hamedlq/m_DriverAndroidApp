@@ -7,4 +7,5 @@ import java.io.Serializable;
  */
 public class UserInitialModel implements Serializable {
     public boolean IsUserRegistered;
+
 }

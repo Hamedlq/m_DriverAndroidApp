@@ -64,6 +64,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private Marker greenSrcMarker;
     private Marker yellowSrcMarker;
     private Marker redSrcMarker;
+    private Marker stMarker;
+    private Marker driverMarker;
 
     private Marker dstMarker;
     private Marker blueDstMarker;
@@ -186,6 +188,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         drawPath(pathRoute);
         zoomToBoundry();
 
+    }
+
+    public void setStation(String stLat, String stLng, String driverLat, String driverLng) {
+        setMinMaxValues(Double.parseDouble(stLat), Double.parseDouble(stLng));
+        setMinMaxValues(Double.parseDouble(driverLat), Double.parseDouble(driverLng));
+        if (stMarker != null) {
+            stMarker.remove();
+        }
+        stMarker = mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(Double.parseDouble(stLat), Double.parseDouble(stLng)))
+                .icon(BitmapDescriptorFactory
+                        .fromResource(R.mipmap.ic_car_start)));
+        if (driverMarker != null) {
+            driverMarker.remove();
+        }
+        driverMarker = mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(Double.parseDouble(driverLat), Double.parseDouble(driverLng)))
+                .icon(BitmapDescriptorFactory
+                        .fromResource(R.mipmap.ic_red)));
+        zoomToBoundry();
     }
 
     private void drawPath(PathPoint pathRoute){

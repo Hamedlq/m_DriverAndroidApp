@@ -52,8 +52,8 @@ public final class Constants {
          */
 //        public static final String URL_BASE = "http://localhost:50226";
 //        public static final String URL_BASE = "http://mibarim.ir/CoreApi";
-//        public static final String URL_BASE = "http://mibarimapp.com/testapp";
-        public static final String URL_BASE = "http://mibarimapp.com/CoreApi";
+        public static final String URL_BASE = "http://mibarimapp.com/testapp";
+//        public static final String URL_BASE = "http://mibarimapp.com/CoreApi";
 //          public static final String URL_BASE = "http://CoreApi.mibarim.ir/";
 //        public static final String URL_BASE = "http://mibarim.ir/testApp/CoreApi";
 
@@ -63,7 +63,7 @@ public final class Constants {
          */
         public static final String URL_AUTH_FRAG = "/TokenAuthentication";
 
-        public static final String URL_REGISTER_FRAG = "/RegisterMobileUser";
+        public static final String URL_REGISTER_FRAG = "/RegisterMobileDriver";
         public static final String URL_MOBILE_CONFIRM_FRAG = "/ConfirmMobileNo";
         public static final String URL_MOBILE_CONFIRM_SMS = "/ConfirmMobileSms";
         public static final String URL_MOBILE_SEND_SMS = "/SendConfirmMobileSms";
@@ -91,6 +91,7 @@ public final class Constants {
         public static final String URL_GET_ROUTE_INFO = "/GetRouteInfo";
         public static final String URL_SET_USER_ROUTE = "/SetUserRoute";
         public static final String URL_SET_ROUTE_TRIP = "/SetTrip";
+        public static final String URL_DISABLE_TRIP = "/DisableTrip";
         public static final String URL_INSERT_RIDE_REQUEST = "/InsertRideRequest";
         /**
          * UserInfoService
@@ -118,7 +119,7 @@ public final class Constants {
         public static final String URL_SET_CAR_BCK_IMAGE = "/InsertCarBackPic";
         public static final String URL_SET_NATIONAL_CARD_IMAGE = "/InsertNationalCardPic";
         public static final String URL_SET_BANK_CARD_IMAGE = "/InsertBankCardPic";
-        public static final String URL_GET_VERSION = "/GetAppVersion";
+        public static final String URL_GET_VERSION = "/GetDriverAppVersion";
         public static final String URL_GET_SCORE = "/GetUserScores";
         public static final String URL_GET_SCORE_CONTACT = "/GetUserScoresByContact";
         public static final String URL_GET_SCORE_Route = "/GetUserScoresByRoute";
@@ -141,7 +142,10 @@ public final class Constants {
         public static final String URL_GET_TRIP_ID = "/GetUserTripId";
         public static final String URL_USER_TRIP_LOCATION = "/SendUserTripLocation";
         public static final String URL_GET_TRIP_INFO = "/GetTripInfo";
+        //public static final String URL_GET_DRIVE_ROUTE_INFO = "/GetDriveRouteInfo";
         public static final String URL_END_TRIP = "/EndTripRequest";
+        public static final String URL_SET_TRIP_LOCATION = "/SetTripLocation";
+        public static final String URL_GET_TRIP = "/GetUserTrips";
 
         /**
          * PARAMS for auth
@@ -176,6 +180,7 @@ public final class Constants {
         public static final String GET_STATION_ROUTE_URL = "/GetStationRoutes";
         public static final String SIMILAR_SUGGEST_ROUTE_URL = "/GetSimilarSuggestRoute";
         public static final String TRIP_PROFILE_URL = "/GetTripProfile";
+        public static final String GET_STATION_URL = "/GetStations";
 
         public static final String URL_GET_EVENT = "/GetAllEvents";
         public static final String URL_GET_CITY_LOCATION = "/GetCityLocations";
@@ -241,6 +246,11 @@ public final class Constants {
         public static final int TIMER_NOTIFICATION_ID = 1000; // Why 1000? Why not? :)
     }
 
+    public static final class GlobalConstants {
+        public static final String CREDIT_REMAIN = "CREDIT_REMAIN";
+        public static final String DRIVER_TRIP_MODEL = "DriverTripModel";
+
+    }
 }
 
 

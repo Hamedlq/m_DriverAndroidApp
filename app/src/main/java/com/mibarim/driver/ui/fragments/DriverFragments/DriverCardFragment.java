@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.brnunes.swipeablerecyclerview.SwipeableRecyclerViewTouchListener;
@@ -58,7 +59,7 @@ public class DriverCardFragment extends Fragment
     private View mRecycler;
     private RecyclerView mRecyclerView;
     SwipeRefreshLayout mSwipeRefreshLayout;
-    private TextView mEmptyView;
+    private ImageView mEmptyView;
     //private ProgressBar mProgressView;
     private DriverRouteRecyclerAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -86,10 +87,12 @@ public class DriverCardFragment extends Fragment
             @Override
             public void onRefresh() {
                 refresh();
+                ((MainActivity)getActivity()).getUserScore();
             }
         });
 
-        mEmptyView = (TextView) mRecycler.findViewById(android.R.id.empty);
+        mEmptyView = (ImageView) mRecycler.findViewById(android.R.id.empty);
+        mEmptyView.setAlpha((float)0.5);
         mEmptyView.setVisibility(View.GONE);
         /*mProgressView = (ProgressBar) mRecycler.findViewById(R.id.pb_loading);*/
 
@@ -121,6 +124,28 @@ public class DriverCardFragment extends Fragment
                 if (getActivity() instanceof MainActivity) {
                     DriverRouteModel selectedItem = ((DriverRouteModel) items.get(position));
                     ((MainActivity) getActivity()).deleteRoute(selectedItem.DriverRouteId);
+                }
+            }
+            @Override
+            public void onSrcLinkClick(View view, int position) {
+                if(getActivity() instanceof MainActivity){
+                    DriverRouteModel selectedItem = ((DriverRouteModel) items.get(position));
+                    ((MainActivity) getActivity()).gotoWebView(selectedItem.SrcLink);
+                }
+            }
+            @Override
+            public void onDstLinkClick(View view, int position) {
+                if(getActivity() instanceof MainActivity){
+                    DriverRouteModel selectedItem = ((DriverRouteModel) items.get(position));
+                    ((MainActivity) getActivity()).gotoWebView(selectedItem.DstLink);
+                }
+            }
+
+            @Override
+            public void onBtnClick(View view, int position) {
+                if(getActivity() instanceof MainActivity){
+                    DriverRouteModel selectedItem = ((DriverRouteModel) items.get(position));
+                    ((MainActivity) getActivity()).gotoRidingActivity(selectedItem);
                 }
             }
 
@@ -256,6 +281,10 @@ public class DriverCardFragment extends Fragment
 
         public void onSwitchCard(View view, int position);
         public void onDeleteCard(View view, int position);
+        public void onSrcLinkClick(View view, int position);
+        public void onDstLinkClick(View view, int position);
+        public void onBtnClick(View view, int position);
+
 
     }
 

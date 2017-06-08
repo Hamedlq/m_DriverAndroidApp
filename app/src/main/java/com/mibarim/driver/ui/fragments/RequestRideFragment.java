@@ -20,7 +20,6 @@ import com.mibarim.driver.BootstrapApplication;
 import com.mibarim.driver.R;
 import com.mibarim.driver.models.LocalRoute;
 import com.mibarim.driver.models.enums.LocalRouteTypes;
-import com.mibarim.driver.ui.activities.MainActivity0;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -81,7 +80,7 @@ public class RequestRideFragment extends Fragment {
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     layout.startAnimation(slideUp);
-                    ((MainActivity0) getActivity()).gotoRideRequestActivity();
+                    //((MainActivity0) getActivity()).gotoRideRequestActivity();
                     return true;
                 }
                 return false;

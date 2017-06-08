@@ -18,15 +18,31 @@ public interface GetTripService {
                                  @Field("Lng") String longitude
     );
 
-    @POST(Constants.Http.URL_GET_TRIP_INFO)
+    /*@POST(Constants.Http.URL_GET_DRIVE_ROUTE_INFO)
     @FormUrlEncoded
     ApiResponse GetTripInfo(@Header(Constants.Http.PARAM_AUTHORIZATION) String authToken,
-                             @Field("TripId") String tripId
-    );
+                             @Field("DriverRouteId") String driverRouteId
+    );*/
 
     @POST(Constants.Http.URL_END_TRIP)
     @FormUrlEncoded
     ApiResponse EndTrip(@Header(Constants.Http.PARAM_AUTHORIZATION) String authToken,
-                            @Field("TripId") String tripId
+                        @Field("TripId") String tripId
     );
+
+    @POST(Constants.Http.URL_SET_TRIP_LOCATION)
+    @FormUrlEncoded
+    ApiResponse SetTripPoint(@Header(Constants.Http.PARAM_AUTHORIZATION) String authToken,
+                             @Field("DriverLat") String lat,
+                             @Field("DriverLng") String lng,
+                             @Field("TripId") long tripId,
+                             @Field("TripState") int tripState
+    );
+
+    @POST(Constants.Http.URL_GET_TRIP)
+    @FormUrlEncoded
+    ApiResponse GetUserTrip(@Header(Constants.Http.PARAM_AUTHORIZATION) String authToken,
+                            @Field("Id") String Id
+    );
+
 }

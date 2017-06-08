@@ -19,7 +19,6 @@ import com.mibarim.driver.models.ApiResponse;
 import com.mibarim.driver.models.ContactModel;
 import com.mibarim.driver.ui.ItemListFragment;
 import com.mibarim.driver.ui.ThrowableLoader;
-import com.mibarim.driver.ui.activities.MainActivity0;
 import com.mibarim.driver.util.SingleTypeAdapter;
 
 import java.util.ArrayList;
@@ -107,7 +106,7 @@ public class ContactListFragment extends ItemListFragment<ContactModel> {
 
     public void onListItemClick(final ListView l, final View v, final int position, final long id) {
         final ContactModel contactModel = ((ContactModel) l.getItemAtPosition(position));
-        ((MainActivity0)getActivity()).goToContactActivity(contactModel);
+        //((MainActivity0)getActivity()).goToContactActivity(contactModel);
 
     }
 

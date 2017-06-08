@@ -238,15 +238,20 @@ public class RouteRequestService {
         return res;
     }
 
-    public ApiResponse setUserRoute(String authToken, long stRouteId) {
+    public ApiResponse setUserRoute(String authToken, long stRouteId, long stationId) {
         ApiResponse res = getService().setUserRoute("Bearer " + authToken,
-                stRouteId);
+                stRouteId,stationId);
         return res;
     }
 
     public ApiResponse setRouteTrip(String authToken, long driverRouteId, int carSeats, int hour, int min) {
         ApiResponse res = getService().setRouteTrip("Bearer " + authToken,
                 driverRouteId,carSeats,hour,min);
+        return res;
+    }
+    public ApiResponse disableTrip(String authToken, long driverRouteId) {
+        ApiResponse res = getService().disableTrip("Bearer " + authToken,
+                driverRouteId);
         return res;
     }
 }

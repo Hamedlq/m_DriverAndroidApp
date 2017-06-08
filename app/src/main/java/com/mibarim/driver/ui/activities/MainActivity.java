@@ -3,7 +3,9 @@
 package com.mibarim.driver.ui.activities;
 
 
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -32,6 +34,7 @@ import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.google.android.gms.analytics.HitBuilders;
@@ -40,11 +43,13 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
+import com.google.gson.Gson;
 import com.mibarim.driver.BootstrapApplication;
 import com.mibarim.driver.BootstrapServiceProvider;
 import com.mibarim.driver.R;
 import com.mibarim.driver.authenticator.LogoutService;
 import com.mibarim.driver.authenticator.TokenRefreshActivity;
+import com.mibarim.driver.core.Constants;
 import com.mibarim.driver.core.ImageUtils;
 import com.mibarim.driver.data.UserData;
 import com.mibarim.driver.events.NetworkErrorEvent;
@@ -53,14 +58,20 @@ import com.mibarim.driver.events.UnAuthorizedErrorEvent;
 import com.mibarim.driver.models.ApiResponse;
 import com.mibarim.driver.models.ImageResponse;
 import com.mibarim.driver.models.Plus.DriverRouteModel;
+import com.mibarim.driver.models.Plus.DriverTripModel;
 import com.mibarim.driver.models.Plus.PassRouteModel;
 import com.mibarim.driver.models.Plus.PaymentDetailModel;
+import com.mibarim.driver.models.Plus.TripTimeModel;
 import com.mibarim.driver.models.Route.BriefRouteModel;
 import com.mibarim.driver.models.Route.RouteResponse;
+import com.mibarim.driver.models.ScoreModel;
 import com.mibarim.driver.models.UserInfoModel;
+import com.mibarim.driver.models.enums.TripStates;
+import com.mibarim.driver.receiver.NotificationReceiver;
 import com.mibarim.driver.services.AuthenticateService;
 import com.mibarim.driver.services.RouteRequestService;
 import com.mibarim.driver.services.RouteResponseService;
+import com.mibarim.driver.services.TripService;
 import com.mibarim.driver.services.UserInfoService;
 import com.mibarim.driver.ui.BootstrapActivity;
 import com.mibarim.driver.ui.HandleApiMessages;
@@ -74,6 +85,7 @@ import java.util.Calendar;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 //import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
@@ -95,15 +107,17 @@ public class MainActivity extends BootstrapActivity {
     @Inject
     RouteResponseService routeResponseService;
     @Inject
+    TripService tripService;
+    @Inject
     UserInfoService userInfoService;
     @Inject
     UserData userData;
-
 
     private CharSequence title;
     private Toolbar toolbar;
     private ApiResponse deleteRes;
     private ApiResponse tripRes;
+    private ApiResponse userTrip;
     private String authToken;
     private ApiResponse response;
     private int appVersion = 0;
@@ -118,6 +132,7 @@ public class MainActivity extends BootstrapActivity {
     String googletoken = "";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private int FINISH_USER_INFO = 5649;
+    private int CREDIT_RETURN = 9999;
     private int ROUTESELECTED = 2456;
     private View parentLayout;
     private boolean netErrorMsg = false;
@@ -125,7 +140,10 @@ public class MainActivity extends BootstrapActivity {
     private UserInfoModel userInfoModel;
     DriverRouteModel selectedRouteTrip;
     int selectedRouteHour;
+    int seatPickerVal;
     int selectedRouteMin;
+    private ScoreModel scoreModel;
+    TextView user_credit;
 
     NumberPicker seat_picker;
 
@@ -160,9 +178,9 @@ public class MainActivity extends BootstrapActivity {
             getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
-
+        user_credit = (TextView) toolbar.findViewById(R.id.user_credit);
         checkAuth();
         //initScreen();
     }
@@ -170,6 +188,8 @@ public class MainActivity extends BootstrapActivity {
     private void initScreen() {
         checkVersion();
         getUserInfoFromServer();
+        getUserScore();
+        getTripState();
         final FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .add(R.id.main_container, new DriverCardFragment(), DRIVE_FRAGMENT_TAG)
@@ -177,6 +197,22 @@ public class MainActivity extends BootstrapActivity {
         fragmentManager.beginTransaction()
                 .add(R.id.main_container, new FabFragment())
                 .commit();
+        user_credit.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    gotoCreditActivity();
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getTripState();
     }
 
     private void checkAuth() {
@@ -329,6 +365,9 @@ public class MainActivity extends BootstrapActivity {
         if (requestCode == ROUTESELECTED && resultCode == RESULT_OK) {
             refreshList();
         }
+        if (requestCode == CREDIT_RETURN && resultCode == RESULT_OK) {
+            getUserScore();
+        }
     }
 
     @Override
@@ -404,8 +443,11 @@ public class MainActivity extends BootstrapActivity {
 
             @Override
             public Boolean call() throws Exception {
-                String token = serviceProvider.getAuthToken(MainActivity.this);
-                imageResponse = userInfoService.GetImageById(token, imageId);
+                if (authToken == null) {
+                    serviceProvider.invalidateAuthToken();
+                    authToken = serviceProvider.getAuthToken(MainActivity.this);
+                }
+                imageResponse = userInfoService.GetImageById(authToken, imageId);
                 if (imageResponse != null && imageResponse.Base64ImageFile != null) {
                     return true;
                 }
@@ -506,49 +548,63 @@ public class MainActivity extends BootstrapActivity {
         }.execute();
     }
 
-
-    public void BookSeat(final PassRouteModel selectedItem) {
-        showProgress();
+    private void getTripState() {
         new SafeAsyncTask<Boolean>() {
             @Override
             public Boolean call() throws Exception {
                 if (authToken == null) {
+                    serviceProvider.invalidateAuthToken();
                     authToken = serviceProvider.getAuthToken(MainActivity.this);
                 }
-                paymentDetailModel = routeRequestService.bookRequest(authToken, selectedItem.TripId);
+                userTrip = tripService.getUserTrip(authToken);
                 return true;
             }
 
             @Override
             protected void onException(final Exception e) throws RuntimeException {
                 super.onException(e);
-                if (e instanceof android.os.OperationCanceledException) {
-                    // User cancelled the authentication process (back button, etc).
-                    // Since auth could not take place, lets finish this activity.
-//                    finish();
-                }
-                hideProgress();
             }
 
             @Override
-            protected void onSuccess(final Boolean succees) throws Exception {
-                hideProgress();
-                if (succees) {
-                    gotoBankPayPage(paymentDetailModel);
+            protected void onSuccess(final Boolean state) throws Exception {
+                super.onSuccess(state);
+                Gson gson = new Gson();
+                for (String tripTimeModel : userTrip.Messages) {
+                    DriverTripModel dm = gson.fromJson(tripTimeModel, DriverTripModel.class);
+                    if(dm.TripState==TripStates.InTripTime.toInt() ||dm.TripState== TripStates.InRiding.toInt()
+                            ||dm.TripState== TripStates.InPreTripTime.toInt()){
+                        gotoRidingActivity(dm);
+                    }else if(dm.TripState== TripStates.InRanking.toInt()) {
+                        //gotoRankingActivity
+                    }
                 }
-                new HandleApiMessages(MainActivity.this, response).showMessages();
-                //finishIt();
             }
         }.execute();
+
     }
 
-    private void gotoBankPayPage(PaymentDetailModel paymentDetailModel) {
-        if (paymentDetailModel.State == 100) {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(paymentDetailModel.BankLink));
-            startActivity(browserIntent);
-        } else {
-            Snackbar.make(parentLayout, R.string.payment_error, Snackbar.LENGTH_LONG).show();
-        }
+    public void gotoRidingActivity(DriverTripModel dm) {
+        Intent intent = new Intent(this, RidingActivity.class);
+        intent.putExtra(Constants.GlobalConstants.DRIVER_TRIP_MODEL, dm);
+        intent.putExtra(Constants.Auth.AUTH_TOKEN, authToken);
+        this.startActivity(intent);
+    }
+
+    public void gotoRidingActivity(DriverRouteModel dr) {
+        DriverTripModel dm=new DriverTripModel();
+        dm.TripState=dr.TripState;
+        dm.StAddress=dr.SrcAddress;
+        dm.DriverRouteId=dr.DriverRouteId;
+        dm.TripId=dr.TripId;
+        dm.StLink=dr.SrcLink;
+        dm.StLat=dr.SrcLat;
+        dm.StLng=dr.SrcLng;
+        dm.FilledSeats=dr.FilledSeats;
+        dm.TripState=dr.TripState;
+        Intent intent = new Intent(this, RidingActivity.class);
+        intent.putExtra(Constants.GlobalConstants.DRIVER_TRIP_MODEL, dm);
+        intent.putExtra(Constants.Auth.AUTH_TOKEN, authToken);
+        this.startActivity(intent);
     }
 
     public int getVersion() {
@@ -603,7 +659,7 @@ public class MainActivity extends BootstrapActivity {
         public void onClick(DialogInterface dialog, int which) {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://mibarimapp.com/androidapp/download"));
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://mibarimapp.com/androidapp/downloaddriver"));
                     startActivity(browserIntent);
                     break;
                 case DialogInterface.BUTTON_NEGATIVE:
@@ -648,13 +704,38 @@ public class MainActivity extends BootstrapActivity {
     }
 
     public void ToggleTrip(DriverRouteModel selectedItem) {
+        selectedRouteTrip = selectedItem;
         if (selectedItem.HasTrip) {
-            Snackbar.make(parentLayout, R.string.NoCancel, Snackbar.LENGTH_LONG).show();
+            String msg = getString(R.string.disable_confirm);
+            showConfirmDisableDialog(msg);
+            //Snackbar.make(parentLayout, R.string.NoCancel, Snackbar.LENGTH_LONG).show();
         } else {
-            selectedRouteTrip = selectedItem;
             showSetTime();
         }
     }
+
+    private void showConfirmDisableDialog(String msg) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(msg).setPositiveButton("بله", ConfirmDisableDialogClickListener)
+                .setNegativeButton("خیر", ConfirmDisableDialogClickListener).show();
+    }
+
+    DialogInterface.OnClickListener ConfirmDisableDialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    seatPickerVal=0;
+                    //setTripTime();
+                    disableTrip();
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
+                    dialog.dismiss();
+                    refreshList();
+                    break;
+            }
+        }
+    };
 
     private void showConfirmDialog(String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -717,12 +798,12 @@ public class MainActivity extends BootstrapActivity {
 
 
         }, hour, minute, true);
-        mTimePicker.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        /*mTimePicker.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
                 refreshList();
             }
-        });
+        });*/
 
         mTimePicker.setTitle("زمان دقیق حضور در مبدا");
         mTimePicker.setButton(DialogInterface.BUTTON_POSITIVE, "تایید زمان", mTimePicker);
@@ -790,6 +871,7 @@ public class MainActivity extends BootstrapActivity {
         public void onClick(DialogInterface dialog, int which) {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:
+                    seatPickerVal=seat_picker.getValue();
                     String msg = getString(R.string.confirm_Msg);
                     showConfirmDialog(msg);
                     break;
@@ -802,6 +884,7 @@ public class MainActivity extends BootstrapActivity {
     };
 
     private void setTripTime() {
+        seatPickerVal=seat_picker.getValue();
         new SafeAsyncTask<Boolean>() {
             @Override
             public Boolean call() throws Exception {
@@ -810,7 +893,7 @@ public class MainActivity extends BootstrapActivity {
                     authToken = serviceProvider.getAuthToken(MainActivity.this);
                 }
                 tripRes = routeRequestService.setRouteTrip(authToken, selectedRouteTrip.DriverRouteId,
-                        seat_picker.getValue(), selectedRouteHour, selectedRouteMin);
+                        seatPickerVal, selectedRouteHour, selectedRouteMin);
                 return true;
             }
 
@@ -824,7 +907,110 @@ public class MainActivity extends BootstrapActivity {
                 super.onSuccess(state);
                 new HandleApiMessagesBySnackbar(parentLayout, tripRes).showMessages();
                 refreshList();
+                Gson gson = new Gson();
+                for (String tripTimeModel : tripRes.Messages) {
+                    TripTimeModel tt = gson.fromJson(tripTimeModel, TripTimeModel.class);
+                    if(tt.IsSubmited){
+                        setNotificationAlamManager(tt,(int)selectedRouteTrip.DriverRouteId);
+                    }
+                }
             }
         }.execute();
+    }
+
+    private void setNotificationAlamManager(TripTimeModel tt, int driverRouteId) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.add(Calendar.HOUR_OF_DAY,  tt.RemainHour);
+        calendar.add(Calendar.MINUTE, tt.RemainMin);
+        Intent intent = new Intent(MainActivity.this, NotificationReceiver.class);
+        intent.putExtra("NotifTitle", getString(R.string.start_trip));
+        intent.putExtra("NotifText", getString(R.string.open_app));
+        intent.putExtra("DriverRouteId", driverRouteId);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, driverRouteId
+                , intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(android.app.AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+    }
+
+    private void disableNotificationAlamManager(int driverRouteId) {
+        Intent intent = new Intent(MainActivity.this, NotificationReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, driverRouteId
+                , intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(pendingIntent);
+    }
+
+    private void disableTrip() {
+        new SafeAsyncTask<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                if (authToken == null) {
+                    serviceProvider.invalidateAuthToken();
+                    authToken = serviceProvider.getAuthToken(MainActivity.this);
+                }
+                tripRes = routeRequestService.disableTrip(authToken, selectedRouteTrip.DriverRouteId);
+                return true;
+            }
+
+            @Override
+            protected void onException(final Exception e) throws RuntimeException {
+                super.onException(e);
+            }
+
+            @Override
+            protected void onSuccess(final Boolean state) throws Exception {
+                super.onSuccess(state);
+                new HandleApiMessagesBySnackbar(parentLayout, tripRes).showMessages();
+                if ((tripRes.Errors == null || tripRes.Errors.size() == 0) && tripRes.Status.equals("OK")) {
+                    disableNotificationAlamManager((int)selectedRouteTrip.DriverRouteId);
+                }
+                refreshList();
+            }
+        }.execute();
+    }
+
+    private void gotoCreditActivity() {
+        Intent intent = new Intent(this, CreditActivity.class);
+        intent.putExtra(Constants.GlobalConstants.CREDIT_REMAIN, scoreModel.CreditMoney);
+        intent.putExtra(Constants.Auth.AUTH_TOKEN, authToken);
+        this.startActivityForResult(intent, CREDIT_RETURN);
+
+    }
+
+    public void getUserScore() {
+        new SafeAsyncTask<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                if (authToken == null) {
+                    serviceProvider.invalidateAuthToken();
+                    authToken = serviceProvider.getAuthToken(MainActivity.this);
+                }
+                scoreModel = userInfoService.getUserScores(authToken);
+                return true;
+            }
+
+            @Override
+            protected void onException(final Exception e) throws RuntimeException {
+                super.onException(e);
+            }
+
+            @Override
+            protected void onSuccess(final Boolean state) throws Exception {
+                super.onSuccess(state);
+                setUserScore();
+            }
+        }.execute();
+    }
+
+    private void setUserScore() {
+        user_credit.setText(scoreModel.CreditMoney);
+    }
+
+    public void gotoWebView(String link) {
+        Intent i = new Intent(MainActivity.this, WebViewActivity.class);
+        i.putExtra("URL", link);
+        startActivity(i);
+
     }
 }

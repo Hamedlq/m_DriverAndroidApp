@@ -17,7 +17,6 @@ import com.mibarim.driver.BootstrapApplication;
 import com.mibarim.driver.R;
 import com.mibarim.driver.models.ScoreModel;
 import com.mibarim.driver.models.UserInfoModel;
-import com.mibarim.driver.ui.activities.MainActivity0;
 
 import butterknife.ButterKnife;
 
@@ -100,9 +99,9 @@ public class MainProfileFragment extends Fragment {
         ButterKnife.bind(this, getView());
 
         UserInfoModel userInfo = null;
-        if (getActivity() instanceof MainActivity0) {
+        /*if (getActivity() instanceof MainActivity0) {
             userInfo = ((MainActivity0) getActivity()).getUserInfo();
-        }
+        }*/
         if (userInfo != null && userInfo.Gender != null) {
             //user_image.setImageBitmap(((MainActivity0) getActivity()).getImageById(userInfo.UserImageId,R.mipmap.ic_camera));
         }

@@ -42,7 +42,7 @@
     <string name="no_news">No News</string>
     <string name="avatar">Avatar</string>
     <string name="choose">Choose</string>
-    <string name="version">0.1</string>
+    <string name="version">0.2</string>
     <string name="testVersion">نسخه آزمایشی</string>
 
     <!-- AuthenticatorActivity -->
@@ -251,7 +251,7 @@
     <string name="request_taxi">درخواست تاکسی</string>
     <string name="request_passenger">درخواست مسافر</string>
     <string name="discount_code">کد تخفیف</string>
-    <string name="withdraw_request">مبلغ مورد درخواست(ریال)</string>
+    <string name="withdraw_request">مبلغ مورد درخواست(تومان)</string>
     <string name="do_finish_time">ثبت زمان ها</string>
     <string name="leave_time">زمان حرکت از مبدا</string>
     <string name="do_source">ثبت مبدا</string>
@@ -365,7 +365,7 @@
     <string name="ms_next">بعدی</string>
     <string name="morning">صبح</string>
     <string name="morning_sher">هر روز صبح چه ساعتی از خانه شروع به حرکت می کنید؟</string>
-    <string name="mobile_hint">شماره موبایل خود را برای دریافت پیامک احراز هویت وارد کنید. شماره شما توسط کاربران دیگر رویت نمی‌شود.</string>
+    <string name="mobile_hint">شماره موبایل خود را برای دریافت پیامک احراز هویت وارد کنید.</string>
     <string name="help_title">تماس با ما</string>
     <string name="q_2">آدرس الکترونیکی</string>
     <string name="faq_4">سوالات متداول</string>
@@ -381,10 +381,20 @@
     <string name="passenger">مسافر</string>
     <string name="trip_info">اطلاعات سفر</string>
     <string name="text_station">ایستگاه مبدا</string>
-    <string name="book_trip">رزرو صندلی</string>
+    <string name="station_distance">فاصله از ایستگاه</string>
+    <string name="show_trip">مشاهده سفر</string>
     <string name="route_list">لیست مسیرها</string>
     <string name="confirm_Msg">با تعیین دقیق زمان ملاقات، متعهد می‌شوید که در این زمان در مبدا مشخص شده حضور داشته باشید و به مدت ۵ دقیقه منتظر مسافرانی که صندلی رزرو کرده‌اند بمانید.</string>
     <string name="driver_time">زمان دقیق حضور در مبدا</string>
     <string name="empty_seats">تعداد صندلی خالی</string>
     <string name="NoCancel">امکان غیرفعال کردن سفر وجود ندارد. لطفا با پشتیبانی تماس بگیرید.</string>
+    <string name="disable_confirm">مسیر غیرفعال شود؟</string>
+    <string name="suggest_station">+ پیشنهاد مسیر و ایستگاه جدید</string>
+    <string name="start_trip">آغاز سفر</string>
+    <string name="open_app">لطفا برنامه را باز کنید</string>
+    <string name="waiting_state">منتظر مسافران هستم</string>
+    <string name="riding_passenger">سوار کردن مسافران</string>
+    <string name="meter">متر</string>
+    <string name="set_station">انتخاب ایستگاه مبدا</string>
+    <string name="no_station">ایستگاهی ثبت نشده است</string>
 </resources>

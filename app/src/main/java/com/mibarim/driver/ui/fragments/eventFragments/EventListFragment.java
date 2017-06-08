@@ -20,7 +20,6 @@ import com.mibarim.driver.services.EventService;
 import com.mibarim.driver.ui.HandleApiMessages;
 import com.mibarim.driver.ui.ItemListFragment;
 import com.mibarim.driver.ui.ThrowableLoader;
-import com.mibarim.driver.ui.activities.MainActivity0;
 import com.mibarim.driver.util.SingleTypeAdapter;
 
 import java.util.ArrayList;
@@ -114,7 +113,7 @@ public class EventListFragment extends ItemListFragment<EventResponse> {
 //        intent.putExtra("EventResponse", latest.get(position - 1));
 //        ((AddMapActivity)getActivity()).selectEvent(eventResponse);
 //        ((StationRouteListActivity)getActivity()).startActivityForResult(intent, RELOAD_REQUEST);
-        ((MainActivity0)getActivity()).gotoEventActivity(eventResponse);
+        //((MainActivity0)getActivity()).gotoEventActivity(eventResponse);
     }
 
     @Override

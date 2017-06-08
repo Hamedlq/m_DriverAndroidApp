@@ -25,17 +25,27 @@ public class TripService {
     }
 
     public ApiResponse sendUserLocation(String mobile, String latitude, String longitude) {
-        ApiResponse res=getService().SendUserLocation(mobile, latitude, longitude);
+        ApiResponse res = getService().SendUserLocation(mobile, latitude, longitude);
         return res;
     }
 
-    public ApiResponse getTripInfo(String authToken, Long tripId) {
-        ApiResponse res=getService().GetTripInfo("Bearer " + authToken, String.valueOf(tripId));
+    /*public ApiResponse getTripInfo(String authToken, Long driverRouteId) {
+        ApiResponse res=getService().GetTripInfo("Bearer " + authToken, String.valueOf(driverRouteId));
         return res;
-    }
+    }*/
 
     public ApiResponse endTrip(String authToken, long tripId) {
-        ApiResponse res=getService().EndTrip("Bearer " + authToken, String.valueOf(tripId));
+        ApiResponse res = getService().EndTrip("Bearer " + authToken, String.valueOf(tripId));
+        return res;
+    }
+
+    public ApiResponse setTripPoint(String authToken, String lat, String lng, long tripId, int tripState) {
+        ApiResponse res = getService().SetTripPoint("Bearer " + authToken, lat, lng, tripId, tripState);
+        return res;
+    }
+
+    public ApiResponse getUserTrip(String authToken) {
+        ApiResponse res = getService().GetUserTrip("Bearer " + authToken, "7");
         return res;
     }
 }

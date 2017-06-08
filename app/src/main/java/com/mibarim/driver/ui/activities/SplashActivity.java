@@ -1,5 +1,6 @@
 package com.mibarim.driver.ui.activities;
 
+import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerFuture;
@@ -7,9 +8,11 @@ import android.accounts.OperationCanceledException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,6 +26,7 @@ import com.mibarim.driver.BootstrapServiceProvider;
 import com.mibarim.driver.R;
 import com.crashlytics.android.Crashlytics;
 import com.mibarim.driver.authenticator.ActionBarAccountAuthenticatorActivity;
+import com.mibarim.driver.authenticator.LogoutService;
 import com.mibarim.driver.core.Constants;
 import com.mibarim.driver.events.NetworkErrorEvent;
 import com.mibarim.driver.events.UnAuthorizedErrorEvent;
@@ -52,13 +56,16 @@ import static com.mibarim.driver.core.Constants.Auth.BOOTSTRAP_ACCOUNT_TYPE;
  */
 public class SplashActivity extends ActionBarAccountAuthenticatorActivity {
 
-    @Inject protected Bus bus;
+    @Inject
+    protected Bus bus;
     @Inject
     BootstrapServiceProvider serviceProvider;
     @Inject
     AuthenticateService authenticateService;
     @Inject
     UserInfoService userInfoService;
+    @Inject
+    LogoutService logoutService;
 
     @Bind(R.id.retry_btn)
     protected TextView retry_btn;
@@ -67,7 +74,7 @@ public class SplashActivity extends ActionBarAccountAuthenticatorActivity {
 
     public static final String PARAM_GRANT_TYPE = "password";
     public static final String PARAM_REPONSE_TYPE = "token";
-
+    private static final int USER_REQUEST_GET_ACCOUNTS = 220;
 
     /**
      * Duration of wait
@@ -159,14 +166,14 @@ public class SplashActivity extends ActionBarAccountAuthenticatorActivity {
     }
 
 
-    public void nextStep(){
+    public void nextStep() {
         SharedPreferences prefs = this.getSharedPreferences(
                 "com.mibarim.driver", Context.MODE_PRIVATE);
         if (prefs.getInt("FirstLaunch", 0) != 1) {
             gotoMainActivity();
             //finishIt();
             return;
-        }else{
+        } else {
             checkAuth();
         }
     }
@@ -208,7 +215,6 @@ public class SplashActivity extends ActionBarAccountAuthenticatorActivity {
                 super.onSuccess(hasAuthenticated);
                 //userHasAuthenticated = true;
                 if (hasAuthenticated) {
-
                     getInitialInfoFromServer();
                 } else {
                     gotoMainActivity();
@@ -271,6 +277,11 @@ public class SplashActivity extends ActionBarAccountAuthenticatorActivity {
                 authToken = accountManagerFuture.getResult().getString(KEY_AUTHTOKEN);
                 accountManager.invalidateAuthToken(Constants.Auth.BOOTSTRAP_ACCOUNT_TYPE, authToken);
                 mobile = accountManagerFuture.getResult().getString(KEY_ACCOUNT_NAME);
+                if (ActivityCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(SplashActivity.this,
+                            new String[]{Manifest.permission.GET_ACCOUNTS},
+                            USER_REQUEST_GET_ACCOUNTS);
+                }
                 Account[] account = accountManager.getAccountsByType(BOOTSTRAP_ACCOUNT_TYPE);
                 if (account[0] != null) {
                     theAccount = account[0];
@@ -312,6 +323,12 @@ public class SplashActivity extends ActionBarAccountAuthenticatorActivity {
         authenticationTask.execute();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,int[] grantResults){
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        reLogin();
+    }
+
     private void retry() {
         Snackbar.make(findViewById(R.id.splash_activity_root), R.string.network_error, Snackbar.LENGTH_LONG).show();
         //Toaster.showLong(SplashActivity.this, getString(R.string.network_error), R.drawable.toast_error);
@@ -325,6 +342,7 @@ public class SplashActivity extends ActionBarAccountAuthenticatorActivity {
             finishLogin();
         } else {
             Snackbar.make(findViewById(R.id.splash_activity_root), loginResponse.error, Snackbar.LENGTH_LONG).show();
+            logout();
             //Toaster.showLong(SplashActivity.this, loginResponse.error, R.drawable.toast_error);
         }
     }
@@ -373,5 +391,15 @@ public class SplashActivity extends ActionBarAccountAuthenticatorActivity {
         Intent intent = getIntent();
         setResult(RESULT_OK,intent);
         finish();
+    }
+
+    private void logout() {
+        logoutService.logout(new Runnable() {
+            @Override
+            public void run() {
+                gotoMainActivity();
+            }
+        });
+
     }
 }

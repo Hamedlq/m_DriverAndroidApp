@@ -4,9 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/suggest_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/primary_light"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:padding="15dp"
+        android:text="@string/suggest_station"
+        android:textSize="15sp" />
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
+        android:layout_below="@+id/suggest_btn"
         android:layout_height="wrap_content">
 
         <!-- A RecyclerView with some commonly used attributes -->
@@ -20,7 +33,7 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <!--<TextView
+    <TextView
         android:id="@android:id/empty"
         style="@style/ListSubtitleText"
         android:layout_width="match_parent"
@@ -28,16 +41,16 @@
         android:gravity="center"
         android:text="@string/no_trip"
         android:textColor="@color/primary_dark"
-        android:visibility="gone" />-->
-
-    <ImageView
-        android:id="@android:id/empty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="50dp"
-        android:src="@drawable/select_route" />
+        android:visibility="gone" />
+    <!--
+        <ImageView
+            android:id="@android:id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="50dp"
+            android:src="@drawable/select_route" />-->
 
 </RelativeLayout>

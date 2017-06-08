@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 
 import com.mibarim.driver.R;
 import com.mibarim.driver.models.ContactModel;
-import com.mibarim.driver.ui.activities.MainActivity0;
 import com.mibarim.driver.util.SingleTypeAdapter;
 
 import java.text.SimpleDateFormat;
@@ -68,7 +67,7 @@ public class ContactListAdapter extends SingleTypeAdapter<ContactModel> {
             Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
             bootstrapImageView(0).setImageBitmap(decodedByte);
         }*/
-        ((MainActivity0) activity).getContactImageFromServer(bootstrapImageView(0), contactModel.UserImageId);
+        //((MainActivity0) activity).getContactImageFromServer(bootstrapImageView(0), contactModel.UserImageId);
         setText(1, contactModel.Name +" "+contactModel.Family);
         setText(2, contactModel.LastMsg);
         setText(3, contactModel.LastMsgTime);

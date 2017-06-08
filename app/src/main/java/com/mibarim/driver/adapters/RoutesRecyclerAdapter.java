@@ -170,7 +170,7 @@ public class RoutesRecyclerAdapter extends RecyclerView.Adapter<RoutesRecyclerAd
 
         holder.src_address.setText(items.get(position).SrcStAdd);
         holder.dst_address.setText(items.get(position).DstStAdd);
-        holder.route_price.setText(items.get(position).StRoutePrice + " تومان ");
+        holder.route_price.setText(items.get(position).StRoutePrice );
         /*holder.carString.setText(items.get(position).CarString);*/
         //holder.seats.setText("ظرفیت: " + items.get(position).EmptySeat + " از " + items.get(position).CarSeats);
         /*holder.src_distance.setText(items.get(position).SrcDistance);

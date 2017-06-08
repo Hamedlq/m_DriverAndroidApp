@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/riding_activity_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:orientation="vertical"
+    tools:context=".ui.activities.RidingActivity">
+
+    <include layout="@layout/toolbar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/station_add_lay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/station_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@string/text_station"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/station_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@string/text_station"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/station_add_lay"
+            android:layout_gravity="center"
+            android:background="@android:color/darker_gray" />
+
+        <LinearLayout
+            android:id="@+id/station_dis_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/station_add_lay"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/station_dis_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@string/station_distance"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/station_dis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="0"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@string/meter"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/wait_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="24dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/button_background_states"
+            android:elevation="5dp"
+            android:padding="12dp"
+            android:text="@string/waiting_state"
+            android:textAlignment="center"
+            android:textColor="@color/text"
+            android:textStyle="bold" />
+
+        <FrameLayout
+            android:id="@+id/map_container"
+            android:name="com.mibarim.driver.ui.fragments.MapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/wait_btn"
+            android:layout_below="@id/station_dis_layout"
+            tools:layout="@layout/fragment_map" />
+
+        <WebView
+            android:id="@+id/map_container_web"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/wait_btn"
+            android:layout_below="@id/station_dis_layout" />
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

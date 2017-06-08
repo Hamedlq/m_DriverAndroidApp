@@ -55,7 +55,6 @@ public class RouteResponseService {
         return res;
     }
 
-
     public ApiResponse GetRouteSimilarSuggests(String authToken, long contactId) {
         ApiResponse res = getService().GetRouteSimilarSuggests("Bearer " + authToken, contactId);
         return res;
@@ -63,6 +62,11 @@ public class RouteResponseService {
 
     public UserRouteModel GetTripProfileInfo(String authToken, long routeId) {
         UserRouteModel res = getService().GetTripProfileInfo("Bearer " + authToken, routeId);
+        return res;
+    }
+
+    public ApiResponse GetStations(long stRouteId) {
+        ApiResponse res = getService().GetStations(stRouteId);
         return res;
     }
 }

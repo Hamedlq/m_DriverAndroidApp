@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mibarim.driver"
-    android:versionCode="25"
+    android:versionCode="26"
     android:versionName="@string/version">
 
     <uses-sdk tools:overrideLibrary="android.support.test.uiautomator.v18" />
@@ -12,9 +12,9 @@
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
-    <!--<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
-    <!--<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!--<uses-permission android:name="android.permission.CAMERA" />-->
@@ -48,8 +48,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.mibarim.driver.ui.activities.MainActivity0"
-            android:label=""
+            android:name="com.mibarim.driver.ui.activities.CreditActivity"
+            android:label="@string/credit_money"
             android:screenOrientation="portrait">
         </activity>
         <activity
@@ -62,6 +62,14 @@
             android:label="@string/route_list"
             android:screenOrientation="portrait">
         </activity>
+        <activity
+            android:name=".ui.activities.WebViewActivity"
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.RidingActivity"
+            android:label="@string/riding_passenger"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.mibarim.driver.ui.activities.AddMapActivity"
             android:label="@string/title_new_route"
@@ -241,6 +249,9 @@
                 <action android:name="LOCATION_RECEIVER_INTENT" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name="com.mibarim.driver.receiver.NotificationReceiver"
+            android:process=":remote" />
 
         <!-- Replace with your Fabric Crashlytics key from Fabric.io -->
         <meta-data

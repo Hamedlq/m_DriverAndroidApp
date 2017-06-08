@@ -17,7 +17,7 @@ import com.mibarim.driver.R;
 import com.mibarim.driver.core.Constants;
 import com.mibarim.driver.models.NotificationModel;
 import com.mibarim.driver.services.RouteRequestService;
-import com.mibarim.driver.ui.activities.MainActivity0;
+import com.mibarim.driver.ui.activities.MainActivity;
 import com.mibarim.driver.util.DynamicJsonConverter;
 import com.mibarim.driver.util.SafeAsyncTask;
 
@@ -91,7 +91,7 @@ public class PeriodicReceiver extends BroadcastReceiver {
         Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         if (res.IsNewRouteSuggest) {
             NotificationManager notificationManager = (NotificationManager) _context.getSystemService(_context.NOTIFICATION_SERVICE);
-            Intent routeActivityIntent = new Intent(_context, MainActivity0.class);
+            Intent routeActivityIntent = new Intent(_context, MainActivity.class);
             routeActivityIntent.putExtra("theRouteId", res.SuggestRouteRequestId.intValue());
             PendingIntent displayIntent = PendingIntent.getActivity(
                     _context, res.SuggestRouteRequestId.intValue(),
@@ -114,7 +114,7 @@ public class PeriodicReceiver extends BroadcastReceiver {
         }
         if (res.IsNewMessage) {
             NotificationManager notificationManager = (NotificationManager) _context.getSystemService(_context.NOTIFICATION_SERVICE);
-            Intent routeActivityIntent = new Intent(_context, MainActivity0.class);
+            Intent routeActivityIntent = new Intent(_context, MainActivity.class);
             routeActivityIntent.putExtra("theRouteId", res.MessageRouteRequestId.intValue());
             PendingIntent displayIntent = PendingIntent.getActivity(
                     _context, res.MessageRouteRequestId.intValue(),

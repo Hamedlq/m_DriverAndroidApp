@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.brnunes.swipeablerecyclerview.SwipeableRecyclerViewTouchListener;
@@ -18,19 +19,15 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 import com.mibarim.driver.BootstrapApplication;
-import com.mibarim.driver.BootstrapServiceProvider;
 import com.mibarim.driver.R;
-import com.mibarim.driver.adapters.DriverRouteRecyclerAdapter;
 import com.mibarim.driver.adapters.RoutesRecyclerAdapter;
-import com.mibarim.driver.authenticator.LogoutService;
-import com.mibarim.driver.data.UserData;
+import com.mibarim.driver.adapters.StationsRecyclerAdapter;
 import com.mibarim.driver.models.ApiResponse;
-import com.mibarim.driver.models.Plus.PassRouteModel;
 import com.mibarim.driver.models.Plus.StationRouteModel;
+import com.mibarim.driver.models.Plus.SubStationModel;
 import com.mibarim.driver.models.Route.RouteResponse;
 import com.mibarim.driver.services.RouteResponseService;
 import com.mibarim.driver.ui.ThrowableLoader;
-import com.mibarim.driver.ui.activities.MainActivity;
 import com.mibarim.driver.ui.activities.StationRouteListActivity;
 
 import java.util.ArrayList;
@@ -39,8 +36,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class RoutesCardFragment extends Fragment
-        implements LoaderManager.LoaderCallbacks<List<StationRouteModel>> {
+public class StationCardFragment extends Fragment
+        implements LoaderManager.LoaderCallbacks<List<SubStationModel>> {
 
     /*    @Inject
         UserData userData;
@@ -52,21 +49,22 @@ public class RoutesCardFragment extends Fragment
     protected LogoutService logoutService;*/
 
     private int RELOAD_REQUEST = 1234;
-    List<StationRouteModel> items;
-    List<StationRouteModel> latest;
+    List<SubStationModel> items;
+    List<SubStationModel> latest;
     private Tracker mTracker;
     private RouteResponse routeResponse;
-    private ApiResponse stationRouteResponse;
+    private ApiResponse stationsResponse;
 
     private View mRecycler;
     private RecyclerView mRecyclerView;
     SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView mEmptyView;
-    private TextView suggest_btn;
+    private RelativeLayout substation_layout;
     //private ProgressBar mProgressView;
-    private RoutesRecyclerAdapter mAdapter;
+    private StationsRecyclerAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private int selectedRow;
+    private StationRouteModel stationRouteModel;
     ItemTouchListener itemTouchListener;
 
 
@@ -77,12 +75,13 @@ public class RoutesCardFragment extends Fragment
         // Obtain the shared Tracker instance.
         BootstrapApplication application = (BootstrapApplication) getActivity().getApplication();
         mTracker = application.getDefaultTracker();
+
     }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
-        mRecycler = inflater.inflate(R.layout.route_card_list, null);
+        mRecycler = inflater.inflate(R.layout.station_card_list, null);
 
         mRecyclerView = (RecyclerView) mRecycler.findViewById(android.R.id.list);
         mSwipeRefreshLayout = (SwipeRefreshLayout) mRecycler.findViewById(R.id.swipe_refresh_layout);
@@ -95,6 +94,18 @@ public class RoutesCardFragment extends Fragment
 
         mEmptyView = (TextView) mRecycler.findViewById(android.R.id.empty);
         mEmptyView.setVisibility(View.GONE);
+
+        substation_layout = (RelativeLayout) mRecycler.findViewById(R.id.substation_layout);
+        substation_layout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    ((StationRouteListActivity)getActivity()).removeSubStation();
+                    return true;
+                }
+                return false;
+            }
+        });
         /*mProgressView = (ProgressBar) mRecycler.findViewById(R.id.pb_loading);*/
 
         // use a linear layout manager
@@ -102,25 +113,12 @@ public class RoutesCardFragment extends Fragment
         mRecyclerView.setLayoutManager(mLayoutManager);
         //showState(1);
 
-        suggest_btn = (TextView) mRecycler.findViewById(R.id.suggest_btn);
-        suggest_btn.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    ((StationRouteListActivity) getActivity()).gotoSuggestStation();
-                    return true;
-                }
-                return false;
-            }
-        });
-
         itemTouchListener = new ItemTouchListener() {
-
             @Override
             public void onCardViewTap(View view, int position) {
                 if (getActivity() instanceof StationRouteListActivity) {
-                    StationRouteModel selectedItem = ((StationRouteModel) items.get(position));
-                    ((StationRouteListActivity) getActivity()).selectStation(selectedItem);
+                    SubStationModel selectedItem = ((SubStationModel) items.get(position));
+                    ((StationRouteListActivity) getActivity()).setRoute(selectedItem);
 
                 }
             }
@@ -160,7 +158,7 @@ public class RoutesCardFragment extends Fragment
     public void refresh() {
         getLoaderManager().restartLoader(0, null, this);
         //showState(1);
-        mAdapter = new RoutesRecyclerAdapter(getActivity(), items, itemTouchListener);
+        mAdapter = new StationsRecyclerAdapter(getActivity(), items, itemTouchListener);
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -175,21 +173,21 @@ public class RoutesCardFragment extends Fragment
     }
 
     @Override
-    public Loader<List<StationRouteModel>> onCreateLoader(int id, Bundle args) {
+    public Loader<List<SubStationModel>> onCreateLoader(int id, Bundle args) {
         mEmptyView.setVisibility(View.GONE);
         mSwipeRefreshLayout.setRefreshing(true);
-        items = new ArrayList<StationRouteModel>();
-        return new ThrowableLoader<List<StationRouteModel>>(getActivity(), items) {
+        stationRouteModel=((StationRouteListActivity)getActivity()).getRoute();
+        items = new ArrayList<SubStationModel>();
+        return new ThrowableLoader<List<SubStationModel>>(getActivity(), items) {
             @Override
-            public List<StationRouteModel> loadData() throws Exception {
-                latest = new ArrayList<StationRouteModel>();
+            public List<SubStationModel> loadData() throws Exception {
+                latest = new ArrayList<SubStationModel>();
                 Gson gson = new Gson();
                 if (getActivity() != null) {
-                    stationRouteResponse = routeResponseService.GetStationRoutes(1);
-                    if (stationRouteResponse != null) {
-                        for (String routeJson : stationRouteResponse.Messages) {
-                            StationRouteModel route = gson.fromJson(routeJson, StationRouteModel.class);
-                            route.StRoutePrice = route.StRoutePrice + " تومان ";
+                    stationsResponse = routeResponseService.GetStations(stationRouteModel.StRouteId);
+                    if (stationsResponse != null) {
+                        for (String routeJson : stationsResponse.Messages) {
+                            SubStationModel route = gson.fromJson(routeJson, SubStationModel.class);
                             latest.add(route);
                         }
                     }
@@ -204,13 +202,13 @@ public class RoutesCardFragment extends Fragment
     }
 
     @Override
-    public void onLoadFinished(Loader<List<StationRouteModel>> loader, List<StationRouteModel> data) {
+    public void onLoadFinished(Loader<List<SubStationModel>> loader, List<SubStationModel> data) {
         items = data;
         /*if (items.size() == 0) {
             mEmptyView.setVisibility(View.VISIBLE);
         }*/
         // specify an adapter (see also next example)
-        mAdapter = new RoutesRecyclerAdapter(getActivity(), items, itemTouchListener);
+        mAdapter = new StationsRecyclerAdapter(getActivity(), items, itemTouchListener);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addOnItemTouchListener(new SwipeableRecyclerViewTouchListener(mRecyclerView,
                 new SwipeableRecyclerViewTouchListener.SwipeListener() {
@@ -236,7 +234,7 @@ public class RoutesCardFragment extends Fragment
     }
 
     @Override
-    public void onLoaderReset(Loader<List<StationRouteModel>> loader) {
+    public void onLoaderReset(Loader<List<SubStationModel>> loader) {
 
     }
 

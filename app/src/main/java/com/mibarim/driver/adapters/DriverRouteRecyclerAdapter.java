@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -17,6 +18,7 @@ import com.beardedhen.androidbootstrap.BootstrapCircleThumbnail;
 import com.mibarim.driver.R;
 import com.mibarim.driver.models.Plus.DriverRouteModel;
 import com.mibarim.driver.models.Plus.PassRouteModel;
+import com.mibarim.driver.models.enums.TripStates;
 import com.mibarim.driver.ui.activities.MainActivity;
 import com.mibarim.driver.ui.fragments.DriverFragments.DriverCardFragment;
 
@@ -49,6 +51,7 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
         public Switch switch_trip;
         public LinearLayout delete_btn;
         public AwesomeTextView fa_trash;
+        public AppCompatButton show_trip;
         /*public TextView src_distance;
         public TextView dst_distance;*/
         //public BootstrapCircleThumbnail userimage;
@@ -68,6 +71,7 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
             switch_trip = (Switch) v.findViewById(R.id.switch_trip);
             delete_btn = (LinearLayout) v.findViewById(R.id.delete_btn);
             fa_trash = (AwesomeTextView) v.findViewById(R.id.fa_trash);
+            show_trip = (AppCompatButton) v.findViewById(R.id.show_trip);
             /*src_distance = (TextView) v.findViewById(R.id.src_distance);
             dst_distance = (TextView) v.findViewById(R.id.dst_distance);*/
 //            userimage = (BootstrapCircleThumbnail) v.findViewById(R.id.userimage);
@@ -105,6 +109,37 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
                     onItemTouchListener.onDeleteCard(v, getPosition());
                 }
             });
+
+            src_address.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        onItemTouchListener.onSrcLinkClick(v, getPosition());
+                        return true;
+                    }
+                    return false;
+                }
+            });
+            dst_address.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        onItemTouchListener.onDstLinkClick(v, getPosition());
+                        return true;
+                    }
+                    return false;
+                }
+            });
+            show_trip.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        onItemTouchListener.onBtnClick(v, getPosition());
+                        return true;
+                    }
+                    return false;
+                }
+            });
         }
     }
 
@@ -138,8 +173,14 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
         holder.dst_address.setText(items.get(position).DstAddress);
         holder.carString.setText(items.get(position).CarString);
         holder.switch_trip.setChecked(items.get(position).HasTrip);
+        holder.show_trip.setVisibility(View.GONE);
         if (items.get(position).HasTrip) {
             holder.seats.setText("رزرو: " + items.get(position).FilledSeats + " از " + items.get(position).CarSeats);
+            if(items.get(position).TripState== TripStates.InPreTripTime.toInt()
+                    || items.get(position).TripState== TripStates.InTripTime.toInt()
+                    || items.get(position).TripState== TripStates.InRiding.toInt()){
+                holder.show_trip.setVisibility(View.VISIBLE);
+            }
         }
 
     }

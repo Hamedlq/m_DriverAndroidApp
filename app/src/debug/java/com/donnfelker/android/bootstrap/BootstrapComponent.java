@@ -1,5 +1,6 @@
 package com.mibarim.driver;
 
+import com.mibarim.driver.ui.activities.CreditActivity;
 import com.mibarim.driver.ui.activities.EventMapActivity;
 import com.mibarim.driver.ui.activities.HelpingActivity;
 import com.mibarim.driver.ui.activities.HomeWorkStepActivity;
@@ -10,6 +11,7 @@ import com.mibarim.driver.ui.activities.CheckSuggestRouteActivity;
 import com.mibarim.driver.ui.activities.HelpActivity;
 import com.mibarim.driver.ui.activities.MessagingActivity;
 import com.mibarim.driver.ui.activities.MobileValidationActivity;
+import com.mibarim.driver.ui.activities.RidingActivity;
 import com.mibarim.driver.ui.activities.RouteStepActivity;
 import com.mibarim.driver.ui.activities.SplashActivity;
 import com.mibarim.driver.ui.activities.RideMainActivity;
@@ -31,13 +33,13 @@ import com.mibarim.driver.authenticator.AuthenticatorActivity;
 import com.mibarim.driver.authenticator.TokenRefreshActivity;
 import com.mibarim.driver.ui.BootstrapActivity;
 import com.mibarim.driver.ui.BootstrapFragmentActivity;
-import com.mibarim.driver.ui.activities.MainActivity0;
 import com.mibarim.driver.ui.activities.UserInfoDetailActivity;
 import com.mibarim.driver.ui.activities.WeekTimeActivity;
 import com.mibarim.driver.ui.activities.WorkHomeActivity;
 import com.mibarim.driver.ui.fragments.DriverFragments.DriverCardFragment;
 import com.mibarim.driver.ui.fragments.DriverFragments.FabFragment;
 import com.mibarim.driver.ui.fragments.DriverFragments.RoutesCardFragment;
+import com.mibarim.driver.ui.fragments.DriverFragments.StationCardFragment;
 import com.mibarim.driver.ui.fragments.HelpFragment;
 import com.mibarim.driver.ui.fragments.TripProfileFragments.ProfileRouteInfoFragment;
 import com.mibarim.driver.ui.fragments.TripProfileFragments.ProfileScoreInfoFragment;
@@ -130,6 +132,8 @@ public interface BootstrapComponent {
 
     void inject(AddMainActivity target);
 
+    void inject(RidingActivity target);
+
     void inject(StationRouteListActivity target);
 
     void inject(TripProfileActivity target);
@@ -137,6 +141,8 @@ public interface BootstrapComponent {
     void inject(MobileActivity target);
 
     void inject(RoutesCardFragment target);
+
+    void inject(StationCardFragment target);
 
     void inject(ProfileUserInfoFragment target);
 
@@ -159,6 +165,8 @@ public interface BootstrapComponent {
     void inject(DriverCardFragment target);
 
     void inject(MainActivity target);
+
+    void inject(CreditActivity target);
 
     void inject(SplashFragment target);
 
@@ -216,8 +224,6 @@ public interface BootstrapComponent {
     void inject(RequestRideFragment target);
 
     void inject(SmsValidationActivity target);
-
-    void inject(MainActivity0 target);
 
     void inject(MainFragment target);
 

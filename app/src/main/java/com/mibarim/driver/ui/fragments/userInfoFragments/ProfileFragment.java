@@ -27,7 +27,6 @@ import com.mibarim.driver.core.ImageUtils;
 import com.mibarim.driver.models.AboutMeModel;
 import com.mibarim.driver.models.ScoreModel;
 import com.mibarim.driver.models.UserInfoModel;
-import com.mibarim.driver.ui.activities.MainActivity0;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -117,7 +116,7 @@ public class ProfileFragment extends Fragment {
         String Mobile = prefs.getString("UserMobile", "");*/
         UserInfoModel userInfo = null;
         AboutMeModel aboutMeModel = null;
-        ((MainActivity0) getActivity()).getUserScore();
+        /*((MainActivity0) getActivity()).getUserScore();
         if (getActivity() instanceof MainActivity0) {
             userInfo = ((MainActivity0) getActivity()).getUserInfo();
             aboutMeModel=((MainActivity0) context).getAboutMe();
@@ -137,12 +136,12 @@ public class ProfileFragment extends Fragment {
                 header.setBackgroundResource(R.color.primary_light);
             }
             title_container.setText(userInfo.Name+" "+ userInfo.Family);
-            /*if (userInfo.Base64UserPic != null && !userInfo.Base64UserPic.equals("")) {
+            *//*if (userInfo.Base64UserPic != null && !userInfo.Base64UserPic.equals("")) {
                 byte[] decodedString = Base64.decode(userInfo.Base64UserPic, Base64.DEFAULT);
                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                 user_image.setImageBitmap(decodedByte);
-            }*/
-        }
+            }*//*
+        }*/
         /*company_image.setVisibility(View.GONE);
         company_name.setVisibility(View.GONE);*/
         /*if (userInfo != null && userInfo.CompanyName != null) {
@@ -165,7 +164,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    ((MainActivity0) getActivity()).gotoMibarimWebsite();
+                    //((MainActivity0) getActivity()).gotoMibarimWebsite();
                     return true;
                 }
                 return false;
@@ -207,10 +206,10 @@ public class ProfileFragment extends Fragment {
     }
 
     public void reloadUserImage() {
-        UserInfoModel userInfo = ((MainActivity0) getActivity()).getUserInfo();
+        /*UserInfoModel userInfo = ((MainActivity0) getActivity()).getUserInfo();
         if (userInfo != null && userInfo.Gender != null) {
             user_image.setImageBitmap(((MainActivity0) getActivity()).getImageById(userInfo.UserImageId,R.mipmap.ic_camera));
-        }
+        }*/
     }
 
     private void setupViewPager(ViewPager viewPager) {

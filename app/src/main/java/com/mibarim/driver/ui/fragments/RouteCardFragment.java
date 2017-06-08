@@ -20,7 +20,6 @@ import com.mibarim.driver.authenticator.LogoutService;
 import com.mibarim.driver.data.UserData;
 import com.mibarim.driver.models.Route.RouteResponse;
 import com.mibarim.driver.adapters.RouteListRecyclerAdapter;
-import com.mibarim.driver.ui.activities.MainActivity0;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -83,12 +82,12 @@ public class RouteCardFragment extends Fragment {
             public void onCardViewTap(View view, int position) {
                 //Toaster.showLong(getActivity(), "tap"+position);
                 RouteResponse routeResponse = ((RouteResponse) items.get(position));
-                ((MainActivity0) getActivity()).goToSuggestActivity(routeResponse);
+                //((MainActivity0) getActivity()).goToSuggestActivity(routeResponse);
             }
 
             @Override
             public void onShareBtnClick(View view, int position) {
-                ((MainActivity0) getActivity()).shareRoute(String.valueOf(items.get(position).RouteId));
+                //((MainActivity0) getActivity()).shareRoute(String.valueOf(items.get(position).RouteId));
 
             }
 
@@ -136,7 +135,7 @@ public class RouteCardFragment extends Fragment {
                     @Override
                     public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
                         for (int position : reverseSortedPositions) {
-                            ((MainActivity0) getActivity()).shareRoute(String.valueOf(items.get(position).RouteId));
+                            //((MainActivity0) getActivity()).shareRoute(String.valueOf(items.get(position).RouteId));
                             //items.remove(position);
                             //mAdapter.notifyItemRemoved(position);
                         }

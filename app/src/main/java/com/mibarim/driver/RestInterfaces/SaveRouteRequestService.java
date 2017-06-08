@@ -201,7 +201,8 @@ public interface SaveRouteRequestService {
     @POST(Constants.Http.URL_SET_USER_ROUTE)
     @FormUrlEncoded
     ApiResponse setUserRoute(@Header(Constants.Http.PARAM_AUTHORIZATION) String authToken,
-                             @Field("StRouteId") long stRouteId);
+                             @Field("StRouteId") long stRouteId,
+                             @Field("StationId") long stationId);
 
     @POST(Constants.Http.URL_SET_ROUTE_TRIP)
     @FormUrlEncoded
@@ -210,5 +211,10 @@ public interface SaveRouteRequestService {
                              @Field("CarSeats") int carSeats,
                              @Field("TimingHour") int hour,
                              @Field("TimingMin") int min);
+
+    @POST(Constants.Http.URL_DISABLE_TRIP)
+    @FormUrlEncoded
+    ApiResponse disableTrip(@Header(Constants.Http.PARAM_AUTHORIZATION) String authToken,
+                             @Field("DriverRouteId") long driverRouteId);
 
 }

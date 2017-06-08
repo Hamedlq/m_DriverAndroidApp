@@ -23,7 +23,6 @@ import com.mibarim.driver.adapters.MainPagerAdapter;
 import com.mibarim.driver.models.LocalRoute;
 import com.mibarim.driver.models.ScoreModel;
 import com.mibarim.driver.models.enums.MainTabs;
-import com.mibarim.driver.ui.activities.MainActivity0;
 import com.mibarim.driver.ui.fragments.ContactCardFragment;
 import com.mibarim.driver.ui.fragments.RequestRideFragment;
 import com.mibarim.driver.ui.fragments.UpdateMessageFragment;
@@ -109,19 +108,19 @@ public class MainFragment extends Fragment {
                         case R.id.profile_item:
                             pager.setCurrentItem(MainTabs.Profile.toInt());
                             //((MainActivity0) getActivity()).showActionBar();
-                            ((MainActivity0) getActivity()).profileMenu();
+//                            ((MainActivity0) getActivity()).profileMenu();
                             //Snackbar.make(layout, R.string.profile_snack, Snackbar.LENGTH_LONG).show();
                             break;
                         case R.id.messages_item:
                             pager.setCurrentItem(MainTabs.Message.toInt());
                             //((MainActivity0) getActivity()).showActionBar();
-                            ((MainActivity0) getActivity()).contactMenu();
+//                            ((MainActivity0) getActivity()).contactMenu();
                             //Snackbar.make(layout, R.string.message_snack, Snackbar.LENGTH_LONG).show();
                             break;
                         case R.id.map_item:
                             pager.setCurrentItem(MainTabs.Map.toInt());
                             //((MainActivity0) getActivity()).showActionBar();
-                            ((MainActivity0) getActivity()).mapMenu();
+//                            ((MainActivity0) getActivity()).mapMenu();
                             flag_layout.setVisibility(View.VISIBLE);
                             my_location.setVisibility(View.VISIBLE);
                         /*fragmentManager.beginTransaction()
@@ -137,7 +136,7 @@ public class MainFragment extends Fragment {
                         case R.id.routes_item:
                             pager.setCurrentItem(MainTabs.Route.toInt());
                             //((MainActivity0) getActivity()).showActionBar();
-                            ((MainActivity0) getActivity()).routeMenu();
+//                            ((MainActivity0) getActivity()).routeMenu();
                             //Snackbar.make(layout, R.string.route_snack, Snackbar.LENGTH_LONG).show();
                             break;
                     }
@@ -150,8 +149,8 @@ public class MainFragment extends Fragment {
             //bottomBar.setDrawingCacheBackgroundColor(getResources().getColor(R.color.colorPrimary));
 //        bottomBar.mapColorForTab(0,getResources().getColor(R.color.colorPrimary) );
 
-            int selectedTab = ((MainActivity0) getActivity()).getSelectedTab();
-            bottomBar.setDefaultTabPosition(selectedTab);
+            /*int selectedTab = ((MainActivity0) getActivity()).getSelectedTab();
+            bottomBar.setDefaultTabPosition(selectedTab);*/
 // Use custom text appearance in tab titles.
             //bottomBar.setTextAppearance(R.style.bottom_navigation);
 
@@ -175,7 +174,7 @@ public class MainFragment extends Fragment {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    ((MainActivity0) getActivity()).gotoMyLocation();
+                    //((MainActivity0) getActivity()).gotoMyLocation();
                     return true;
                 }
                 return false;
@@ -185,7 +184,7 @@ public class MainFragment extends Fragment {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    ((MainActivity0) getActivity()).gotoTripActivity();
+                    //((MainActivity0) getActivity()).gotoTripActivity();
                     return true;
                 }
                 return false;
@@ -204,13 +203,13 @@ public class MainFragment extends Fragment {
     }
 
     public void setTripState(){
-        if(((MainActivity0)getActivity()).IsTripState()){
+        /*if(((MainActivity0)getActivity()).IsTripState()){
             go_to_trip.setVisibility(View.VISIBLE);
             blink = AnimationUtils.loadAnimation(getActivity(), R.anim.blink);
             go_to_trip.startAnimation(blink);
         }else {
             go_to_trip.setVisibility(View.GONE);
-        }
+        }*/
     }
 
     public void showUpdateMsg() {

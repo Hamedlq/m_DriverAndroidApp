@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.beardedhen.androidbootstrap.BootstrapCircleThumbnail;
 import com.mibarim.driver.R;
 import com.mibarim.driver.models.ContactModel;
-import com.mibarim.driver.ui.activities.MainActivity0;
 import com.mibarim.driver.ui.fragments.ContactCardFragment;
 
 import java.util.List;
@@ -118,7 +117,7 @@ public class ContactListRecyclerAdapter extends RecyclerView.Adapter<ContactList
         else if(items.get(position).IsDriver==0 && items.get(position).IsPassengerAccepted==1){
             holder.contact_card_layout.setBackgroundColor(_activity.getResources().getColor(R.color.active_row));
         }
-        holder.userimage.setImageBitmap(((MainActivity0)_activity).getImageById(items.get(position).UserImageId,R.mipmap.ic_user_black));
+        //holder.userimage.setImageBitmap(((MainActivity0)_activity).getImageById(items.get(position).UserImageId,R.mipmap.ic_user_black));
         //holder.username.setText(items.get(position).Name+" "+items.get(position).Family);
         holder.last_msg.setText(items.get(position).LastMsg);
         holder.last_time.setText(items.get(position).LastMsgTime);

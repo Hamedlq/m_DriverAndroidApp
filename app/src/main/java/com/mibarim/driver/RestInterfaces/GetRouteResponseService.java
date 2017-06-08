@@ -51,4 +51,9 @@ public interface GetRouteResponseService {
     @FormUrlEncoded
     UserRouteModel GetTripProfileInfo(@Header(Constants.Http.PARAM_AUTHORIZATION) String authToken,
                                       @Field("RouteRequestId") long Id);
+
+    @POST(Constants.Http.GET_STATION_URL)
+    @FormUrlEncoded
+    ApiResponse GetStations(@Field("StRouteId") long stRouteId);
+
 }

@@ -51,7 +51,7 @@ public class WithdrawAdapter extends SingleTypeAdapter<WithdrawRequestModel> {
     protected void update(final int position, final WithdrawRequestModel withdrawRequestModel) {
         setText(0, withdrawRequestModel.WithdrawStateString);
         setText(1, withdrawRequestModel.WithdrawDate);
-        setText(2, withdrawRequestModel.WithdrawAmount+ "ریال");
+        setText(2, withdrawRequestModel.WithdrawAmount+ "تومان");
 /*
         setText(0, eventResponse.Name);
         setText(1, eventResponse.Address);
