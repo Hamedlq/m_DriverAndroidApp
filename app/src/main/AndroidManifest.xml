@@ -19,9 +19,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!--<uses-permission android:name="android.permission.CAMERA" />-->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <!--<uses-permission android:name="driverer.permission.C2D_MESSAGE" />
+    <uses-permission android:name="driverer.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.SEND" />
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />-->
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
     <application
         android:name="com.mibarim.driver.BootstrapApplicationImpl"

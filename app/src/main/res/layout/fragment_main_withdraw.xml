@@ -24,6 +24,7 @@
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
             android:contentDescription="Withdraw"
+            android:inputType="number"
             android:paddingEnd="15dp"
             android:paddingStart="15dp"
             android:textColorHint="@color/text_hint">

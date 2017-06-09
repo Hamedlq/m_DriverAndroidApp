@@ -177,35 +177,41 @@ public class CreditActivity extends BootstrapActivity {
     }
 
     public void submitWithdrawRequest(final String withdrawAmount) {
-        showProgress();
-        new SafeAsyncTask<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                response = userInfoService.submitWithdrawRequest(authToken, withdrawAmount);
-                return true;
-            }
+        if(withdrawAmount.equals(""))
+        {
+            Snackbar.make(parentLayout, R.string.no_amount, BaseTransientBottomBar.LENGTH_LONG);
+        }else {
+            showProgress();
+            new SafeAsyncTask<Boolean>() {
+                @Override
+                public Boolean call() throws Exception {
+                    response = userInfoService.submitWithdrawRequest(authToken, withdrawAmount);
+                    return true;
+                }
 
-            @Override
-            protected void onException(final Exception e) throws RuntimeException {
-                super.onException(e);
-                hideProgress();
-            }
+                @Override
+                protected void onException(final Exception e) throws RuntimeException {
+                    super.onException(e);
+                    hideProgress();
+                }
 
-            @Override
-            protected void onSuccess(final Boolean state) throws Exception {
-                super.onSuccess(state);
-                hideProgress();
-                if (state) {
-                    new HandleApiMessagesBySnackbar(parentLayout, response).showMessages();
-                    if(response.Messages!=null && response.Messages.size()>0){
-                        for (String msg: response.Messages){
-                            Snackbar.make(parentLayout, msg, BaseTransientBottomBar.LENGTH_LONG);
-                            clearCode();
+                @Override
+                protected void onSuccess(final Boolean state) throws Exception {
+                    super.onSuccess(state);
+                    hideProgress();
+                    if (state) {
+                        new HandleApiMessagesBySnackbar(parentLayout, response).showMessages();
+                        if (response.Messages != null && response.Messages.size() > 0) {
+                            for (String msg : response.Messages) {
+                                Snackbar.make(parentLayout, msg, BaseTransientBottomBar.LENGTH_LONG);
+                                clearCode();
+                            }
                         }
                     }
                 }
-            }
-        }.execute();
+            }.execute();
+
+        }
     }
 
     private void clearCode() {

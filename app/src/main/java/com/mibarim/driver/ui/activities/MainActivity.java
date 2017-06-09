@@ -25,6 +25,7 @@ import android.support.v4.os.OperationCanceledException;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -97,7 +98,7 @@ import butterknife.ButterKnife;
  * If you need to remove the authentication from the application please see
  */
 public class MainActivity extends BootstrapActivity {
-
+    private static final String TAG = "MainActivity";
     @Inject
     protected BootstrapServiceProvider serviceProvider;
     @Inject
@@ -119,6 +120,7 @@ public class MainActivity extends BootstrapActivity {
     private ApiResponse tripRes;
     private ApiResponse userTrip;
     private String authToken;
+    private String url;
     private ApiResponse response;
     private int appVersion = 0;
     private ApiResponse theSuggestRoute;
@@ -170,6 +172,9 @@ public class MainActivity extends BootstrapActivity {
 
 
         setContentView(R.layout.main_activity);
+        if (getIntent() != null && getIntent().getExtras() != null) {
+            url = getIntent().getExtras().getString(Constants.GlobalConstants.URL);
+        }
         parentLayout = findViewById(R.id.main_activity_root);
         // View injection with Butterknife
         ButterKnife.bind(this);
@@ -207,12 +212,17 @@ public class MainActivity extends BootstrapActivity {
                 return false;
             }
         });
+        if(url!=null){
+            gotoWebView(url);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        getTripState();
+        if(authToken!=null){
+            getTripState();
+        }
     }
 
     private void checkAuth() {

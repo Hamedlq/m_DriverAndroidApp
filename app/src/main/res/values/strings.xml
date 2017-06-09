@@ -397,4 +397,5 @@
     <string name="meter">متر</string>
     <string name="set_station">انتخاب ایستگاه مبدا</string>
     <string name="no_station">ایستگاهی ثبت نشده است</string>
+    <string name="no_amount">لطفا مبلغ را وارد کنید</string>
 </resources>

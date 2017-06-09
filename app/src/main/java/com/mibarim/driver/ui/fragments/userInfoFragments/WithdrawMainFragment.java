@@ -68,10 +68,10 @@ public class WithdrawMainFragment extends Fragment {
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     String withdrawAmount = withdraw_txt.getText().toString();
-                    if(withdrawAmount.equals(""))
+                    /*if(withdrawAmount.equals(""))
                     {
                         withdrawAmount=((CreditActivity)getActivity()).getRemain();
-                    }
+                    }*/
                     ((CreditActivity) getActivity()).submitWithdrawRequest(withdrawAmount);
                     return true;
                 }

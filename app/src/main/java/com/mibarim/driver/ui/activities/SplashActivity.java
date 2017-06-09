@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -55,6 +56,7 @@ import static com.mibarim.driver.core.Constants.Auth.BOOTSTRAP_ACCOUNT_TYPE;
  * Created by Hamed on 3/30/2016.
  */
 public class SplashActivity extends ActionBarAccountAuthenticatorActivity {
+    private static final String TAG = "SplashActivity";
 
     @Inject
     protected Bus bus;
@@ -82,6 +84,7 @@ public class SplashActivity extends ActionBarAccountAuthenticatorActivity {
     private final int SPLASH_DISPLAY_LENGTH = 2000;
     private Tracker mTracker;
     private String authToken;
+    private String url;
     private UserInitialModel userInitialModel;
     private AccountManager accountManager;
     private Account theAccount;
@@ -112,6 +115,10 @@ public class SplashActivity extends ActionBarAccountAuthenticatorActivity {
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
         mTracker.send(new HitBuilders.EventBuilder().setCategory("Activity").setAction("SplashActivity").build());
         setContentView(R.layout.initial_splash);
+
+        if (getIntent() != null && getIntent().getExtras() != null) {
+            url = getIntent().getExtras().getString(Constants.GlobalConstants.URL);
+        }
 
         ButterKnife.bind(this);
 
@@ -181,6 +188,9 @@ public class SplashActivity extends ActionBarAccountAuthenticatorActivity {
     private void gotoMainActivity() {
         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
         //Intent intent = new Intent(MainActivity0.this, HomeWorkStepActivity.class);
+        if(url!=null){
+            intent.putExtra(Constants.GlobalConstants.URL,url);
+        }
         this.startActivity(intent);
         finishIt();
     }
