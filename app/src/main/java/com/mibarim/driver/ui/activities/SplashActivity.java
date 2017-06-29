@@ -45,6 +45,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 import static android.accounts.AccountManager.KEY_ACCOUNT_NAME;
 import static android.accounts.AccountManager.KEY_ACCOUNT_TYPE;
@@ -316,6 +318,11 @@ public class SplashActivity extends ActionBarAccountAuthenticatorActivity {
                         //Toaster.showLong(SplashActivity.this, cause.getMessage());
                     }
                 } else {
+                    Response res = ((RetrofitError) e).getResponse();
+                    String body = new String(((TypedByteArray)res.getBody()).getBytes());
+                    if (res.getStatus() == 400 && body.toLowerCase().contains("error")) {
+                        logout();
+                    }
                     retry();
                 }
             }

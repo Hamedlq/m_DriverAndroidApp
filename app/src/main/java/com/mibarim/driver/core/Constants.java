@@ -57,7 +57,6 @@ public final class Constants {
 //          public static final String URL_BASE = "http://CoreApi.mibarim.ir/";
 //        public static final String URL_BASE = "http://mibarim.ir/testApp/CoreApi";
 
-
         /**
          * Authentication URL
          */
@@ -252,7 +251,6 @@ public final class Constants {
 
         public static final String URL = "URL";
     }
-
 }
 
 

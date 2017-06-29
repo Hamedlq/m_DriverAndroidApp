@@ -67,15 +67,22 @@
 
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:paddingTop="8dp">
+
+                    <ImageView
+                        android:id="@+id/src_img"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:src="@drawable/ic_place_black" />
+
 
                     <TextView
                         android:id="@+id/src_station"
@@ -83,45 +90,65 @@
                         android:layout_height="wrap_content"
                         android:paddingEnd="8dp"
                         android:paddingStart="8dp"
+                        android:layout_alignParentStart="true"
                         android:text="@string/text_station"
                         android:textColor="@color/table_text_selector"
                         android:textSize="10sp" />
 
                     <TextView
                         android:id="@+id/src_address"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/src_station"
+                        android:layout_marginEnd="50dp"
                         android:paddingEnd="8dp"
                         android:paddingStart="8dp"
                         android:textColor="@color/table_text_selector"
                         android:textSize="14sp" />
-                </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:paddingTop="8dp">
+
 
                     <TextView
                         android:id="@+id/text_destination"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
                         android:paddingEnd="8dp"
                         android:paddingStart="8dp"
                         android:text="@string/destination"
                         android:textColor="@color/table_text_selector"
                         android:textSize="10sp" />
 
+
                     <TextView
                         android:id="@+id/dst_address"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/text_destination"
+                        android:layout_marginEnd="50dp"
                         android:paddingEnd="8dp"
                         android:paddingStart="8dp"
                         android:textColor="@color/table_text_selector"
                         android:textSize="14sp" />
-                </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/dst_img"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_pin_drop_black"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true" />
+
+
+                </RelativeLayout>
+
 
                 <LinearLayout
                     android:id="@+id/car_info"
@@ -169,22 +196,22 @@
                         app:bootstrapBrand="danger"
                         app:fontAwesomeIcon="fa_trash" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:orientation="horizontal">
 
-                        <TextView
-                            android:id="@+id/seats"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/table_text_selector"
-                            android:textSize="14sp" />
+                    <TextView
+                        android:id="@+id/seats"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/table_text_selector"
+                        android:textSize="14sp" />
 
 
                 </LinearLayout>
-
 
 
             </RelativeLayout>

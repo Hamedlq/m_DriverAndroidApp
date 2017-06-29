@@ -45,8 +45,6 @@
 
     <color name="dark_grey">#1f1f1f</color>
     <color name="navigation_drawer_item_separator">#c2c2c2</color>
-    <color name="colorPrimary">#26a69a</color>
-    <color name="colorPrimaryDark">#009688</color>
 
     <color name="darker_gray">#aaa</color>
     <color name="form_field">#eeeeee</color>
@@ -73,10 +71,10 @@
     <color name="slide_2">#b8bdc0</color>
     <color name="slide_3">#b8bdc0</color>
 
-    <color name="primary">#009688</color>
-    <color name="primary_dark">#00796B</color>
-    <color name="primary_light">#B2DFDB</color>
-    <color name="accent">#536DFE</color>
+    <color name="primary">#536DFE</color>
+    <color name="primary_dark">#0043ca</color>
+    <color name="primary_light">#8f9bff</color>
+    <color name="accent">#009688</color>
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#757575</color>
     <color name="icons">#FFFFFF</color>

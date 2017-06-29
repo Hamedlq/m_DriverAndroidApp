@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import com.mibarim.driver.models.enums.TripStates;
 import com.mibarim.driver.ui.activities.MainActivity;
 import com.mibarim.driver.ui.fragments.DriverFragments.DriverCardFragment;
 
+import java.util.Calendar;
 import java.util.List;
 
 import cn.nekocode.badge.BadgeDrawable;
@@ -33,6 +35,14 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
     private List<DriverRouteModel> items;
     private Activity _activity;
     private DriverCardFragment.ItemTouchListener onItemTouchListener;
+    private static final int MAX_CLICK_DURATION = 200;
+    private long startClickTime;
+
+    private float mDownX;
+    private float mDownY;
+    private final float SCROLL_THRESHOLD = 10;
+    private boolean isOnClick;
+
     //private RelativeLayout lastLayout;
 
     // Provide a reference to the views for each data item
@@ -44,7 +54,9 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
         //public TextView username;
         public TextView timing;
         //public TextView seats;
+        public ImageView src_img;
         public TextView src_address;
+        public ImageView dst_img;
         public TextView dst_address;
         public TextView carString;
         public TextView seats;
@@ -65,7 +77,9 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
             timing = (TextView) v.findViewById(R.id.timing);
             //seats = (TextView) v.findViewById(R.id.seats);
             src_address = (TextView) v.findViewById(R.id.src_address);
+            src_img = (ImageView) v.findViewById(R.id.src_img);
             dst_address = (TextView) v.findViewById(R.id.dst_address);
+            dst_img= (ImageView) v.findViewById(R.id.dst_img);
             carString = (TextView) v.findViewById(R.id.carString);
             seats = (TextView) v.findViewById(R.id.seats);
             switch_trip = (Switch) v.findViewById(R.id.switch_trip);
@@ -84,33 +98,61 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
             });*/
 
 
-            v.setOnClickListener(new View.OnClickListener() {
+            v.setOnTouchListener(new View.OnTouchListener() {
                 @Override
-                public void onClick(View v) {
-                    onItemTouchListener.onCardViewTap(v, getPosition());
+                public boolean onTouch(View v, MotionEvent event) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN: {
+                            startClickTime = Calendar.getInstance().getTimeInMillis();
+                            break;
+                        }
+                        case MotionEvent.ACTION_UP: {
+                            long clickDuration = Calendar.getInstance().getTimeInMillis() - startClickTime;
+                            if(clickDuration < MAX_CLICK_DURATION) {
+                                onItemTouchListener.onCardViewTap(v, getPosition());
+                            }
+                            break;
+                        }
+                        default:
+                            break;
+                    }
+                    return true;
                 }
             });
 
-            switch_trip.setOnClickListener(new View.OnClickListener() {
+            switch_trip.setOnTouchListener(new View.OnTouchListener() {
                 @Override
-                public void onClick(View v) {
-                    onItemTouchListener.onSwitchCard(v, getPosition());
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        onItemTouchListener.onSwitchCard(v, getPosition());
+                        return true;
+                    }
+                    return false;
                 }
             });
-            delete_btn.setOnClickListener(new View.OnClickListener() {
+            delete_btn.setOnTouchListener(new View.OnTouchListener() {
                 @Override
-                public void onClick(View v) {
-                    onItemTouchListener.onDeleteCard(v, getPosition());
-                }
-            });
-            fa_trash.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onItemTouchListener.onDeleteCard(v, getPosition());
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        onItemTouchListener.onDeleteCard(v, getPosition());
+                        return true;
+                    }
+                    return false;
                 }
             });
 
-            src_address.setOnTouchListener(new View.OnTouchListener() {
+            fa_trash.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        onItemTouchListener.onDeleteCard(v, getPosition());
+                        return true;
+                    }
+                    return false;
+                }
+            });
+
+            src_img.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -120,7 +162,50 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
                     return false;
                 }
             });
+            src_address.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN: {
+                            startClickTime = Calendar.getInstance().getTimeInMillis();
+                            break;
+                        }
+                        case MotionEvent.ACTION_UP: {
+                            long clickDuration = Calendar.getInstance().getTimeInMillis() - startClickTime;
+                            if(clickDuration < MAX_CLICK_DURATION) {
+                                onItemTouchListener.onSrcLinkClick(v, getPosition());
+                            }
+                            break;
+                        }
+                        default:
+                            break;
+                    }
+                    return true;
+                }
+            });
             dst_address.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN: {
+                            startClickTime = Calendar.getInstance().getTimeInMillis();
+                            break;
+                        }
+                        case MotionEvent.ACTION_UP: {
+                            long clickDuration = Calendar.getInstance().getTimeInMillis() - startClickTime;
+                            if(clickDuration < MAX_CLICK_DURATION) {
+                                onItemTouchListener.onDstLinkClick(v, getPosition());
+                            }
+                            break;
+                        }
+                        default:
+                            break;
+                    }
+                    return true;
+
+                }
+            });
+            dst_img.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     if (event.getAction() == MotionEvent.ACTION_DOWN) {

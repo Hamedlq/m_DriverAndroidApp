@@ -2,7 +2,8 @@
 
 <resources>
 
-    <string name="app_name">می‌بریم(راننده)</string>
+    <string name="app_name">Mibarim</string>
+    <string name="app_name_label">می‌بریم(راننده)</string>
     <string name="content_column">Content</string>
     <string name="page_referrers">Referrers</string>
     <string name="refresh_action">Refresh</string>
@@ -42,7 +43,7 @@
     <string name="no_news">No News</string>
     <string name="avatar">Avatar</string>
     <string name="choose">Choose</string>
-    <string name="version">0.2</string>
+    <string name="version">3</string>
     <string name="testVersion">نسخه آزمایشی</string>
 
     <!-- AuthenticatorActivity -->

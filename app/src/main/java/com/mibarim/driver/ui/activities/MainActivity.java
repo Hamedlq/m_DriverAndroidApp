@@ -212,7 +212,7 @@ public class MainActivity extends BootstrapActivity {
                 return false;
             }
         });
-        if(url!=null){
+        if (url != null) {
             gotoWebView(url);
         }
     }
@@ -220,7 +220,7 @@ public class MainActivity extends BootstrapActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(authToken!=null){
+        if (authToken != null) {
             getTripState();
         }
     }
@@ -581,10 +581,10 @@ public class MainActivity extends BootstrapActivity {
                 Gson gson = new Gson();
                 for (String tripTimeModel : userTrip.Messages) {
                     DriverTripModel dm = gson.fromJson(tripTimeModel, DriverTripModel.class);
-                    if(dm.TripState==TripStates.InTripTime.toInt() ||dm.TripState== TripStates.InRiding.toInt()
-                            ||dm.TripState== TripStates.InPreTripTime.toInt()){
+                    if (dm.TripState == TripStates.InTripTime.toInt() || dm.TripState == TripStates.InRiding.toInt()
+                            || dm.TripState == TripStates.InPreTripTime.toInt()) {
                         gotoRidingActivity(dm);
-                    }else if(dm.TripState== TripStates.InRanking.toInt()) {
+                    } else if (dm.TripState == TripStates.InRanking.toInt()) {
                         //gotoRankingActivity
                     }
                 }
@@ -601,16 +601,16 @@ public class MainActivity extends BootstrapActivity {
     }
 
     public void gotoRidingActivity(DriverRouteModel dr) {
-        DriverTripModel dm=new DriverTripModel();
-        dm.TripState=dr.TripState;
-        dm.StAddress=dr.SrcAddress;
-        dm.DriverRouteId=dr.DriverRouteId;
-        dm.TripId=dr.TripId;
-        dm.StLink=dr.SrcLink;
-        dm.StLat=dr.SrcLat;
-        dm.StLng=dr.SrcLng;
-        dm.FilledSeats=dr.FilledSeats;
-        dm.TripState=dr.TripState;
+        DriverTripModel dm = new DriverTripModel();
+        dm.TripState = dr.TripState;
+        dm.StAddress = dr.SrcAddress;
+        dm.DriverRouteId = dr.DriverRouteId;
+        dm.TripId = dr.TripId;
+        dm.StLink = dr.SrcLink;
+        dm.StLat = dr.SrcLat;
+        dm.StLng = dr.SrcLng;
+        dm.FilledSeats = dr.FilledSeats;
+        dm.TripState = dr.TripState;
         Intent intent = new Intent(this, RidingActivity.class);
         intent.putExtra(Constants.GlobalConstants.DRIVER_TRIP_MODEL, dm);
         intent.putExtra(Constants.Auth.AUTH_TOKEN, authToken);
@@ -669,7 +669,7 @@ public class MainActivity extends BootstrapActivity {
         public void onClick(DialogInterface dialog, int which) {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://mibarimapp.com/androidapp/downloaddriver"));
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.update_link)));
                     startActivity(browserIntent);
                     break;
                 case DialogInterface.BUTTON_NEGATIVE:
@@ -735,7 +735,7 @@ public class MainActivity extends BootstrapActivity {
         public void onClick(DialogInterface dialog, int which) {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:
-                    seatPickerVal=0;
+                    seatPickerVal = 0;
                     //setTripTime();
                     disableTrip();
                     break;
@@ -801,9 +801,11 @@ public class MainActivity extends BootstrapActivity {
         mTimePicker = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                selectedRouteHour = selectedHour;
-                selectedRouteMin = selectedMinute;
-                setEmptySeats();
+                if (timePicker.isShown()) {
+                    selectedRouteHour = selectedHour;
+                    selectedRouteMin = selectedMinute;
+                    setEmptySeats();
+                }
             }
 
 
@@ -881,7 +883,7 @@ public class MainActivity extends BootstrapActivity {
         public void onClick(DialogInterface dialog, int which) {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:
-                    seatPickerVal=seat_picker.getValue();
+                    seatPickerVal = seat_picker.getValue();
                     String msg = getString(R.string.confirm_Msg);
                     showConfirmDialog(msg);
                     break;
@@ -894,7 +896,7 @@ public class MainActivity extends BootstrapActivity {
     };
 
     private void setTripTime() {
-        seatPickerVal=seat_picker.getValue();
+        seatPickerVal = seat_picker.getValue();
         new SafeAsyncTask<Boolean>() {
             @Override
             public Boolean call() throws Exception {
@@ -920,8 +922,8 @@ public class MainActivity extends BootstrapActivity {
                 Gson gson = new Gson();
                 for (String tripTimeModel : tripRes.Messages) {
                     TripTimeModel tt = gson.fromJson(tripTimeModel, TripTimeModel.class);
-                    if(tt.IsSubmited){
-                        setNotificationAlamManager(tt,(int)selectedRouteTrip.DriverRouteId);
+                    if (tt.IsSubmited) {
+                        setNotificationAlamManager(tt, (int) selectedRouteTrip.DriverRouteId);
                     }
                 }
             }
@@ -931,7 +933,7 @@ public class MainActivity extends BootstrapActivity {
     private void setNotificationAlamManager(TripTimeModel tt, int driverRouteId) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.add(Calendar.HOUR_OF_DAY,  tt.RemainHour);
+        calendar.add(Calendar.HOUR_OF_DAY, tt.RemainHour);
         calendar.add(Calendar.MINUTE, tt.RemainMin);
         Intent intent = new Intent(MainActivity.this, NotificationReceiver.class);
         intent.putExtra("NotifTitle", getString(R.string.start_trip));
@@ -973,7 +975,7 @@ public class MainActivity extends BootstrapActivity {
                 super.onSuccess(state);
                 new HandleApiMessagesBySnackbar(parentLayout, tripRes).showMessages();
                 if ((tripRes.Errors == null || tripRes.Errors.size() == 0) && tripRes.Status.equals("OK")) {
-                    disableNotificationAlamManager((int)selectedRouteTrip.DriverRouteId);
+                    disableNotificationAlamManager((int) selectedRouteTrip.DriverRouteId);
                 }
                 refreshList();
             }

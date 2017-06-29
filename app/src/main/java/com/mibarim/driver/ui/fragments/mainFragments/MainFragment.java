@@ -92,7 +92,7 @@ public class MainFragment extends Fragment {
         pager.setPagingEnabled(false);
         if (savedInstanceState == null) {
             bottomBar = BottomBar.attach(getActivity(), savedInstanceState);
-            bottomBar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+            bottomBar.setBackgroundColor(getResources().getColor(R.color.primary_dark));
             bottomBar.useOnlyStatusBarTopOffset();
             bottomBar.noNavBarGoodness();
             bottomBar.noTopOffset();
