@@ -106,7 +106,7 @@ public final class Constants {
         public static final String URL_PERSON_INFO = "/GetPersonalInfo";
         public static final String URL_GET_USER_INFO = "/GetUserInfo";
         public static final String URL_SET_PERSON_INFO = "/InsertPersoanlInfo";
-        public static final String URL_REGISTER_USER = "/RegisterUserInfo";
+        public static final String URL_REGISTER_USER = "/RegisterDriverInfo";
         public static final String URL_SET_USER_INFO = "/InsertUserInfo";
         public static final String URL_SET_PERSON_Email = "/InsertEmailInfo";
         public static final String URL_SET_LICENSE_INFO = "/InsertLicenseInfo";
@@ -131,7 +131,7 @@ public final class Constants {
         public static final String URL_GET_WITHDRAW = "/GetWithdraw";
         public static final String URL_SET_ABOUT_ME = "/InsertAboutMe";
         public static final String URL_GET_ABOUT_ME = "/GetAboutMe";
-        public static final String URL_GET_INVITE = "/GetInvite";
+        public static final String URL_GET_INVITE = "/GetDriverInvite";
         public static final String URL_TOGGLE_CONTACT = "/ToggleContactState";
         public static final String URL_SET_SCORE = "/SubmitUserScore";
         public static final String URL_SEND_FEEDBACK = "/ContactUs";

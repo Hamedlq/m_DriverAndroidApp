@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
@@ -54,9 +55,9 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
         //public TextView username;
         public TextView timing;
         //public TextView seats;
-        public ImageView src_img;
+        public Button src_station;
         public TextView src_address;
-        public ImageView dst_img;
+        public Button st_destination;
         public TextView dst_address;
         public TextView carString;
         public TextView seats;
@@ -77,9 +78,9 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
             timing = (TextView) v.findViewById(R.id.timing);
             //seats = (TextView) v.findViewById(R.id.seats);
             src_address = (TextView) v.findViewById(R.id.src_address);
-            src_img = (ImageView) v.findViewById(R.id.src_img);
+            src_station = (Button) v.findViewById(R.id.src_station);
             dst_address = (TextView) v.findViewById(R.id.dst_address);
-            dst_img= (ImageView) v.findViewById(R.id.dst_img);
+            st_destination= (Button) v.findViewById(R.id.st_destination);
             carString = (TextView) v.findViewById(R.id.carString);
             seats = (TextView) v.findViewById(R.id.seats);
             switch_trip = (Switch) v.findViewById(R.id.switch_trip);
@@ -152,17 +153,7 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
                 }
             });
 
-            src_img.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        onItemTouchListener.onSrcLinkClick(v, getPosition());
-                        return true;
-                    }
-                    return false;
-                }
-            });
-            src_address.setOnTouchListener(new View.OnTouchListener() {
+            src_station.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     switch (event.getAction()) {
@@ -182,8 +173,37 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
                     }
                     return true;
                 }
+                /*@Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        onItemTouchListener.onSrcLinkClick(v, getPosition());
+                        return true;
+                    }
+                    return false;
+                }*/
             });
-            dst_address.setOnTouchListener(new View.OnTouchListener() {
+            /*src_address.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN: {
+                            startClickTime = Calendar.getInstance().getTimeInMillis();
+                            break;
+                        }
+                        case MotionEvent.ACTION_UP: {
+                            long clickDuration = Calendar.getInstance().getTimeInMillis() - startClickTime;
+                            if(clickDuration < MAX_CLICK_DURATION) {
+                                onItemTouchListener.onSrcLinkClick(v, getPosition());
+                            }
+                            break;
+                        }
+                        default:
+                            break;
+                    }
+                    return true;
+                }
+            });*/
+            /*dst_address.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     switch (event.getAction()) {
@@ -204,15 +224,27 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
                     return true;
 
                 }
-            });
-            dst_img.setOnTouchListener(new View.OnTouchListener() {
+            });*/
+            st_destination.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        onItemTouchListener.onDstLinkClick(v, getPosition());
-                        return true;
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN: {
+                            startClickTime = Calendar.getInstance().getTimeInMillis();
+                            break;
+                        }
+                        case MotionEvent.ACTION_UP: {
+                            long clickDuration = Calendar.getInstance().getTimeInMillis() - startClickTime;
+                            if(clickDuration < MAX_CLICK_DURATION) {
+                                onItemTouchListener.onDstLinkClick(v, getPosition());
+                            }
+                            break;
+                        }
+                        default:
+                            break;
                     }
-                    return false;
+                    return true;
+
                 }
             });
             show_trip.setOnTouchListener(new View.OnTouchListener() {

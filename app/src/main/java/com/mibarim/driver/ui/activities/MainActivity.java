@@ -33,6 +33,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -58,6 +59,7 @@ import com.mibarim.driver.events.RestAdapterErrorEvent;
 import com.mibarim.driver.events.UnAuthorizedErrorEvent;
 import com.mibarim.driver.models.ApiResponse;
 import com.mibarim.driver.models.ImageResponse;
+import com.mibarim.driver.models.InviteModel;
 import com.mibarim.driver.models.Plus.DriverRouteModel;
 import com.mibarim.driver.models.Plus.DriverTripModel;
 import com.mibarim.driver.models.Plus.PassRouteModel;
@@ -146,7 +148,8 @@ public class MainActivity extends BootstrapActivity {
     int selectedRouteMin;
     private ScoreModel scoreModel;
     TextView user_credit;
-
+    ImageView invite_btn;
+    private InviteModel inviteModel;
     NumberPicker seat_picker;
 
     private static final String DRIVE_FRAGMENT_TAG = "driveFragment";
@@ -186,6 +189,7 @@ public class MainActivity extends BootstrapActivity {
         toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         user_credit = (TextView) toolbar.findViewById(R.id.user_credit);
+        invite_btn = (ImageView) toolbar.findViewById(R.id.invite_btn);
         checkAuth();
         //initScreen();
     }
@@ -195,6 +199,7 @@ public class MainActivity extends BootstrapActivity {
         getUserInfoFromServer();
         getUserScore();
         getTripState();
+        getInviteFromServer();
         final FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .add(R.id.main_container, new DriverCardFragment(), DRIVE_FRAGMENT_TAG)
@@ -207,6 +212,16 @@ public class MainActivity extends BootstrapActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     gotoCreditActivity();
+                    return true;
+                }
+                return false;
+            }
+        });
+        invite_btn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    gotoInviteActivity();
                     return true;
                 }
                 return false;
@@ -984,10 +999,15 @@ public class MainActivity extends BootstrapActivity {
 
     private void gotoCreditActivity() {
         Intent intent = new Intent(this, CreditActivity.class);
-        intent.putExtra(Constants.GlobalConstants.CREDIT_REMAIN, scoreModel.CreditMoney);
+        intent.putExtra(Constants.GlobalConstants.CREDIT_REMAIN, scoreModel.CreditMoneyString);
         intent.putExtra(Constants.Auth.AUTH_TOKEN, authToken);
         this.startActivityForResult(intent, CREDIT_RETURN);
 
+    }
+    private void gotoInviteActivity() {
+        Intent intent = new Intent(this, InviteActivity.class);
+        intent.putExtra(Constants.Auth.AUTH_TOKEN, authToken);
+        this.startActivity(intent);
     }
 
     public void getUserScore() {
@@ -1016,7 +1036,7 @@ public class MainActivity extends BootstrapActivity {
     }
 
     private void setUserScore() {
-        user_credit.setText(scoreModel.CreditMoney);
+        user_credit.setText(scoreModel.CreditMoneyString);
     }
 
     public void gotoWebView(String link) {
@@ -1024,5 +1044,30 @@ public class MainActivity extends BootstrapActivity {
         i.putExtra("URL", link);
         startActivity(i);
 
+    }
+
+    public void getInviteFromServer() {
+        new SafeAsyncTask<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                if (authToken == null) {
+                    serviceProvider.invalidateAuthToken();
+                    authToken = serviceProvider.getAuthToken(MainActivity.this);
+                }
+                inviteModel = userInfoService.getInvite(authToken);
+                return true;
+            }
+
+            @Override
+            protected void onException(final Exception e) throws RuntimeException {
+                super.onException(e);
+            }
+
+            @Override
+            protected void onSuccess(final Boolean state) throws Exception {
+                super.onSuccess(state);
+                userData.insertInvite(inviteModel);
+            }
+        }.execute();
     }
 }

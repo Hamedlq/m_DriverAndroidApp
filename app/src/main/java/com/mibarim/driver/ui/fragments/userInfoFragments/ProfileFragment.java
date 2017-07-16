@@ -201,7 +201,7 @@ public class ProfileFragment extends Fragment {
 */
 
     public void SetScores(ScoreModel scoreModel) {
-        credit_money.setText(scoreModel.CreditMoney);
+        credit_money.setText(scoreModel.CreditMoneyString);
         score_tree.setText(scoreModel.Score);
     }
 

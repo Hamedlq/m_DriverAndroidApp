@@ -14,6 +14,7 @@ import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.mibarim.driver.BootstrapApplication;
 import com.mibarim.driver.R;
 import com.mibarim.driver.models.InviteModel;
+import com.mibarim.driver.ui.activities.InviteActivity;
 import com.mibarim.driver.ui.activities.UserInfoDetailActivity;
 
 import butterknife.Bind;
@@ -29,8 +30,17 @@ public class InviteFragment extends Fragment {
     protected BootstrapButton share_btn;
     @Bind(R.id.inviteCode)
     protected TextView inviteCode;
+    @Bind(R.id.pass_title)
+    protected TextView pass_title;
+    @Bind(R.id.pass_desc)
+    protected TextView pass_desc;
+    @Bind(R.id.driver_title)
+    protected TextView driver_title;
+    @Bind(R.id.driver_desc)
+    protected TextView driver_desc;
 
     public InviteFragment() {
+
     }
 
     @Override
@@ -52,17 +62,21 @@ public class InviteFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         ButterKnife.bind(this, getView());
         reloadInvite();
-        ((UserInfoDetailActivity) getActivity()).getInviteFromServer();
+        //((InviteActivity) getActivity()).getInviteFromServer();
     }
 
     public void reloadInvite() {
-        final InviteModel inviteModel=((UserInfoDetailActivity) getActivity()).getInviteCode();
+        final InviteModel inviteModel = ((InviteActivity) getActivity()).getInviteCode();
         inviteCode.setText(inviteModel.InviteCode);
+        pass_title.setText(inviteModel.InvitePassTitle);
+        pass_desc.setText(inviteModel.InvitePassenger);
+        driver_title.setText(inviteModel.InviteDriverTitle);
+        driver_desc.setText(inviteModel.InviteDriver);
         share_btn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    ((UserInfoDetailActivity) getActivity()).ShareInvite(inviteModel.InviteLink);
+                    ((InviteActivity) getActivity()).ShareInvite(inviteModel.InviteLink);
                     return true;
                 }
                 return false;

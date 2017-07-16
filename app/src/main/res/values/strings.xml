@@ -4,6 +4,7 @@
 
     <string name="app_name">Mibarim</string>
     <string name="app_name_label">می‌بریم(راننده)</string>
+    <string name="app_name_toolbar">می‌‌بریم</string>
     <string name="content_column">Content</string>
     <string name="page_referrers">Referrers</string>
     <string name="refresh_action">Refresh</string>
@@ -43,7 +44,7 @@
     <string name="no_news">No News</string>
     <string name="avatar">Avatar</string>
     <string name="choose">Choose</string>
-    <string name="version">3</string>
+    <string name="version">3.1</string>
     <string name="testVersion">نسخه آزمایشی</string>
 
     <!-- AuthenticatorActivity -->
@@ -83,6 +84,7 @@
     <string name="manage_route">مدیریت مسیر</string>
     <string name="source">مبدا</string>
     <string name="destination">مقصد</string>
+    <string name="st_destination">ایستگاه مقصد</string>
     <string name="new_route">مسیر</string>
     <string name="src_address_detail">جزییات آدرس مبدا</string>
     <string name="dst_address_detail">جزییات آدرس مقصد</string>
@@ -342,7 +344,7 @@
     <string name="do_withdraw">درخواست وجه</string>
     <string name="gift_amount"> ریال اعتبار هدیه تکمیل</string>
     <string name="describe_me">علایق من و انتظارات از همسفرها</string>
-    <string name="invite_text">می بریم را به دوستان خود معرفی کنید و یک ماه سفرهای درون شهری خود را رایگان انجام دهید.</string>
+    <string name="invite_text">می‌بریم را به دوستان خود معرفی کنید و یک ماه سفرهای درون شهری خود را رایگان انجام دهید.</string>
     <string name="invite_text_2">با معرفی سرویس می بریم به دوستان خود به ازای هر فرد سه روز سفر رایگان (بدون سقف کرایه) دریافت خواهید کرد. این میزان تا ده نفر قابل افزایش است.</string>
     <string name="invite_title">سفر بی نهایت</string>
     <string name="invite_code">کد معرفی</string>

@@ -4,6 +4,7 @@ import com.mibarim.driver.ui.activities.CreditActivity;
 import com.mibarim.driver.ui.activities.EventMapActivity;
 import com.mibarim.driver.ui.activities.HelpingActivity;
 import com.mibarim.driver.ui.activities.HomeWorkStepActivity;
+import com.mibarim.driver.ui.activities.InviteActivity;
 import com.mibarim.driver.ui.activities.MainActivity;
 import com.mibarim.driver.ui.activities.MobileActivity;
 import com.mibarim.driver.ui.activities.RegisterActivity;
@@ -131,6 +132,8 @@ public interface BootstrapComponent {
     void inject(TokenRefreshActivity target);
 
     void inject(AddMainActivity target);
+
+    void inject(InviteActivity target);
 
     void inject(RidingActivity target);
 

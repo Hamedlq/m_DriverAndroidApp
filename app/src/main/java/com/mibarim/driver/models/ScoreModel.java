@@ -8,7 +8,8 @@ public class ScoreModel implements Serializable {
     public String Score;
     public int ContactScore;
     public String MoneySave;
-    public String CreditMoney;
+    public long CreditMoney;
+    public String CreditMoneyString;
     public String AboutMe;
 
 }
