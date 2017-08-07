@@ -18,19 +18,14 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 import com.mibarim.driver.BootstrapApplication;
-import com.mibarim.driver.BootstrapServiceProvider;
 import com.mibarim.driver.R;
-import com.mibarim.driver.adapters.DriverRouteRecyclerAdapter;
+import com.mibarim.driver.adapters.NewRoutesAdapter;
 import com.mibarim.driver.adapters.RoutesRecyclerAdapter;
-import com.mibarim.driver.authenticator.LogoutService;
-import com.mibarim.driver.data.UserData;
 import com.mibarim.driver.models.ApiResponse;
-import com.mibarim.driver.models.Plus.PassRouteModel;
 import com.mibarim.driver.models.Plus.StationRouteModel;
 import com.mibarim.driver.models.Route.RouteResponse;
 import com.mibarim.driver.services.RouteResponseService;
 import com.mibarim.driver.ui.ThrowableLoader;
-import com.mibarim.driver.ui.activities.MainActivity;
 import com.mibarim.driver.ui.activities.StationRouteListActivity;
 
 import java.util.ArrayList;
@@ -38,6 +33,8 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import static android.R.id.list;
 
 public class RoutesCardFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<List<StationRouteModel>> {
@@ -65,6 +62,9 @@ public class RoutesCardFragment extends Fragment
     private TextView suggest_btn;
     //private ProgressBar mProgressView;
     private RoutesRecyclerAdapter mAdapter;
+
+    private NewRoutesAdapter newAdapter;
+
     private RecyclerView.LayoutManager mLayoutManager;
     private int selectedRow;
     ItemTouchListener itemTouchListener;
@@ -84,7 +84,7 @@ public class RoutesCardFragment extends Fragment
                              final Bundle savedInstanceState) {
         mRecycler = inflater.inflate(R.layout.route_card_list, null);
 
-        mRecyclerView = (RecyclerView) mRecycler.findViewById(android.R.id.list);
+        mRecyclerView = (RecyclerView) mRecycler.findViewById(list);
         mSwipeRefreshLayout = (SwipeRefreshLayout) mRecycler.findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -211,12 +211,21 @@ public class RoutesCardFragment extends Fragment
         }*/
         // specify an adapter (see also next example)
         mAdapter = new RoutesRecyclerAdapter(getActivity(), items, itemTouchListener);
+
+
+        ArrayList<StationRouteModel> myArray = new ArrayList<>();
+        for (int i = 0; i < items.size(); i++) {
+            StationRouteModel s = items.get(i);//.SrcStAdd + " - " + list.get(i).DstStAdd;
+            myArray.add(s);
+        }
+
+        //newAdapter = new NewRoutesAdapter(getActivity(), R.layout.route_list_item, myArray);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addOnItemTouchListener(new SwipeableRecyclerViewTouchListener(mRecyclerView,
                 new SwipeableRecyclerViewTouchListener.SwipeListener() {
                     @Override
                     public boolean canSwipeLeft(int position) {
-                        return true;
+                        return false;
                     }
 
                     @Override
@@ -234,6 +243,12 @@ public class RoutesCardFragment extends Fragment
                 }));
         mSwipeRefreshLayout.setRefreshing(false);
     }
+
+    public void searchText(String srcText, String dstText) {
+        mAdapter.getFilter(srcText, dstText).filter(null);
+        // lv.setAdapter(myAdapter);
+    }
+
 
     @Override
     public void onLoaderReset(Loader<List<StationRouteModel>> loader) {

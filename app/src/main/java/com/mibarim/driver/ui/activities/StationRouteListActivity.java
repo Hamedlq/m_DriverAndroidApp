@@ -5,66 +5,43 @@ package com.mibarim.driver.ui.activities;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.os.OperationCanceledException;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.android.gms.iid.InstanceID;
 import com.google.gson.Gson;
 import com.mibarim.driver.BootstrapApplication;
 import com.mibarim.driver.BootstrapServiceProvider;
 import com.mibarim.driver.R;
 import com.mibarim.driver.authenticator.LogoutService;
-import com.mibarim.driver.authenticator.TokenRefreshActivity;
 import com.mibarim.driver.core.Constants;
-import com.mibarim.driver.core.ImageUtils;
 import com.mibarim.driver.data.UserData;
 import com.mibarim.driver.events.NetworkErrorEvent;
 import com.mibarim.driver.events.RestAdapterErrorEvent;
 import com.mibarim.driver.events.UnAuthorizedErrorEvent;
 import com.mibarim.driver.models.ApiResponse;
-import com.mibarim.driver.models.ImageResponse;
-import com.mibarim.driver.models.Plus.PassRouteModel;
-import com.mibarim.driver.models.Plus.PaymentDetailModel;
 import com.mibarim.driver.models.Plus.StationRouteModel;
 import com.mibarim.driver.models.Plus.SubStationModel;
-import com.mibarim.driver.models.Route.BriefRouteModel;
-import com.mibarim.driver.models.Route.RouteResponse;
 import com.mibarim.driver.models.SubmitResult;
-import com.mibarim.driver.models.UserInfoModel;
-import com.mibarim.driver.services.AuthenticateService;
 import com.mibarim.driver.services.RouteRequestService;
 import com.mibarim.driver.services.RouteResponseService;
 import com.mibarim.driver.services.UserInfoService;
 import com.mibarim.driver.ui.BootstrapActivity;
-import com.mibarim.driver.ui.HandleApiMessages;
 import com.mibarim.driver.ui.HandleApiMessagesBySnackbar;
-import com.mibarim.driver.ui.fragments.DriverFragments.DriverCardFragment;
 import com.mibarim.driver.ui.fragments.DriverFragments.RoutesCardFragment;
 import com.mibarim.driver.ui.fragments.DriverFragments.StationCardFragment;
 import com.mibarim.driver.util.SafeAsyncTask;
@@ -73,6 +50,8 @@ import com.squareup.otto.Subscribe;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
+
+import static com.mibarim.driver.R.id.searchView;
 
 //import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
 
@@ -98,7 +77,13 @@ public class StationRouteListActivity extends BootstrapActivity {
     UserData userData;
 
 
+    SearchView s1;
+    SearchView s2;
+
+
     private static final String SubStationFragment="SubStationFragment";
+    private static final String RoutesCardFragment="RoutesCardFragment";
+
     private CharSequence title;
     private Toolbar toolbar;
     private String authToken;
@@ -107,6 +92,9 @@ public class StationRouteListActivity extends BootstrapActivity {
     private View parentLayout;
     private boolean netErrorMsg = false;
     private StationRouteModel stationRouteModel;
+
+    String srcText = null;
+    String dstText = null;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -128,7 +116,7 @@ public class StationRouteListActivity extends BootstrapActivity {
         mTracker.send(new HitBuilders.EventBuilder().setCategory("Activity").setAction("StationRouteListActivity").build());
 
 
-        setContentView(R.layout.container_activity);
+        setContentView(R.layout.search_activity);
         parentLayout = findViewById(R.id.container_activity_root);
         // View injection with Butterknife
         ButterKnife.bind(this);
@@ -141,8 +129,22 @@ public class StationRouteListActivity extends BootstrapActivity {
             authToken = getIntent().getExtras().getString(Constants.Auth.AUTH_TOKEN);
         }
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar_search);
         setSupportActionBar(toolbar);
+
+
+
+
+
+//        final RoutesCardFragment routesCardFrag = new RoutesCardFragment();
+
+//        final Fragment fragment = fragmentManager.findFragmentById(R.id.container);
+
+
+
+
+
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             if (Build.VERSION.SDK_INT >= 17) {
@@ -154,12 +156,187 @@ public class StationRouteListActivity extends BootstrapActivity {
 
         //checkAuth();
         initScreen();
+
+
+
+
+//s1.setQueryHint("salam");
+
+        s1 = (SearchView) findViewById(searchView);
+        s2 = (SearchView) findViewById(R.id.searchView2);
+
+        s1.onActionViewExpanded();
+        s1.setIconified(false);
+
+        s2.onActionViewExpanded();
+//        s2.setIconified(false);
+
+        //
+
+
+//        Fragment fragment = fragmentManager.findFragmentByTag(SubStationFragment);
+
+
+        s1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                s1.setIconified(false);
+
+            }
+        });
+
+
+        s2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                s2.setIconified(false);
+
+            }
+        });
+
+/*
+
+        s1.setIconified(false);
+        s2.setIconified(false);
+
+
+*/
+
+
+        s1.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+
+                char asym1 = '\u064A'; // y arabi noghte daar ok
+                char asym2 = '\u0649'; // y arabi binoghte ok
+
+                char asym4 = '\u0643'; // kaafe arabi
+
+                char asym3 = '\u0629'; // taye arabi
+
+
+                char asym5 = '\u0671'; // alefe vasl arabi
+                char asym6 = '\u0625'; // alf ba hamzeye paayin arabi
+
+                //farsi symbols
+
+                char fsym6 = '\u06CC'; //ye
+                char fsym7 = '\u0626'; // ye baa hamze
+
+                char fsym1 = '\u06A9'; // kaafe farsi
+                char fsym2 = '\u0648'; //vaave farsi
+                char fsym3 = '\u0622'; //aa ba kolah farsi
+                char fsym4 = '\u0627'; // alef
+                char fsym5 = '\u0623'; //alef ba hamzeye bala
+
+                char fsym8 = '\u0647'; // he
+
+
+
+
+                String temp;
+
+                temp = newText.replace(asym1, fsym6);  // for y
+                temp = temp.replace(asym2, fsym6); // for y
+
+
+                temp = temp.replace(asym4, fsym1); // for kaaf
+//                temp = newText.replace(asym3, fsym8);
+
+
+                temp = temp.replaceAll(" ","");
+
+
+                srcText = temp;
+
+
+
+                //srcText = newText;
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                final Fragment routesCardFrag = fragmentManager.findFragmentByTag(RoutesCardFragment);
+                ((RoutesCardFragment)routesCardFrag).searchText(srcText, dstText);
+
+                return false;
+            }
+        });
+
+
+        s2.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+
+                char asym1 = '\u064A'; // y arabi noghte daar ok
+                char asym2 = '\u0649'; // y arabi binoghte ok
+
+                char asym4 = '\u0643'; // kaafe arabi
+
+                char asym3 = '\u0629'; // taye arabi
+
+
+                char asym5 = '\u0671'; // alefe vasl arabi
+                char asym6 = '\u0625'; // alf ba hamzeye paayin arabi
+
+                //farsi symbols
+
+                char fsym6 = '\u06CC'; //ye
+                char fsym7 = '\u0626'; // ye baa hamze
+
+                char fsym1 = '\u06A9'; // kaafe farsi
+                char fsym2 = '\u0648'; //vaave farsi
+                char fsym3 = '\u0622'; //aa ba kolah farsi
+                char fsym4 = '\u0627'; // alef
+                char fsym5 = '\u0623'; //alef ba hamzeye bala
+
+                char fsym8 = '\u0647'; // he
+
+
+
+
+                String temp;
+
+                temp = newText.replace(asym1, fsym6);  // for y
+                temp = temp.replace(asym2, fsym6); // for y
+
+
+                temp = temp.replace(asym4, fsym1); // for kaaf
+//                temp = newText.replace(asym3, fsym8);
+
+
+                temp = temp.replaceAll(" ","");
+                dstText = temp;
+
+
+
+
+//                dstText = newText;
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                final Fragment routesCardFrag = fragmentManager.findFragmentByTag(RoutesCardFragment);
+                ((RoutesCardFragment)routesCardFrag).searchText(srcText, dstText);
+                return false;
+            }
+        });
+
+
+
+
     }
 
     private void initScreen() {
         final FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .add(R.id.container, new RoutesCardFragment())
+                .add(R.id.container, new RoutesCardFragment(),RoutesCardFragment)
                 .commit();
     }
 
@@ -347,5 +524,46 @@ public class StationRouteListActivity extends BootstrapActivity {
             fragmentManager.beginTransaction().remove(fragment).commit();
         }
 
+
     }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+/*
+
+
+        // Accessing the SearchAutoComplete
+        int queryTextViewId = getResources().getIdentifier("android:id/search_src_text", null, null);
+        View autoComplete = s1.findViewById(queryTextViewId);
+
+        Class clazz = Class.forName("android.widget.SearchView$SearchAutoComplete");
+
+        SpannableStringBuilder stopHint = new SpannableStringBuilder("   ");
+        stopHint.append(getString("my text"));
+
+// Add the icon as an spannable
+        Drawable searchIcon = getResources().getDrawable(R.drawable.ic_action_search);
+        Method textSizeMethod = clazz.getMethod("getTextSize");
+        Float rawTextSize = (Float)textSizeMethod.invoke(autoComplete);
+        int textSize = (int) (rawTextSize * 1.25);
+        searchIcon.setBounds(0, 0, textSize, textSize);
+        stopHint.setSpan(new ImageSpan(searchIcon), 1, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+// Set the new hint text
+        Method setHintMethod = clazz.getMethod("setHint", CharSequence.class);
+        setHintMethod.invoke(autoComplete, stopHint);
+
+*/
+
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+
+
+
 }

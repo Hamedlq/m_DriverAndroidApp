@@ -25,14 +25,11 @@ import android.support.v4.os.OperationCanceledException;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
@@ -62,7 +59,6 @@ import com.mibarim.driver.models.ImageResponse;
 import com.mibarim.driver.models.InviteModel;
 import com.mibarim.driver.models.Plus.DriverRouteModel;
 import com.mibarim.driver.models.Plus.DriverTripModel;
-import com.mibarim.driver.models.Plus.PassRouteModel;
 import com.mibarim.driver.models.Plus.PaymentDetailModel;
 import com.mibarim.driver.models.Plus.TripTimeModel;
 import com.mibarim.driver.models.Route.BriefRouteModel;
@@ -77,7 +73,6 @@ import com.mibarim.driver.services.RouteResponseService;
 import com.mibarim.driver.services.TripService;
 import com.mibarim.driver.services.UserInfoService;
 import com.mibarim.driver.ui.BootstrapActivity;
-import com.mibarim.driver.ui.HandleApiMessages;
 import com.mibarim.driver.ui.HandleApiMessagesBySnackbar;
 import com.mibarim.driver.ui.fragments.DriverFragments.DriverCardFragment;
 import com.mibarim.driver.ui.fragments.DriverFragments.FabFragment;
@@ -88,7 +83,6 @@ import java.util.Calendar;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 
 //import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
@@ -353,7 +347,7 @@ public class MainActivity extends BootstrapActivity {
         }
     }
 
-
+/*
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -362,6 +356,8 @@ public class MainActivity extends BootstrapActivity {
         }
         return super.onKeyUp(keyCode, event);
     }
+*/
+
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {

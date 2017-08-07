@@ -1,23 +1,22 @@
 package com.mibarim.driver.adapters;
 
 import android.app.Activity;
+import android.database.DataSetObservable;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
 import android.widget.TextView;
 
 import com.mibarim.driver.R;
-import com.mibarim.driver.models.Plus.PassRouteModel;
 import com.mibarim.driver.models.Plus.StationRouteModel;
-import com.mibarim.driver.ui.fragments.DriverFragments.DriverCardFragment;
 import com.mibarim.driver.ui.fragments.DriverFragments.RoutesCardFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import cn.nekocode.badge.BadgeDrawable;
+import static java.util.Collections.addAll;
 
 /**
  * Created by Hamed on 10/16/2016.
@@ -84,10 +83,13 @@ public class RoutesRecyclerAdapter extends RecyclerView.Adapter<RoutesRecyclerAd
         }
     }
 
+
+
     // Provide a suitable constructor (depends on the kind of dataset)
     public RoutesRecyclerAdapter(Activity activity, List<StationRouteModel> list, RoutesCardFragment.ItemTouchListener onItemTouchListener) {
         _activity = activity;
         items = list;
+        mObjects=items;
         this.onItemTouchListener = onItemTouchListener;
     }
 
@@ -168,9 +170,9 @@ public class RoutesRecyclerAdapter extends RecyclerView.Adapter<RoutesRecyclerAd
         }*/
         //holder.userimage.setImageBitmap(((MainActivity) _activity).getImageById(items.get(position).UserImageId, R.mipmap.ic_user_black));
 
-        holder.src_address.setText(items.get(position).SrcStAdd);
-        holder.dst_address.setText(items.get(position).DstStAdd);
-        holder.route_price.setText(items.get(position).StRoutePrice );
+        holder.src_address.setText(mObjects.get(position).SrcStAdd);
+        holder.dst_address.setText(mObjects.get(position).DstStAdd);
+        holder.route_price.setText(mObjects.get(position).StRoutePrice );
         /*holder.carString.setText(items.get(position).CarString);*/
         //holder.seats.setText("ظرفیت: " + items.get(position).EmptySeat + " از " + items.get(position).CarSeats);
         /*holder.src_distance.setText(items.get(position).SrcDistance);
@@ -181,6 +183,188 @@ public class RoutesRecyclerAdapter extends RecyclerView.Adapter<RoutesRecyclerAd
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return items.size();
+        return mObjects.size();
     }
+
+
+
+
+
+
+
+// added by me
+
+
+
+
+
+
+
+    private RouteArrayFilter mFilter;
+    private ArrayList<StationRouteModel> mOriginalValues;
+    private final Object mLock = new Object();
+    private List<StationRouteModel> mObjects;
+
+
+
+
+
+
+
+    public Filter getFilter(String src, String dst) {
+        if (mFilter != null) {
+            mFilter = null;
+        }
+
+        mFilter = new RouteArrayFilter(src, dst);
+        return mFilter;
+    }
+
+
+
+
+
+    private class RouteArrayFilter extends Filter {
+        CharSequence srcPrefix;
+        CharSequence dstPrefix;
+
+        public RouteArrayFilter(CharSequence srcSearchWord, CharSequence dstSearchWord) {
+            srcPrefix = srcSearchWord;
+            dstPrefix = dstSearchWord;
+        }
+
+        @Override
+        protected FilterResults performFiltering(CharSequence prefix1) {
+            final FilterResults results = new FilterResults();
+            //final String searchValue ;
+            if (mOriginalValues == null) {
+                synchronized (mLock) {
+                    mOriginalValues = new ArrayList<>(mObjects);
+                }
+            }
+
+            if ((srcPrefix == null || srcPrefix.length() == 0) && (dstPrefix == null || dstPrefix.length() == 0)) {
+                final ArrayList<StationRouteModel> list;
+                synchronized (mLock) {
+                    list = new ArrayList<>(mOriginalValues);
+                }
+                results.values = list;
+                results.count = list.size();
+            } else {
+                final ArrayList<StationRouteModel> values;
+                synchronized (mLock) {
+                    values = new ArrayList<StationRouteModel>(mOriginalValues);
+                }
+                final int count = values.size();
+                final ArrayList<StationRouteModel> newValues = new ArrayList<>();
+
+                if (srcPrefix == null || srcPrefix.length() == 0) {
+                    final String dstString = dstPrefix.toString().toLowerCase();
+                    for (int i = 0; i < count; i++) {
+                        final StationRouteModel value = values.get(i);
+                        String dstText = value.DstStAdd.toString().toLowerCase();//.replace('\u200C', ' ').replaceAll("\\s+","");
+                        dstText = dstText.replace('\u200C',' ').replaceAll(" ","").replaceAll("،","");
+
+
+
+
+
+                        final String[] dstWords = dstText.split(" ");
+                        for (String dstWord : dstWords) {
+//                            if (dstWord.startsWith(dstString)) {
+                            if (dstWord.toLowerCase().contains(dstString.toLowerCase())) {
+                                newValues.add(value);
+                                break;
+                            }
+                        }
+                    }
+                } else if (dstPrefix == null || dstPrefix.length() == 0) {
+                    final String srcString = srcPrefix.toString().toLowerCase();
+
+                    for (int i = 0; i < count; i++) {
+                        final StationRouteModel value = values.get(i);
+
+                        String srcText = value.SrcStAdd.toString().toLowerCase();
+                        srcText = srcText.replace('\u200C',' ').replaceAll(" ","").replaceAll("،","");;
+
+                        final String[] srcWords = srcText.split(" ");
+                        for (String srcWord : srcWords) {
+//                            if (srcWord.startsWith(srcString)) {
+                            if (srcWord.toLowerCase().contains(srcString.toLowerCase())) {
+                                newValues.add(value);
+                                break;
+                            }
+                        }
+
+                    }
+                } else {
+                    final String srcString = srcPrefix.toString().toLowerCase();
+                    final String dstString = dstPrefix.toString().toLowerCase();
+
+                    for (int i = 0; i < count; i++) {
+                        final StationRouteModel value = values.get(i);
+
+                        String srcText = value.SrcStAdd.toString().toLowerCase();
+                        srcText = srcText.replace('\u200C',' ').replaceAll(" ","").replaceAll("،","");
+
+                        String dstText = value.DstStAdd.toString().toLowerCase();
+                        dstText = dstText.replace('\u200C',' ').replaceAll(" ","").replaceAll("،","");
+
+                        final String[] srcWords = srcText.split(" ");
+                        final String[] dstWords = dstText.split(" ");
+                        for (String srcWord : srcWords) {
+                            for (String dstWord : dstWords) {
+//                                if (srcWord.startsWith(srcString) && dstWord.startsWith(dstString)) {
+                                if (srcWord.toLowerCase().contains(srcString.toLowerCase()) && dstWord.toLowerCase().contains(dstString.toLowerCase())) {
+                                    newValues.add(value);
+                                    break;
+                                }
+                            }
+                        }
+
+                    }
+                }
+                results.values = newValues;
+                results.count = newValues.size();
+            }
+
+            return results;
+        }
+
+        private final DataSetObservable mDataSetObservable = new DataSetObservable();
+
+        public void notifyDataSetInvalidated() {
+            mDataSetObservable.notifyInvalidated();
+        }
+
+        private boolean mNotifyOnChange = true;
+
+
+        public void clear() {
+            synchronized (mLock) {
+                if (mOriginalValues != null) {
+                    mOriginalValues.clear();
+                } else {
+                    mObjects.clear();
+                }
+            }
+            if (mNotifyOnChange) notifyDataSetChanged();
+        }
+
+
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            //noinspection unchecked
+            mObjects = (List<StationRouteModel>) results.values;
+            //clear();
+            addAll(mObjects);
+            //if (results.count > 0) {
+                notifyDataSetChanged();
+            /*} else {
+                notifyDataSetInvalidated();
+            }*/
+        }
+    }
+
 }
