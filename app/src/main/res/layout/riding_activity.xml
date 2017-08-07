@@ -8,7 +8,7 @@
     android:orientation="vertical"
     tools:context=".ui.activities.RidingActivity">
 
-    <include layout="@layout/toolbar" />
+    <include layout="@layout/toolbar_riding" />
 
     <RelativeLayout
         android:layout_width="match_parent"

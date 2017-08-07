@@ -7,6 +7,7 @@
     android:background="@color/search_box"
     android:orientation="vertical">
 
+
     <LinearLayout
         android:id="@+id/withdraw_form"
         android:layout_width="match_parent"
@@ -15,39 +16,59 @@
         android:layout_marginBottom="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:orientation="vertical">
 
-        <android.support.design.widget.TextInputLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:contentDescription="Withdraw"
-            android:inputType="number"
-            android:paddingEnd="15dp"
-            android:paddingStart="15dp"
-            android:textColorHint="@color/text_hint">
+            android:orientation="horizontal">
 
-
-            <EditText
-                android:id="@+id/withdraw_txt"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:hint="@string/withdraw_request"
-                android:inputType="text"
-                android:singleLine="true"
-                android:textColor="@color/text_light"
-                android:textSize="14dp" />
-        </android.support.design.widget.TextInputLayout>
+                android:layout_marginBottom="8dp"
+                android:layout_weight="1"
+                android:layout_marginTop="8dp"
+                android:layout_gravity="center|start"
+                android:gravity="center|start"
+                android:contentDescription="Withdraw"
+                android:inputType="number"
+                android:paddingEnd="15dp"
+                android:paddingStart="15dp"
+                android:textColorHint="@color/text_hint">
+
+
+                <EditText
+                    android:id="@+id/withdraw_txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:hint="@string/shaba"
+                    android:inputType="text"
+                    android:singleLine="true"
+                    android:textColor="@color/text_light"
+                    android:textSize="14dp" />
+            </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|end"
+                android:layout_weight="10"
+                android:gravity="center|end"
+                android:text="IR" />
+
+        </LinearLayout>
 
         <com.beardedhen.androidbootstrap.BootstrapButton
             android:id="@+id/withdraw_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_gravity="center"
-            android:text="@string/do_withdraw"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:text="@string/do_withdraw_all"
             app:bootstrapBrand="success"
             app:bootstrapSize="md"
             app:buttonMode="regular"

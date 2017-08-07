@@ -5,7 +5,9 @@ package com.mibarim.driver.ui.activities;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.BaseTransientBottomBar;
@@ -61,6 +63,7 @@ public class CreditActivity extends BootstrapActivity {
     private View parentLayout;
     private String authToken;
     private String remain;
+    private String shaba;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -101,6 +104,9 @@ public class CreditActivity extends BootstrapActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
         }
+        SharedPreferences prefs = this.getSharedPreferences(
+                "com.mibarim.driver", Context.MODE_PRIVATE);
+        shaba=prefs.getString("Shaba", "");
         initScreen();
     }
 
@@ -176,11 +182,22 @@ public class CreditActivity extends BootstrapActivity {
         return remain;
     }
 
+    public void setShaba(String shaba) {
+        SharedPreferences prefs = this.getSharedPreferences(
+                "com.mibarim.driver", Context.MODE_PRIVATE);
+        prefs.edit().putString("Shaba", shaba).apply();
+    }
+
+    public String getShaba() {
+        return shaba;
+    }
+
     public void submitWithdrawRequest(final String withdrawAmount) {
         if(withdrawAmount.equals(""))
         {
-            Snackbar.make(parentLayout, R.string.no_amount, BaseTransientBottomBar.LENGTH_LONG);
+            Snackbar.make(parentLayout, R.string.no_shaba, BaseTransientBottomBar.LENGTH_LONG).show();
         }else {
+            setShaba(withdrawAmount);
             showProgress();
             new SafeAsyncTask<Boolean>() {
                 @Override
@@ -203,7 +220,7 @@ public class CreditActivity extends BootstrapActivity {
                         new HandleApiMessagesBySnackbar(parentLayout, response).showMessages();
                         if (response.Messages != null && response.Messages.size() > 0) {
                             for (String msg : response.Messages) {
-                                Snackbar.make(parentLayout, msg, BaseTransientBottomBar.LENGTH_LONG);
+                                Snackbar.make(parentLayout, msg, BaseTransientBottomBar.LENGTH_LONG).show();
                                 clearCode();
                             }
                         }

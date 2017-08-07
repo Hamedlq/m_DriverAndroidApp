@@ -50,6 +50,7 @@ public class
     public ApiResponse confirmMobileSms(String authToken, String mobile, String vCode) {
         return getUserService().validateMobileSms("Bearer " + authToken, mobile, vCode);
     }
+
     public boolean sendValidateSms(String authToken,String mobile,int count) {
         return getUserService().sendValidateSms("Bearer " + authToken, mobile,count);
     }

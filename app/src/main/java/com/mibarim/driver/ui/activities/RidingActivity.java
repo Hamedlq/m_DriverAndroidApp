@@ -17,6 +17,8 @@ import android.graphics.Color;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -25,6 +27,7 @@ import android.provider.Settings;
 import android.support.annotation.ArrayRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
@@ -117,6 +120,8 @@ public class RidingActivity extends BootstrapActivity {
     GoogleLocationService mService;
     boolean mBound = false;
     private Tracker mTracker;
+    private ImageView support;
+
 
     private String authToken;
     private int RELOAD_REQUEST = 1234;
@@ -171,8 +176,19 @@ public class RidingActivity extends BootstrapActivity {
         }
 
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.ride_toolbar);
         setSupportActionBar(toolbar);
+
+        support = (ImageView) toolbar.findViewById(R.id.support);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            if (Build.VERSION.SDK_INT >= 17) {
+                actionBar.setHomeAsUpIndicator(R.mipmap.ic_menu_forward);
+            }
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
 
         serviceIntent = new Intent(this, LocationService.class);
         googleServiceIntent = new Intent(this, GoogleLocationService.class);
@@ -214,6 +230,16 @@ public class RidingActivity extends BootstrapActivity {
                     } else {
                         finishIt();
                     }
+                    return true;
+                }
+                return false;
+            }
+        });
+        support.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    call("09358695785");
                     return true;
                 }
                 return false;
@@ -306,6 +332,14 @@ public class RidingActivity extends BootstrapActivity {
 
     }
 
+    public void call(String tel) {
+        if (tel != null) {
+            Intent intent = new Intent(Intent.ACTION_DIAL);
+            intent.setData(Uri.parse("tel:" + tel));
+            startActivity(intent);
+        }
+    }
+
     private void periodicReLoading() {
         mHandler = new Handler();
         mRunnable = new Runnable() {
@@ -393,11 +427,11 @@ public class RidingActivity extends BootstrapActivity {
                     Double.parseDouble(loc.lng),
                     results);
             stationDistance = (int) results[0];
-            if (stationDistance > 200) {
+            if (stationDistance > 300) {
                 station_dis.setTextColor(Color.RED);
-            } else if (stationDistance > 100) {
+            } else if (stationDistance > 200) {
                 station_dis.setTextColor(Color.YELLOW);
-            } else if (stationDistance < 100) {
+            } else if (stationDistance < 200) {
                 station_dis.setTextColor(Color.GREEN);
             }
             station_dis.setText(String.valueOf(stationDistance));

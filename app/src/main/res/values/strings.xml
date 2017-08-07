@@ -342,6 +342,7 @@
     <string name="money_request">درخواست دریافت وجه</string>
     <string name="do_discount">اعمال کد تخفیف</string>
     <string name="do_withdraw">درخواست وجه</string>
+    <string name="do_withdraw_all">درخواست تصفیه</string>
     <string name="gift_amount"> ریال اعتبار هدیه تکمیل</string>
     <string name="describe_me">علایق من و انتظارات از همسفرها</string>
     <string name="invite_text">می‌بریم را به دوستان خود معرفی کنید و یک ماه سفرهای درون شهری خود را رایگان انجام دهید.</string>
@@ -401,4 +402,6 @@
     <string name="set_station">انتخاب ایستگاه مبدا</string>
     <string name="no_station">ایستگاهی ثبت نشده است</string>
     <string name="no_amount">لطفا مبلغ را وارد کنید</string>
+    <string name="no_shaba">لطفا شماره شبا بانکی را وارد نمایید</string>
+    <string name="trip">سفر</string>
 </resources>

@@ -601,7 +601,6 @@ public class MainActivity extends BootstrapActivity {
                 }
             }
         }.execute();
-
     }
 
     public void gotoRidingActivity(DriverTripModel dm) {

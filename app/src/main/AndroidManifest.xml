@@ -68,7 +68,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.RidingActivity"
-            android:label="@string/riding_passenger"
+            android:label=""
             android:screenOrientation="portrait" />
         <activity
             android:name="com.mibarim.driver.ui.activities.AddMapActivity"

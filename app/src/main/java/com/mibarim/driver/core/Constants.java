@@ -52,8 +52,8 @@ public final class Constants {
          */
 //        public static final String URL_BASE = "http://localhost:50226";
 //        public static final String URL_BASE = "http://mibarim.ir/CoreApi";
-//        public static final String URL_BASE = "http://mibarimapp.com/testapp";
-        public static final String URL_BASE = "http://mibarimapp.com/CoreApi";
+        public static final String URL_BASE = "http://mibarimapp.com/testapp";
+//        public static final String URL_BASE = "http://mibarimapp.com/CoreApi";
 //          public static final String URL_BASE = "http://CoreApi.mibarim.ir/";
 //        public static final String URL_BASE = "http://mibarim.ir/testApp/CoreApi";
 
@@ -123,7 +123,7 @@ public final class Constants {
         public static final String URL_GET_SCORE_CONTACT = "/GetUserScoresByContact";
         public static final String URL_GET_SCORE_Route = "/GetUserScoresByRoute";
         public static final String URL_GET_INITIAL_INFO = "/GetUserInitialInfo";
-        public static final String URL_SET_GOOGLE_TOKEN = "/SaveGcmToken";
+        public static final String URL_SET_GOOGLE_TOKEN = "/SaveDriverGcmToken";
         public static final String URL_GET_IMAGE = "/GetImageById";
         public static final String URL_SET_DISCOUNT = "/SubmitDiscount";
         public static final String URL_GET_DISCOUNT = "/GetDiscount";

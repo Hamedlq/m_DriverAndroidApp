@@ -32,6 +32,7 @@ public class WithdrawMainFragment extends Fragment {
     protected EditText withdraw_txt;
 
     public WithdrawMainFragment() {
+
     }
 
     @Override
@@ -61,7 +62,11 @@ public class WithdrawMainFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         ButterKnife.bind(this, getView());
         String remain=((CreditActivity)getActivity()).getRemain();
-        withdraw_txt.setHint(remain);
+        String shaba=((CreditActivity)getActivity()).getShaba();
+        withdraw_btn.setText("درخواست تصفیه (" + remain + " تومان) ");
+        withdraw_txt.setText(shaba);
+        //withdraw_txt.setHint(remain);
+
         withdraw_txt.requestFocus();
         withdraw_btn.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -83,7 +88,7 @@ public class WithdrawMainFragment extends Fragment {
 
 
     public void ClearCode() {
-        withdraw_txt.setText("");
+        //withdraw_txt.setText("");
         final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.withdraw_list, new WithdrawListFragment())
