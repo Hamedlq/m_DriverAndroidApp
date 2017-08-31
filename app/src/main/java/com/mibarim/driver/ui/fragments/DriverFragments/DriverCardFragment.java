@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.github.brnunes.swipeablerecyclerview.SwipeableRecyclerViewTouchListener;
 import com.google.android.gms.analytics.HitBuilders;
@@ -25,7 +24,6 @@ import com.mibarim.driver.authenticator.LogoutService;
 import com.mibarim.driver.data.UserData;
 import com.mibarim.driver.models.ApiResponse;
 import com.mibarim.driver.models.Plus.DriverRouteModel;
-import com.mibarim.driver.models.Plus.PassRouteModel;
 import com.mibarim.driver.models.Route.RouteResponse;
 import com.mibarim.driver.services.RouteResponseService;
 import com.mibarim.driver.ui.ThrowableLoader;
@@ -87,12 +85,12 @@ public class DriverCardFragment extends Fragment
             @Override
             public void onRefresh() {
                 refresh();
-                ((MainActivity)getActivity()).getUserScore();
+                ((MainActivity) getActivity()).getUserScore();
             }
         });
 
         mEmptyView = (ImageView) mRecycler.findViewById(android.R.id.empty);
-        mEmptyView.setAlpha((float)0.5);
+        mEmptyView.setAlpha((float) 0.5);
         mEmptyView.setVisibility(View.GONE);
         /*mProgressView = (ProgressBar) mRecycler.findViewById(R.id.pb_loading);*/
 
@@ -126,16 +124,18 @@ public class DriverCardFragment extends Fragment
                     ((MainActivity) getActivity()).deleteRoute(selectedItem.DriverRouteId);
                 }
             }
+
             @Override
             public void onSrcLinkClick(View view, int position) {
-                if(getActivity() instanceof MainActivity){
+                if (getActivity() instanceof MainActivity) {
                     DriverRouteModel selectedItem = ((DriverRouteModel) items.get(position));
                     ((MainActivity) getActivity()).gotoWebView(selectedItem.SrcLink);
                 }
             }
+
             @Override
             public void onDstLinkClick(View view, int position) {
-                if(getActivity() instanceof MainActivity){
+                if (getActivity() instanceof MainActivity) {
                     DriverRouteModel selectedItem = ((DriverRouteModel) items.get(position));
                     ((MainActivity) getActivity()).gotoWebView(selectedItem.DstLink);
                 }
@@ -143,7 +143,7 @@ public class DriverCardFragment extends Fragment
 
             @Override
             public void onBtnClick(View view, int position) {
-                if(getActivity() instanceof MainActivity){
+                if (getActivity() instanceof MainActivity) {
                     DriverRouteModel selectedItem = ((DriverRouteModel) items.get(position));
                     ((MainActivity) getActivity()).gotoRidingActivity(selectedItem);
                 }
@@ -248,6 +248,40 @@ public class DriverCardFragment extends Fragment
         // specify an adapter (see also next example)
         mAdapter = new DriverRouteRecyclerAdapter(getActivity(), items, itemTouchListener);
         mRecyclerView.setAdapter(mAdapter);
+
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            int c = 0;
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0 && c == 0) {
+                    ((MainActivity) getActivity()).hidefab();
+                    c = 1;
+                }
+
+                if (dy < 0 && c == 1) {
+                    ((MainActivity) getActivity()).showFab();
+                    c = 0;
+                }
+
+
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+//                    ((MainActivity)getActivity()).hidefab();
+                }
+            }
+
+
+        });
+
+
+
         mRecyclerView.addOnItemTouchListener(new SwipeableRecyclerViewTouchListener(mRecyclerView,
                 new SwipeableRecyclerViewTouchListener.SwipeListener() {
                     @Override
@@ -280,9 +314,13 @@ public class DriverCardFragment extends Fragment
         public void onCardViewTap(View view, int position);
 
         public void onSwitchCard(View view, int position);
+
         public void onDeleteCard(View view, int position);
+
         public void onSrcLinkClick(View view, int position);
+
         public void onDstLinkClick(View view, int position);
+
         public void onBtnClick(View view, int position);
 
 

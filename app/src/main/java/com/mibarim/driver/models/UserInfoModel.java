@@ -28,4 +28,9 @@ public class UserInfoModel implements Serializable {
     public String BankAccountNo;
     public String BankImageId;
     public String CompanyImageId;
+    public ImageDescription NationalCardImage;
+    public ImageDescription LicenseImage;
+    public ImageDescription CarCardImage;
+    public ImageDescription CarCardBckImage;
+    public ImageDescription CarImage;
 }

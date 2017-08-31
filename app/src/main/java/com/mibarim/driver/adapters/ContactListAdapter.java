@@ -76,7 +76,7 @@ public class ContactListAdapter extends SingleTypeAdapter<ContactModel> {
         setText(1, eventResponse.Address);
         setText(2, eventResponse.TimeString);
         setText(3, eventResponse.Conductor);
-        setText(4, eventResponse.Description);
+        setText(4, eventResponse.ImageDescription);
 
         setText(3, String.valueOf(eventResponse.AccompanyCount));
         setText(4, eventResponse.PricingString);

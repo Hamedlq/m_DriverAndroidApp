@@ -143,6 +143,7 @@ public class MainActivity extends BootstrapActivity {
     private ScoreModel scoreModel;
     TextView user_credit;
     ImageView invite_btn;
+    ImageView uploadButton;
     private InviteModel inviteModel;
     NumberPicker seat_picker;
 
@@ -184,6 +185,7 @@ public class MainActivity extends BootstrapActivity {
         setSupportActionBar(toolbar);
         user_credit = (TextView) toolbar.findViewById(R.id.user_credit);
         invite_btn = (ImageView) toolbar.findViewById(R.id.invite_btn);
+        uploadButton = (ImageView) toolbar.findViewById(R.id.upload_button);
         checkAuth();
         //initScreen();
     }
@@ -199,8 +201,11 @@ public class MainActivity extends BootstrapActivity {
                 .add(R.id.main_container, new DriverCardFragment(), DRIVE_FRAGMENT_TAG)
                 .commit();
         fragmentManager.beginTransaction()
-                .add(R.id.main_container, new FabFragment())
+                .add(R.id.main_container, new FabFragment(),"FabFragment")
                 .commit();
+
+
+
         user_credit.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -211,6 +216,7 @@ public class MainActivity extends BootstrapActivity {
                 return false;
             }
         });
+
         invite_btn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -221,6 +227,18 @@ public class MainActivity extends BootstrapActivity {
                 return false;
             }
         });
+
+        uploadButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN){
+                    goToUploadActivity();
+                    return true;
+                }
+                return false;
+            }
+        });
+
         if (url != null) {
             gotoWebView(url);
         }
@@ -767,6 +785,7 @@ public class MainActivity extends BootstrapActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(msg).setPositiveButton("تعهد می‌دهم", ConfirmDialogClickListener)
                 .setNegativeButton("بیخیال", ConfirmDialogClickListener).show();
+
     }
 
     DialogInterface.OnClickListener ConfirmDialogClickListener = new DialogInterface.OnClickListener() {
@@ -775,6 +794,12 @@ public class MainActivity extends BootstrapActivity {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:
                     //showSetTime();
+                    if (userInfoModel.UserImageId == null) {
+                        Intent j = new Intent(getApplicationContext(), UserImageUploadActivity.class);
+                        startActivity(j);
+                    }
+//                    Intent userImageIntent = new Intent(getApplicationContext(),UserImageUploadActivity.class);
+//                    startActivity(userImageIntent);
                     setTripTime();
                     break;
                 case DialogInterface.BUTTON_NEGATIVE:
@@ -1012,6 +1037,13 @@ public class MainActivity extends BootstrapActivity {
         this.startActivity(intent);
     }
 
+    private void goToUploadActivity(){
+        Intent intent = new Intent(this,UserDocumentsUploadActivity.class);
+//        Intent intent = new Intent(this,UserImageUploadActivity.class);
+        intent.putExtra(Constants.Auth.AUTH_TOKEN, authToken);
+        startActivity(intent);
+    }
+
     public void getUserScore() {
         new SafeAsyncTask<Boolean>() {
             @Override
@@ -1072,4 +1104,19 @@ public class MainActivity extends BootstrapActivity {
             }
         }.execute();
     }
+
+    public void hidefab(){
+//        FabFragment fabFragment =
+        final FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentByTag("FabFragment");
+        ((FabFragment)fragment).hideTheFab();
+    }
+
+    public void showFab(){
+        final FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentByTag("FabFragment");
+        ((FabFragment)fragment).showTheFab();
+
+    }
+
 }

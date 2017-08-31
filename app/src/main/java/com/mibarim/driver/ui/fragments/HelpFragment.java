@@ -126,7 +126,7 @@ public class HelpFragment extends Fragment {
         for (int i = 0; i < 20; i++) {
             StructNote note = new StructNote();
             note.title = "Title";
-            note.description = "Description";
+            note.description = "ImageDescription";
             notes.add(note);
         }
         adapter.notifyDataSetChanged();

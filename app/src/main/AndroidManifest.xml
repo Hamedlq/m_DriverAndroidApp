@@ -178,6 +178,20 @@
             android:label="@string/location_search"
             android:screenOrientation="portrait" />
 
+        <activity android:name=".ui.activities.UserImageUploadActivity"/>
+        
+        <!--<activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat"/> &lt;!&ndash; optional (needed if default theme has no action bar) &ndash;&gt;-->
+
+        <activity android:name=".ui.activities.UserDocumentsUploadActivity"
+            android:label=""
+            android:screenOrientation="portrait"
+
+
+            />
+
+
+
         <!--
                     <receiver
                     android:name=".receiver.PeriodicReceiver"

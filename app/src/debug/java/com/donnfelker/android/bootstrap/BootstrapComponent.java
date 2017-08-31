@@ -29,6 +29,8 @@ import com.mibarim.driver.ui.activities.SuggestRouteCardActivity;
 import com.mibarim.driver.ui.activities.TripActivity;
 import com.mibarim.driver.ui.activities.TripProfileActivity;
 import com.mibarim.driver.ui.activities.UserContactActivity;
+import com.mibarim.driver.ui.activities.UserDocumentsUploadActivity;
+import com.mibarim.driver.ui.activities.UserImageUploadActivity;
 import com.mibarim.driver.ui.activities.UserInfoActivity;
 import com.mibarim.driver.authenticator.AuthenticatorActivity;
 import com.mibarim.driver.authenticator.TokenRefreshActivity;
@@ -361,6 +363,10 @@ public interface BootstrapComponent {
     void inject(HelpFragment target);
 
     void inject(BootstrapActivity target);
+
+    void inject(UserImageUploadActivity target);
+
+    void inject(UserDocumentsUploadActivity target);
 
 
 }

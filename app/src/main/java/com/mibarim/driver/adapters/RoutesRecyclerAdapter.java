@@ -84,12 +84,11 @@ public class RoutesRecyclerAdapter extends RecyclerView.Adapter<RoutesRecyclerAd
     }
 
 
-
     // Provide a suitable constructor (depends on the kind of dataset)
     public RoutesRecyclerAdapter(Activity activity, List<StationRouteModel> list, RoutesCardFragment.ItemTouchListener onItemTouchListener) {
         _activity = activity;
         items = list;
-        mObjects=items;
+        mObjects = items;
         this.onItemTouchListener = onItemTouchListener;
     }
 
@@ -172,7 +171,7 @@ public class RoutesRecyclerAdapter extends RecyclerView.Adapter<RoutesRecyclerAd
 
         holder.src_address.setText(mObjects.get(position).SrcStAdd);
         holder.dst_address.setText(mObjects.get(position).DstStAdd);
-        holder.route_price.setText(mObjects.get(position).StRoutePrice );
+        holder.route_price.setText(mObjects.get(position).StRoutePrice);
         /*holder.carString.setText(items.get(position).CarString);*/
         //holder.seats.setText("ظرفیت: " + items.get(position).EmptySeat + " از " + items.get(position).CarSeats);
         /*holder.src_distance.setText(items.get(position).SrcDistance);
@@ -206,9 +205,6 @@ public class RoutesRecyclerAdapter extends RecyclerView.Adapter<RoutesRecyclerAd
         mFilter = new RouteArrayFilter(src, dst);
         return mFilter;
     }
-
-
-
 
 
     private class RouteArrayFilter extends Filter {
@@ -250,10 +246,7 @@ public class RoutesRecyclerAdapter extends RecyclerView.Adapter<RoutesRecyclerAd
                     for (int i = 0; i < count; i++) {
                         final StationRouteModel value = values.get(i);
                         String dstText = value.DstStAdd.toString().toLowerCase();//.replace('\u200C', ' ').replaceAll("\\s+","");
-                        dstText = dstText.replace('\u200C',' ').replaceAll(" ","").replaceAll("،","");
-
-
-
+                        dstText = dstText.replace('\u200C', ' ').replaceAll(" ", "").replaceAll("،", "");
 
 
                         final String[] dstWords = dstText.split(" ");
@@ -272,7 +265,8 @@ public class RoutesRecyclerAdapter extends RecyclerView.Adapter<RoutesRecyclerAd
                         final StationRouteModel value = values.get(i);
 
                         String srcText = value.SrcStAdd.toString().toLowerCase();
-                        srcText = srcText.replace('\u200C',' ').replaceAll(" ","").replaceAll("،","");;
+                        srcText = srcText.replace('\u200C', ' ').replaceAll(" ", "").replaceAll("،", "");
+                        ;
 
                         final String[] srcWords = srcText.split(" ");
                         for (String srcWord : srcWords) {
@@ -292,10 +286,10 @@ public class RoutesRecyclerAdapter extends RecyclerView.Adapter<RoutesRecyclerAd
                         final StationRouteModel value = values.get(i);
 
                         String srcText = value.SrcStAdd.toString().toLowerCase();
-                        srcText = srcText.replace('\u200C',' ').replaceAll(" ","").replaceAll("،","");
+                        srcText = srcText.replace('\u200C', ' ').replaceAll(" ", "").replaceAll("،", "");
 
                         String dstText = value.DstStAdd.toString().toLowerCase();
-                        dstText = dstText.replace('\u200C',' ').replaceAll(" ","").replaceAll("،","");
+                        dstText = dstText.replace('\u200C', ' ').replaceAll(" ", "").replaceAll("،", "");
 
                         final String[] srcWords = srcText.split(" ");
                         final String[] dstWords = dstText.split(" ");
@@ -333,7 +327,6 @@ public class RoutesRecyclerAdapter extends RecyclerView.Adapter<RoutesRecyclerAd
         }
 
 
-
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             //noinspection unchecked
@@ -341,7 +334,7 @@ public class RoutesRecyclerAdapter extends RecyclerView.Adapter<RoutesRecyclerAd
             //clear();
             addAll(mObjects);
             //if (results.count > 0) {
-                notifyDataSetChanged();
+            notifyDataSetChanged();
             /*} else {
                 notifyDataSetInvalidated();
             }*/

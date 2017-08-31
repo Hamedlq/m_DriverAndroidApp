@@ -2,13 +2,16 @@ package com.mibarim.driver.RestInterfaces;
 
 import com.mibarim.driver.core.Constants;
 import com.mibarim.driver.models.ApiResponse;
-//import com.squareup.okhttp.RequestBody;
 
+import retrofit.http.Field;
+import retrofit.http.FormUrlEncoded;
 import retrofit.http.Header;
 import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.http.Part;
 import retrofit.mime.TypedFile;
+
+//import com.squareup.okhttp.RequestBody;
 
 /**
  * Created by Hamed on 3/10/2016.
@@ -44,5 +47,10 @@ public interface SaveUserImageService {
     @Multipart
     ApiResponse SaveBankCardImage(@Header(Constants.Http.PARAM_AUTHORIZATION) String authToken,
                                       @Part("BankCardPic") TypedFile pic);
+
+    @POST(Constants.Http.URL_SEND_IMAGE)
+    @FormUrlEncoded
+    ApiResponse saveImage(@Header(Constants.Http.PARAM_AUTHORIZATION) String authToken,
+                          @Field("Base64Image") String Base64Image, @Field("ImageType") int i);
 
 }

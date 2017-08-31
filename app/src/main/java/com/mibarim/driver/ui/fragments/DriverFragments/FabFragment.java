@@ -1,25 +1,17 @@
 package com.mibarim.driver.ui.fragments.DriverFragments;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.AppCompatButton;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.mibarim.driver.BootstrapApplication;
 import com.mibarim.driver.R;
-import com.mibarim.driver.ui.activities.DriveActivity;
 import com.mibarim.driver.ui.activities.MainActivity;
 
 import butterknife.Bind;
@@ -28,7 +20,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Hamed on 3/5/2016.
  */
-public class FabFragment extends Fragment  {
+public class FabFragment extends Fragment {
 
     private RelativeLayout layout;
 
@@ -62,6 +54,23 @@ public class FabFragment extends Fragment  {
                 ((MainActivity)getActivity()).gotoRouteLists();
             }
         });
+
+    }
+
+    public void hideTheFab(){
+//        fab.hide();
+        LinearInterpolator linearInterpolator = new LinearInterpolator();
+//        fab.animate().translationY(0).setInterpolator(new LinearInterpolator()).start();
+//        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+//        int fab_bottomMargin = layoutParams.bottomMargin;
+        fab.animate().setDuration(200).translationY(fab.getHeight() + 100  ).setInterpolator(new LinearInterpolator()).start();
+
+
+    }
+
+    public void showTheFab(){
+//        fab.show();
+        fab.animate().translationY(0).setInterpolator(new LinearInterpolator()).start();
     }
 
 

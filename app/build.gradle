@@ -147,6 +147,9 @@ dependencies {
     //compile 'com.github.clans:fab:1.6.4'
     //compile 'com.google.android.gms:play-services:9.0.1'
     //https://developers.google.com/android/guides/setup
+
+//    compile 'com.theartofdev.edmodo:android-image-cropper:2.4.+'
+
     compile 'com.google.android.gms:play-services-base:9.4.0'
     compile 'com.google.android.gms:play-services-appindexing:9.4.0'
     compile 'com.google.android.gms:play-services-gcm:9.4.0'

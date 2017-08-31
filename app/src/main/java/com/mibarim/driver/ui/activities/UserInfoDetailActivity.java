@@ -122,6 +122,12 @@ public class UserInfoDetailActivity extends BootstrapActivity {
 
     private boolean refreshingToken = false;
 
+
+
+
+
+
+
     /*private PersonalInfoModel personalInfoModel;
     private CarInfoModel carInfoModel;
     private LicenseInfoModel licenseInfoModel;
@@ -169,6 +175,10 @@ public class UserInfoDetailActivity extends BootstrapActivity {
             //userInfoModel = (UserInfoModel) getIntent().getExtras().getSerializable(USER_INFO);
             selectedFragment= (UserCardTypes)getIntent().getExtras().getSerializable(SELECTED_FRAGMENT);
         }
+
+
+
+
         userInfoModel = userData.userInfoQuery();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -790,6 +800,7 @@ public class UserInfoDetailActivity extends BootstrapActivity {
             }
         }.execute();
     }
+
 
     private void selectImage() {
         final CharSequence[] items = {getString(R.string.camera), getString(R.string.fromGallery), getString(R.string.later)};

@@ -18,7 +18,9 @@ public enum ImageTypes {
     @SerializedName("5")
     CarBckPic("CarBckPic", 5),
     @SerializedName("6")
-    BankPic("BankPic", 6);
+    BankPic("BankPic", 6),
+    @SerializedName("8")
+    CarImage("CarImage", 8);
 
     private String stringValue;
     private int intValue;
@@ -31,6 +33,10 @@ public enum ImageTypes {
     @Override
     public String toString() {
         return stringValue;
+    }
+
+    public int toInt() {
+        return intValue;
     }
 }
 

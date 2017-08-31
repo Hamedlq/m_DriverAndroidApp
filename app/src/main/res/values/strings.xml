@@ -402,7 +402,5 @@
     <string name="set_station">انتخاب ایستگاه مبدا</string>
     <string name="no_station">ایستگاهی ثبت نشده است</string>
     <string name="no_amount">لطفا مبلغ را وارد کنید</string>
-    <string name="no_shaba">لطفا شماره شبا بانکی را وارد نمایید</string>
-    <string name="trip">سفر</string>
-    <string name="not_reserved">سفر رزرو نشده است</string>
+    <string name="state_not_sent">وضعیت: فرستاده نشده</string>
 </resources>

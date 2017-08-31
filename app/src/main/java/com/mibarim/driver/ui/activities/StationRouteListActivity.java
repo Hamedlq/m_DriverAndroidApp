@@ -175,9 +175,15 @@ public class StationRouteListActivity extends BootstrapActivity {
         //come second to be focusable
         s2.onActionViewExpanded();
         s1.onActionViewExpanded();
-        s1.setIconified(false);
+//        s1.setIconified(false);
 
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+
+//        Fragment fragment = fragmentManager.findFragmentByTag(SubStationFragment);
+
 
         s1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -319,6 +325,7 @@ public class StationRouteListActivity extends BootstrapActivity {
     public void onBackPressed() {
         finish();
         return;
+
     }
 
     @Override
@@ -469,6 +476,7 @@ public class StationRouteListActivity extends BootstrapActivity {
 
         return super.onCreateOptionsMenu(menu);
     }
+
 
 
 
