@@ -9,45 +9,68 @@
     android:minHeight="@dimen/abc_action_bar_default_height_material"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-    <!--
-        <Button
-            android:background="@android:color/holo_blue_bright"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        -->
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
 
-        <android.support.v7.widget.SearchView
-            app:searchHintIcon="@drawable/ic_search_black"
-            android:id="@+id/searchView"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:layout_margin="8dp"
-            android:background="@android:color/holo_blue_light"
-            android:iconifiedByDefault="true"
-            app:defaultQueryHint="مبدا" />
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_weight="15"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_adjust_black" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_more_vert" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_place_black" />
+        </LinearLayout>
 
 
-        <android.support.v7.widget.SearchView
-            app:searchHintIcon="@drawable/ic_search_black"
-            android:id="@+id/searchView2"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:layout_margin="8dp"
-            android:layout_marginBottom="10dp"
-            android:background="@android:color/holo_blue_light"
-            android:iconifiedByDefault="true"
-            app:defaultQueryHint="مقصد" />
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
+            <android.support.v7.widget.SearchView
+                android:id="@+id/searchView"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_margin="8dp"
+                android:background="@color/primary_light"
+                android:focusable="true"
+                android:iconifiedByDefault="true"
+                app:defaultQueryHint="مبدا"
+                app:searchHintIcon="@drawable/ic_search_black" />
+
+
+            <android.support.v7.widget.SearchView
+                android:id="@+id/searchView2"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_margin="8dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/primary_light"
+                android:iconifiedByDefault="true"
+                app:defaultQueryHint="مقصد"
+                app:searchHintIcon="@drawable/ic_search_black" />
+
+
+        </LinearLayout>
 
     </LinearLayout>
-
 
 </android.support.v7.widget.Toolbar>

@@ -44,7 +44,7 @@
     <string name="no_news">No News</string>
     <string name="avatar">Avatar</string>
     <string name="choose">Choose</string>
-    <string name="version">3.1</string>
+    <string name="version">3.1.1</string>
     <string name="testVersion">نسخه آزمایشی</string>
 
     <!-- AuthenticatorActivity -->
@@ -404,4 +404,5 @@
     <string name="no_amount">لطفا مبلغ را وارد کنید</string>
     <string name="no_shaba">لطفا شماره شبا بانکی را وارد نمایید</string>
     <string name="trip">سفر</string>
+    <string name="not_reserved">سفر رزرو نشده است</string>
 </resources>

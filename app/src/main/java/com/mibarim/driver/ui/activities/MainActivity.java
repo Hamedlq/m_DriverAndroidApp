@@ -592,15 +592,21 @@ public class MainActivity extends BootstrapActivity {
                 Gson gson = new Gson();
                 for (String tripTimeModel : userTrip.Messages) {
                     DriverTripModel dm = gson.fromJson(tripTimeModel, DriverTripModel.class);
+
                     if (dm.TripState == TripStates.InTripTime.toInt() || dm.TripState == TripStates.InRiding.toInt()
                             || dm.TripState == TripStates.InPreTripTime.toInt()) {
-                        gotoRidingActivity(dm);
+                        if (dm.FilledSeats > 0) {
+                            gotoRidingActivity(dm);
+                        } else {
+                            Snackbar.make(parentLayout, R.string.not_reserved, Snackbar.LENGTH_LONG).show();
+                        }
                     } else if (dm.TripState == TripStates.InRanking.toInt()) {
                         //gotoRankingActivity
                     }
                 }
             }
         }.execute();
+
     }
 
     public void gotoRidingActivity(DriverTripModel dm) {
@@ -999,6 +1005,7 @@ public class MainActivity extends BootstrapActivity {
         this.startActivityForResult(intent, CREDIT_RETURN);
 
     }
+
     private void gotoInviteActivity() {
         Intent intent = new Intent(this, InviteActivity.class);
         intent.putExtra(Constants.Auth.AUTH_TOKEN, authToken);

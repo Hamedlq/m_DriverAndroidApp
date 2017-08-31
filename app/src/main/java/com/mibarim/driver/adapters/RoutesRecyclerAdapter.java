@@ -186,30 +186,17 @@ public class RoutesRecyclerAdapter extends RecyclerView.Adapter<RoutesRecyclerAd
         return mObjects.size();
     }
 
-
-
-
-
-
+    public List<StationRouteModel> getItems() {
+        return mObjects;
+    }
 
 // added by me
-
-
-
-
-
-
 
     private RouteArrayFilter mFilter;
     private ArrayList<StationRouteModel> mOriginalValues;
     private final Object mLock = new Object();
     private List<StationRouteModel> mObjects;
-
-
-
-
-
-
+    private boolean mNotifyOnChange = true;
 
     public Filter getFilter(String src, String dst) {
         if (mFilter != null) {
@@ -331,13 +318,7 @@ public class RoutesRecyclerAdapter extends RecyclerView.Adapter<RoutesRecyclerAd
             return results;
         }
 
-        private final DataSetObservable mDataSetObservable = new DataSetObservable();
 
-        public void notifyDataSetInvalidated() {
-            mDataSetObservable.notifyInvalidated();
-        }
-
-        private boolean mNotifyOnChange = true;
 
 
         public void clear() {

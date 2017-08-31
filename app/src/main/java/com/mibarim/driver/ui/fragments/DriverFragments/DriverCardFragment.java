@@ -252,7 +252,7 @@ public class DriverCardFragment extends Fragment
                 new SwipeableRecyclerViewTouchListener.SwipeListener() {
                     @Override
                     public boolean canSwipeLeft(int position) {
-                        return true;
+                        return false;
                     }
 
                     @Override

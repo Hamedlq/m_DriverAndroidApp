@@ -207,8 +207,8 @@ public class RidingActivity extends BootstrapActivity {
                             gpsAlert.show();
                         } else {
                             AlertDialog.Builder builder = new AlertDialog.Builder(RidingActivity.this);
-                            String msg = "زمان سفر فرانرسیده است. لطفا منتظر بمانید.";
-                            builder.setMessage(msg).setPositiveButton("باشه", dialogClickListener);
+                            String msg = "زمان سفر فرانرسیده است. آیا "+driverTripModel.FilledSeats+" مسافر سوار خودرو شده‌اند؟";
+                            builder.setMessage(msg).setPositiveButton("بله", tripdialogClickListener).setNegativeButton("خیر", tripdialogClickListener);
                             gpsAlert = builder.create();
                             gpsAlert.show();
                         }
@@ -239,7 +239,7 @@ public class RidingActivity extends BootstrapActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    call("09358695785");
+                    call("02128426784");
                     return true;
                 }
                 return false;
@@ -273,6 +273,23 @@ public class RidingActivity extends BootstrapActivity {
         mHandler.removeCallbacks(mRunnable);
         super.onDestroy();
     }
+
+    @Override
+    public void onBackPressed() {
+        finishIt();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finishIt();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 
 
     private void sendTripPoint(final int tripState) {
@@ -532,6 +549,22 @@ public class RidingActivity extends BootstrapActivity {
         }
     };
 
+    DialogInterface.OnClickListener tripdialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    sendTripPoint(TripStates.DriverRiding.toInt());
+                    finishIt();
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
+
+                    //finishAffinity();
+                    break;
+            }
+        }
+    };
+
 
     /**
      * Hide progress dialog
@@ -648,6 +681,8 @@ public class RidingActivity extends BootstrapActivity {
     private void finishIt() {
         mHandler.removeCallbacks(mRunnable);
         LocationService.destroy(RidingActivity.this);
+        Intent i= getIntent();
+        setResult(RESULT_OK,i);
         finish();
     }
 }

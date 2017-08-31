@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -96,6 +97,31 @@ public class StationRouteListActivity extends BootstrapActivity {
     String srcText = null;
     String dstText = null;
 
+    char asym1 = '\u064A'; // y arabi noghte daar ok
+    char asym2 = '\u0649'; // y arabi binoghte ok
+
+    char asym4 = '\u0643'; // kaafe arabi
+
+    char asym3 = '\u0629'; // taye arabi
+
+
+    char asym5 = '\u0671'; // alefe vasl arabi
+    char asym6 = '\u0625'; // alf ba hamzeye paayin arabi
+
+    //farsi symbols
+
+    char fsym6 = '\u06CC'; //ye
+    char fsym7 = '\u0626'; // ye baa hamze
+
+    char fsym1 = '\u06A9'; // kaafe farsi
+    char fsym2 = '\u0648'; //vaave farsi
+    char fsym3 = '\u0622'; //aa ba kolah farsi
+    char fsym4 = '\u0627'; // alef
+    char fsym5 = '\u0623'; //alef ba hamzeye bala
+
+    char fsym8 = '\u0647'; // he
+
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
 
@@ -132,19 +158,6 @@ public class StationRouteListActivity extends BootstrapActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar_search);
         setSupportActionBar(toolbar);
 
-
-
-
-
-//        final RoutesCardFragment routesCardFrag = new RoutesCardFragment();
-
-//        final Fragment fragment = fragmentManager.findFragmentById(R.id.container);
-
-
-
-
-
-
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             if (Build.VERSION.SDK_INT >= 17) {
@@ -157,25 +170,14 @@ public class StationRouteListActivity extends BootstrapActivity {
         //checkAuth();
         initScreen();
 
-
-
-
-//s1.setQueryHint("salam");
-
-        s1 = (SearchView) findViewById(searchView);
+        s1 = (SearchView) findViewById(R.id.searchView);
         s2 = (SearchView) findViewById(R.id.searchView2);
-
+        //come second to be focusable
+        s2.onActionViewExpanded();
         s1.onActionViewExpanded();
         s1.setIconified(false);
 
-        s2.onActionViewExpanded();
-//        s2.setIconified(false);
-
-        //
-
-
-//        Fragment fragment = fragmentManager.findFragmentByTag(SubStationFragment);
-
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         s1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,8 +186,6 @@ public class StationRouteListActivity extends BootstrapActivity {
 
             }
         });
-
-
         s2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -193,15 +193,6 @@ public class StationRouteListActivity extends BootstrapActivity {
 
             }
         });
-
-/*
-
-        s1.setIconified(false);
-        s2.setIconified(false);
-
-
-*/
-
 
         s1.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -211,53 +202,13 @@ public class StationRouteListActivity extends BootstrapActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
-
-                char asym1 = '\u064A'; // y arabi noghte daar ok
-                char asym2 = '\u0649'; // y arabi binoghte ok
-
-                char asym4 = '\u0643'; // kaafe arabi
-
-                char asym3 = '\u0629'; // taye arabi
-
-
-                char asym5 = '\u0671'; // alefe vasl arabi
-                char asym6 = '\u0625'; // alf ba hamzeye paayin arabi
-
-                //farsi symbols
-
-                char fsym6 = '\u06CC'; //ye
-                char fsym7 = '\u0626'; // ye baa hamze
-
-                char fsym1 = '\u06A9'; // kaafe farsi
-                char fsym2 = '\u0648'; //vaave farsi
-                char fsym3 = '\u0622'; //aa ba kolah farsi
-                char fsym4 = '\u0627'; // alef
-                char fsym5 = '\u0623'; //alef ba hamzeye bala
-
-                char fsym8 = '\u0647'; // he
-
-
-
-
                 String temp;
 
                 temp = newText.replace(asym1, fsym6);  // for y
                 temp = temp.replace(asym2, fsym6); // for y
-
-
                 temp = temp.replace(asym4, fsym1); // for kaaf
-//                temp = newText.replace(asym3, fsym8);
-
-
                 temp = temp.replaceAll(" ","");
-
-
                 srcText = temp;
-
-
-
-                //srcText = newText;
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 final Fragment routesCardFrag = fragmentManager.findFragmentByTag(RoutesCardFragment);
                 ((RoutesCardFragment)routesCardFrag).searchText(srcText, dstText);
@@ -275,59 +226,19 @@ public class StationRouteListActivity extends BootstrapActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
-
-                char asym1 = '\u064A'; // y arabi noghte daar ok
-                char asym2 = '\u0649'; // y arabi binoghte ok
-
-                char asym4 = '\u0643'; // kaafe arabi
-
-                char asym3 = '\u0629'; // taye arabi
-
-
-                char asym5 = '\u0671'; // alefe vasl arabi
-                char asym6 = '\u0625'; // alf ba hamzeye paayin arabi
-
-                //farsi symbols
-
-                char fsym6 = '\u06CC'; //ye
-                char fsym7 = '\u0626'; // ye baa hamze
-
-                char fsym1 = '\u06A9'; // kaafe farsi
-                char fsym2 = '\u0648'; //vaave farsi
-                char fsym3 = '\u0622'; //aa ba kolah farsi
-                char fsym4 = '\u0627'; // alef
-                char fsym5 = '\u0623'; //alef ba hamzeye bala
-
-                char fsym8 = '\u0647'; // he
-
-
-
-
                 String temp;
 
                 temp = newText.replace(asym1, fsym6);  // for y
                 temp = temp.replace(asym2, fsym6); // for y
-
-
                 temp = temp.replace(asym4, fsym1); // for kaaf
-//                temp = newText.replace(asym3, fsym8);
-
-
                 temp = temp.replaceAll(" ","");
                 dstText = temp;
-
-
-
-
-//                dstText = newText;
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 final Fragment routesCardFrag = fragmentManager.findFragmentByTag(RoutesCardFragment);
                 ((RoutesCardFragment)routesCardFrag).searchText(srcText, dstText);
                 return false;
             }
         });
-
 
 
 
@@ -339,6 +250,7 @@ public class StationRouteListActivity extends BootstrapActivity {
                 .add(R.id.container, new RoutesCardFragment(),RoutesCardFragment)
                 .commit();
     }
+
 
     /*private void checkAuth() {
         new SafeAsyncTask<Boolean>() {
@@ -403,13 +315,11 @@ public class StationRouteListActivity extends BootstrapActivity {
         Snackbar.make(parentLayout, R.string.network_error, Snackbar.LENGTH_LONG).show();
     }
 
-
     @Override
     public void onBackPressed() {
         finish();
         return;
     }
-
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
@@ -523,8 +433,6 @@ public class StationRouteListActivity extends BootstrapActivity {
         if (fragment != null) {
             fragmentManager.beginTransaction().remove(fragment).commit();
         }
-
-
     }
 
 

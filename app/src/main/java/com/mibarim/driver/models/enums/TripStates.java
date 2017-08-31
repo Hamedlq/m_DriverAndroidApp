@@ -10,6 +10,7 @@ public enum TripStates {
     InPreTripTime("InPreTripTime", 10),
     InTripTime("InTripTime", 15),
     InRiding("InRiding", 20),
+    DriverRiding("DriverRiding", 27),
     InDriving("InDriving", 40),
     InRanking("InRanking", 45);
 

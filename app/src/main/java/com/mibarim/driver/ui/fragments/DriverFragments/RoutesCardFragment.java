@@ -119,9 +119,9 @@ public class RoutesCardFragment extends Fragment
             @Override
             public void onCardViewTap(View view, int position) {
                 if (getActivity() instanceof StationRouteListActivity) {
-                    StationRouteModel selectedItem = ((StationRouteModel) items.get(position));
+                    List<StationRouteModel> theItems=mAdapter.getItems();
+                    StationRouteModel selectedItem = ((StationRouteModel) theItems.get(position));
                     ((StationRouteListActivity) getActivity()).selectStation(selectedItem);
-
                 }
             }
             /*@Override
