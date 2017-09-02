@@ -67,8 +67,6 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
     private String SAVE_IMAGE_CODE = "SaveImageCode";
 
 
-
-
     @Inject
     protected BootstrapServiceProvider serviceProvider;
     @Inject
@@ -95,8 +93,6 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
     protected ImageView imageCarIv;
 
 
-
-
     @Bind(R.id.user_national_card_tv)
     protected TextView userNationalCardTv;
 
@@ -111,8 +107,6 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
 
     @Bind(R.id.image_car_tv)
     protected TextView imageCarTv;
-
-
 
 
     @Bind(R.id.user_national_card_pb)
@@ -131,7 +125,6 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
     protected ProgressBar imageCarPB;
 
 
-
     @Bind(R.id.user_national_card_description_tv)
     protected TextView userNationalCardDescriptionTv;
 
@@ -148,7 +141,6 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
     protected TextView imageCarDescriptionDescriptionTv;
 
 
-
     @Bind(R.id.user_national_card__title_tv)
     protected TextView userNationalCardTitleTv;
 
@@ -163,8 +155,6 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
 
     @Bind(R.id.image_car_title_tv)
     protected TextView imageCarTitleTv;
-
-
 
 
     @Override
@@ -185,17 +175,13 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
 
         SharedPreferences sharedPreferences = this.getSharedPreferences("com.mibarim.driver", Context.MODE_PRIVATE);
 
-        sharedPreferences.edit().putInt(USER_NATIONAL_CARD,2).apply();
+        sharedPreferences.edit().putInt(USER_NATIONAL_CARD, 2).apply();
 
         /*sharedPreferences.edit().putInt(USER_NATIONAL_CARD,2).apply();
         sharedPreferences.edit().putInt(LICENSE_CARD,2).apply();
         sharedPreferences.edit().putInt(CAR_PIC,4).apply();
         sharedPreferences.edit().putInt(CAR_BACK_PIC,5).apply();
         sharedPreferences.edit().putInt(CAR_BACK_PIC,8).apply();*/
-
-
-
-
 
 
         userNationalCardPB.setVisibility(View.INVISIBLE);
@@ -248,41 +234,33 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
         SharedPreferences sharedPreferences = this.getSharedPreferences("com.mibarim.driver", Context.MODE_PRIVATE);
 
 
-
-
-
-        if (v.getId() == R.id.user_national_card_tv | v.getId() == R.id.user_national_card_iv | v.getId() == R.id.user_national_card__title_tv)
-        {
-            sharedPreferences.edit().putInt(SAVE_IMAGE_CODE,2).apply();
+        if (v.getId() == R.id.user_national_card_tv | v.getId() == R.id.user_national_card_iv | v.getId() == R.id.user_national_card__title_tv) {
+            sharedPreferences.edit().putInt(SAVE_IMAGE_CODE, 2).apply();
             g = 2;
             selectImage();
         }
 
-        if (v.getId() == R.id.license_card_iv | v.getId() == R.id.license_card_tv | v.getId() == R.id.license_card_title_tv)
-        {
+        if (v.getId() == R.id.license_card_iv | v.getId() == R.id.license_card_tv | v.getId() == R.id.license_card_title_tv) {
             g = 3;
-            sharedPreferences.edit().putInt(SAVE_IMAGE_CODE,3).apply();
+            sharedPreferences.edit().putInt(SAVE_IMAGE_CODE, 3).apply();
             selectImage();
         }
 
-        if (v.getId() == R.id.car_pic_iv | v.getId() == R.id.car_pic_tv | v.getId() == R.id.car_pic_title_tv)
-        {
-            sharedPreferences.edit().putInt(SAVE_IMAGE_CODE,4).apply();
+        if (v.getId() == R.id.car_pic_iv | v.getId() == R.id.car_pic_tv | v.getId() == R.id.car_pic_title_tv) {
+            sharedPreferences.edit().putInt(SAVE_IMAGE_CODE, 4).apply();
             g = 4;
             selectImage();
         }
 
-        if (v.getId() == R.id.car_back_pic_iv | v.getId() == R.id.car_back_pic_tv | v.getId() == R.id.car_back_pic_title_tv )
-        {
+        if (v.getId() == R.id.car_back_pic_iv | v.getId() == R.id.car_back_pic_tv | v.getId() == R.id.car_back_pic_title_tv) {
             g = 5;
-            sharedPreferences.edit().putInt(SAVE_IMAGE_CODE,5).apply();
+            sharedPreferences.edit().putInt(SAVE_IMAGE_CODE, 5).apply();
             selectImage();
         }
 
-        if (v.getId() == R.id.image_car_iv | v.getId() == R.id.image_car_tv | v.getId() == R.id.image_car_title_tv)
-        {
+        if (v.getId() == R.id.image_car_iv | v.getId() == R.id.image_car_tv | v.getId() == R.id.image_car_title_tv) {
             g = 8;
-            sharedPreferences.edit().putInt(SAVE_IMAGE_CODE,8).apply();
+            sharedPreferences.edit().putInt(SAVE_IMAGE_CODE, 8).apply();
             selectImage();
         }
 
@@ -396,48 +374,56 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
         if (requestCode == REQUEST_CAMERA && resultCode == RESULT_OK) {
 //            Intent reciecedIntent = getIntent();
 //            int imageTypeInt = reciecedIntent.getIntExtra(IMAGE_TYPE_INT, 0);
-            Uri imageUri = data.getData();
+            final Uri imageUri = data.getData();
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+//            Bitmap bitmap2;
+            /*if(data.getData()==null){
+                bitmap2 = (Bitmap)data.getExtras().get("data");
+            }else{
+                try {
+                    bitmap2 = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }*/
+
 //            doCrop(imageuri);
 
             SharedPreferences sharedPreferences = this.getSharedPreferences("com.mibarim.driver", Context.MODE_PRIVATE);
-            int r = sharedPreferences.getInt(SAVE_IMAGE_CODE,0);
+            int r = sharedPreferences.getInt(SAVE_IMAGE_CODE, 0);
 
-            try {
-                switch (r) {
-                    case 2:
-                        userNationalCardPB.setVisibility(View.VISIBLE);
-                        break;
-                    case 3:
-                        licenseCardPB.setVisibility(View.VISIBLE);
+            switch (r) {
+                case 2:
+                    userNationalCardPB.setVisibility(View.VISIBLE);
+                    break;
+                case 3:
+                    licenseCardPB.setVisibility(View.VISIBLE);
 //                        licenseCardPB.setProgress(0);
 //                        licenseCardPB.setProgress(40);
 
-                        break;
-                    case 4:
-                        carPicPB.setVisibility(View.VISIBLE);
-                        break;
-                    case 5:
-                        carBackPicPB.setVisibility(View.VISIBLE);
-                        break;
-                    case 8:
-                        imageCarPB.setVisibility(View.VISIBLE);
-                        break;
-                }
-
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
-                saveProfileImage(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
+                    break;
+                case 4:
+                    carPicPB.setVisibility(View.VISIBLE);
+                    break;
+                case 5:
+                    carBackPicPB.setVisibility(View.VISIBLE);
+                    break;
+                case 8:
+                    imageCarPB.setVisibility(View.VISIBLE);
+                    break;
             }
 
 
+//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+            saveProfileImage(photo);
 
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
-                saveProfileImage(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+//            try {
+//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+//                saveProfileImage(bitmap);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
 
         }
 
@@ -453,7 +439,7 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
 //            long iSelectedItem = data.getLongExtra(IMAGE_TYPE_INT, 0);
 //            doCrop(imageUri);
             SharedPreferences sharedPreferences = this.getSharedPreferences("com.mibarim.driver", Context.MODE_PRIVATE);
-            int r = sharedPreferences.getInt(SAVE_IMAGE_CODE,0);
+            int r = sharedPreferences.getInt(SAVE_IMAGE_CODE, 0);
 
             try {
                 switch (r) {
@@ -563,8 +549,6 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
     }
 
 
-
-
     private void setTheStates() {
         switch (userInfoModel.NationalCardImage.getState().toString()) {
             case "NotSent":
@@ -668,7 +652,6 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
         }
 
 
-
         userNationalCardPB.setVisibility(View.INVISIBLE); // or  invisible?
         licenseCardPB.setVisibility(View.INVISIBLE);
         carPicPB.setVisibility(View.INVISIBLE);
@@ -693,7 +676,7 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
                 String encodedImage = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
 //                licenseCardPB.setProgress(60);
                 SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.mibarim.driver", Context.MODE_PRIVATE);
-                int imageSaveCode = sharedPreferences.getInt(SAVE_IMAGE_CODE,0);
+                int imageSaveCode = sharedPreferences.getInt(SAVE_IMAGE_CODE, 0);
                 response = userImageService.SaveImage(authToken, encodedImage, imageSaveCode);
                 if ((response.Errors == null || response.Errors.size() == 0) && response.Status.equals("OK")) {
 
@@ -845,8 +828,6 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
         super.onBackPressed();
         finish();
     }
-
-
 
 
 }

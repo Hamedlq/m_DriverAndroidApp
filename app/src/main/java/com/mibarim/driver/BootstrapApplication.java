@@ -3,6 +3,7 @@
 package com.mibarim.driver;
 
 import android.app.Application;
+import android.os.StrictMode;
 
 import com.beardedhen.androidbootstrap.TypefaceProvider;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -15,7 +16,7 @@ import com.mibarim.driver.util.FontsOverride;
 public abstract class BootstrapApplication extends Application {
 
     private static BootstrapApplication instance;
-    private BootstrapComponent component;
+    private com.mibarim.driver.BootstrapComponent component;
 
     /**
      * Create driver application
@@ -44,8 +45,10 @@ public abstract class BootstrapApplication extends Application {
         FontsOverride.setDefaultFont(this, "MONOSPACE", "fonts/IRANSans(FaNum)_Light.ttf");
         FontsOverride.setDefaultFont(this, "SERIF", "fonts/IRANSans(FaNum)_Light.ttf");
         FontsOverride.setDefaultFont(this, "SANS_SERIF", "fonts/IRANSans(FaNum)_Light.ttf");
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
     }
-    public static BootstrapComponent component() {
+    public static com.mibarim.driver.BootstrapComponent component() {
         return instance.component;
     }
 
@@ -57,13 +60,13 @@ public abstract class BootstrapApplication extends Application {
         return instance;
     }
 
-    public BootstrapComponent getComponent() {
+    public com.mibarim.driver.BootstrapComponent getComponent() {
         return component;
     }
 
     public final static class DaggerComponentInitializer {
 
-        public static BootstrapComponent init() {
+        public static com.mibarim.driver.BootstrapComponent init() {
             return DaggerBootstrapComponent.builder()
                     .androidModule(new AndroidModule())
                     .bootstrapModule(new BootstrapModule())
