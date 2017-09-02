@@ -794,10 +794,6 @@ public class MainActivity extends BootstrapActivity {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:
                     //showSetTime();
-                    if (userInfoModel.UserImageId == null) {
-                        Intent j = new Intent(getApplicationContext(), UserImageUploadActivity.class);
-                        startActivity(j);
-                    }
 //                    Intent userImageIntent = new Intent(getApplicationContext(),UserImageUploadActivity.class);
 //                    startActivity(userImageIntent);
                     setTripTime();
@@ -965,6 +961,10 @@ public class MainActivity extends BootstrapActivity {
                     TripTimeModel tt = gson.fromJson(tripTimeModel, TripTimeModel.class);
                     if (tt.IsSubmited) {
                         setNotificationAlamManager(tt, (int) selectedRouteTrip.DriverRouteId);
+                        if (userInfoModel.UserImageId == null) {
+                            Intent j = new Intent(getApplicationContext(), UserImageUploadActivity.class);
+                            startActivity(j);
+                        }
                     }
                 }
             }

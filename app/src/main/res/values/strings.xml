@@ -396,22 +396,16 @@
     <string name="suggest_station">+ پیشنهاد مسیر و ایستگاه جدید</string>
     <string name="start_trip">آغاز سفر</string>
     <string name="open_app">لطفا برنامه را باز کنید</string>
-    <string name="waiting_state">منتظر مسافران هستم</string>
+    <string name="waiting_state">منتظر هم‌مسیران هستم</string>
     <string name="riding_passenger">سوار کردن مسافران</string>
     <string name="meter">متر</string>
     <string name="set_station">انتخاب ایستگاه مبدا</string>
     <string name="no_station">ایستگاهی ثبت نشده است</string>
     <string name="no_amount">لطفا مبلغ را وارد کنید</string>
     <string name="state_not_sent">وضعیت: فرستاده نشده</string>
-    <!--<string name="state_under_checking">وضعیت: درحال بررسی</string>-->
-    <string name="state_accepted">وضعیت: پذیرفته شده</string>
-    <!--<string name="state_rejected">وضعیت: رد شده</string>-->
-    <string name="trip">سفر</string>
-
     <string name="no_shaba">لطفا کد شبا را وارد کنید</string>
     <string name="state_under_checking">در حال بررسی</string>
     <string name="state_accpeted">وضعیت: پذیرفته شده</string>
     <string name="state_rejected">وضعیت: رد شده</string>
     <string name="not_reserved">سفر رزرو نشده است</string>
-
 </resources>

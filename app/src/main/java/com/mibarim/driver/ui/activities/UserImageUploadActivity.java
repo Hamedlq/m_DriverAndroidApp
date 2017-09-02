@@ -479,6 +479,7 @@ public class UserImageUploadActivity extends BootstrapActivity implements View.O
             @Override
             protected void onException(final Exception e) throws RuntimeException {
                 super.onException(e);
+                progressDialog.hide();
                 if (e instanceof android.os.OperationCanceledException) {
                     // User cancelled the authentication process (back button, etc).
                     // Since auth could not take place, lets finish this activity.

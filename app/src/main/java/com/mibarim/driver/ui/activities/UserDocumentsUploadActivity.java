@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -323,6 +324,25 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
                 selectImage();
         }*/
 
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void selectImage() {
@@ -647,8 +667,6 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
                 imageCarTv.setText(R.string.state_rejected);
                 imageCarIv.setImageResource(R.drawable.ic_highlight_off_black_24dp);
                 break;
-
-
         }
 
 
@@ -823,11 +841,6 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
     }
 
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-    }
 
 
 }
