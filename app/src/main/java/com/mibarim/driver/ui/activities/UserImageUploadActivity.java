@@ -364,9 +364,9 @@ public class UserImageUploadActivity extends BootstrapActivity implements View.O
         new SafeAsyncTask<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                if (authToken == null) {
+                /*if (authToken == null) {
                     authToken = serviceProvider.getAuthToken(UserImageUploadActivity.this);
-                }
+                }*/
 
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                 image.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
@@ -391,7 +391,7 @@ public class UserImageUploadActivity extends BootstrapActivity implements View.O
             @Override
             protected void onException(final Exception e) throws RuntimeException {
                 super.onException(e);
-                Toast.makeText(getBaseContext(),"لطفا مجددا تلاش گنید.",Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(),"لطفا مجددا تلاش کنید.",Toast.LENGTH_LONG).show();
                 progressDialog.hide();
             }
 
@@ -413,10 +413,10 @@ public class UserImageUploadActivity extends BootstrapActivity implements View.O
         new SafeAsyncTask<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                if (authToken == null) {
+                /*if (authToken == null) {
 //                    serviceProvider.invalidateAuthToken();
 //                    authToken = serviceProvider.getAuthToken(UserInfoDetailActivity.this);
-                }
+                }*/
                 newUserInfoModel = userInfoService.getUserInfo(authToken);
                 return true;
             }
@@ -461,13 +461,14 @@ public class UserImageUploadActivity extends BootstrapActivity implements View.O
 
 
     private void getImageFromServer(final String imageId) {
+        progressDialog.show();
         new SafeAsyncTask<Boolean>() {
             ImageResponse imageResponse = new ImageResponse();
 
             @Override
             public Boolean call() throws Exception {
-                String token = serviceProvider.getAuthToken(UserImageUploadActivity.this);
-                imageResponse = userInfoService.GetImageById(token, imageId);
+                //String token = serviceProvider.getAuthToken(UserImageUploadActivity.this);
+                imageResponse = userInfoService.GetImageById(authToken, imageId);
                 if (imageResponse != null && imageResponse.Base64ImageFile != null) {
                     return true;
                 }
@@ -490,6 +491,7 @@ public class UserImageUploadActivity extends BootstrapActivity implements View.O
             @Override
             protected void onSuccess(final Boolean imageLoaded) throws Exception {
                 if (imageLoaded) {
+                    progressDialog.hide();
                     byte[] decodedString = Base64.decode(imageResponse.Base64ImageFile, Base64.DEFAULT);
                     Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                     String path = ImageUtils.saveImageToInternalStorage(getApplicationContext(), decodedByte, imageResponse.ImageId);

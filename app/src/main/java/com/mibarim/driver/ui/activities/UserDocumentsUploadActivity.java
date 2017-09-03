@@ -543,10 +543,10 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
         new SafeAsyncTask<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                if (authToken == null) {
+                /*if (authToken == null) {
                     serviceProvider.invalidateAuthToken();
                     authToken = serviceProvider.getAuthToken(UserDocumentsUploadActivity.this);
-                }
+                }*/
                 userInfoModel = userInfoService.getUserInfo(authToken);
                 return true;
             }
@@ -684,9 +684,9 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
         new SafeAsyncTask<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                if (authToken == null) {
+                /*if (authToken == null) {
                     authToken = serviceProvider.getAuthToken(UserDocumentsUploadActivity.this);
-                }
+                }*/
 
 
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -737,10 +737,10 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
         new SafeAsyncTask<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                if (authToken == null) {
+                /*if (authToken == null) {
 //                    serviceProvider.invalidateAuthToken();
 //                    authToken = serviceProvider.getAuthToken(UserInfoDetailActivity.this);
-                }
+                }*/
                 newUserInfoModel = userInfoService.getUserInfo(authToken);
                 return true;
             }
@@ -790,8 +790,8 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
 
             @Override
             public Boolean call() throws Exception {
-                String token = serviceProvider.getAuthToken(UserDocumentsUploadActivity.this);
-                imageResponse = userInfoService.GetImageById(token, imageId);
+//                String token = serviceProvider.getAuthToken(UserDocumentsUploadActivity.this);
+                imageResponse = userInfoService.GetImageById(authToken, imageId);
                 if (imageResponse != null && imageResponse.Base64ImageFile != null) {
                     return true;
                 }

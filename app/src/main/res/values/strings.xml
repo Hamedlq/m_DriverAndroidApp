@@ -408,4 +408,5 @@
     <string name="state_accpeted">وضعیت: پذیرفته شده</string>
     <string name="state_rejected">وضعیت: رد شده</string>
     <string name="not_reserved">سفر رزرو نشده است</string>
+    <string name="car_image">تصویر خودرو</string>
 </resources>

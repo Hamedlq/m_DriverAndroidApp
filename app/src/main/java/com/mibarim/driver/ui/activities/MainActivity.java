@@ -126,6 +126,7 @@ public class MainActivity extends BootstrapActivity {
     private Tracker mTracker;
     protected Bitmap result;//concurrency must be considered
     private int REFRESH_TOKEN_REQUEST = 3456;
+    private int USER_PIC_REQUEST = 4567;
     private boolean refreshingToken = false;
     String googletoken = "";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
@@ -406,6 +407,9 @@ public class MainActivity extends BootstrapActivity {
         }
         if (requestCode == CREDIT_RETURN && resultCode == RESULT_OK) {
             getUserScore();
+        }
+        if (requestCode == USER_PIC_REQUEST && resultCode == RESULT_OK) {
+            getUserInfoFromServer();
         }
     }
 
@@ -962,8 +966,9 @@ public class MainActivity extends BootstrapActivity {
                     if (tt.IsSubmited) {
                         setNotificationAlamManager(tt, (int) selectedRouteTrip.DriverRouteId);
                         if (userInfoModel.UserImageId == null) {
-                            Intent j = new Intent(getApplicationContext(), UserImageUploadActivity.class);
-                            startActivity(j);
+                            Intent intent = new Intent(MainActivity.this, UserImageUploadActivity.class);
+                            intent.putExtra(Constants.Auth.AUTH_TOKEN, authToken);
+                            startActivityForResult(intent,USER_PIC_REQUEST);
                         }
                     }
                 }
