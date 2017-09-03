@@ -409,4 +409,5 @@
     <string name="state_rejected">وضعیت: رد شده</string>
     <string name="not_reserved">سفر رزرو نشده است</string>
     <string name="car_image">تصویر خودرو</string>
+    <string name="error_message">خطا در ارتباط با سرور. لطفا مجددا تلاش کنید.</string>
 </resources>

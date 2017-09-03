@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
@@ -60,11 +61,11 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
     private View parentLayout;
     private int g = 0;
 
-    private String USER_NATIONAL_CARD = "UserNationalCard";
+    /*private String USER_NATIONAL_CARD = "UserNationalCard";
     private String LICENSE_CARD = "LicenseCard";
     private String CAR_PIC = "CarPic";
     private String CAR_BACK_PIC = "CarBackPic";
-    private String CAR_IMAGE = "CarImage";
+    private String CAR_IMAGE = "CarImage";*/
     private String SAVE_IMAGE_CODE = "SaveImageCode";
 
 
@@ -175,8 +176,9 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         SharedPreferences sharedPreferences = this.getSharedPreferences("com.mibarim.driver", Context.MODE_PRIVATE);
+        sharedPreferences.edit().putInt(SAVE_IMAGE_CODE, 0).apply();
 
-        sharedPreferences.edit().putInt(USER_NATIONAL_CARD, 2).apply();
+//        sharedPreferences.edit().putInt(USER_NATIONAL_CARD, 2).apply();
 
         /*sharedPreferences.edit().putInt(USER_NATIONAL_CARD,2).apply();
         sharedPreferences.edit().putInt(LICENSE_CARD,2).apply();
@@ -185,11 +187,13 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
         sharedPreferences.edit().putInt(CAR_BACK_PIC,8).apply();*/
 
 
-        userNationalCardPB.setVisibility(View.INVISIBLE);
+        /*userNationalCardPB.setVisibility(View.INVISIBLE);
         licenseCardPB.setVisibility(View.INVISIBLE);
         carPicPB.setVisibility(View.INVISIBLE);
         carBackPicPB.setVisibility(View.INVISIBLE);
-        imageCarPB.setVisibility(View.INVISIBLE);
+        imageCarPB.setVisibility(View.INVISIBLE);*/
+
+        makeAllProgressBarsInvisible();
 
 
         userNationalCardDescriptionTv.setVisibility(View.GONE);
@@ -554,6 +558,8 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
             @Override
             protected void onException(final Exception e) throws RuntimeException {
                 super.onException(e);
+                makeAllProgressBarsInvisible();
+                Toast.makeText(getBaseContext(), R.string.error_message, Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -563,7 +569,23 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
 //                getImageById(userInfoModel.UserImageId, R.mipmap.ic_camera);
 //                setInfoValues(userInfoModel.IsUserRegistered);
                 //setEmail();
-                setTheStates();
+
+                SharedPreferences sharedPreferences = UserDocumentsUploadActivity.this.getSharedPreferences("com.mibarim.driver", Context.MODE_PRIVATE);
+                int i = sharedPreferences.getInt(SAVE_IMAGE_CODE, -1);
+                if (i != 0) {
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            //Do something after 100ms
+                            setTheStates();
+                            Toast.makeText(getBaseContext(), "عکس بارگذاری شد.", Toast.LENGTH_LONG).show();
+                        }
+                    }, 5000);
+                }
+                else
+                    setTheStates();
+//                setTheStates();
             }
         }.execute();
     }
@@ -726,7 +748,7 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
 //                getImageById(id,i);
 //                reloadUserInfo();
 //                licenseCardPB.setProgress(100);
-                Toast.makeText(getBaseContext(), "عکس بارگذاری شد.", Toast.LENGTH_LONG).show();
+//                Toast.makeText(getBaseContext(), "عکس بارگذاری شد.", Toast.LENGTH_LONG).show();
 //                licenseCardPB.setVisibility(View.GONE);
                 getUserInfoFromServer();
             }
@@ -840,7 +862,13 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
         }.execute();
     }
 
-
+    public void makeAllProgressBarsInvisible() {
+        userNationalCardPB.setVisibility(View.INVISIBLE);
+        licenseCardPB.setVisibility(View.INVISIBLE);
+        carPicPB.setVisibility(View.INVISIBLE);
+        carBackPicPB.setVisibility(View.INVISIBLE);
+        imageCarPB.setVisibility(View.INVISIBLE);
+    }
 
 
 }

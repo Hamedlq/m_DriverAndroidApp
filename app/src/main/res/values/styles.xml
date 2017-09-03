@@ -94,16 +94,19 @@
         <item name="android:layout_margin">3dp</item>
         <item name="android:textSize">20dp</item>
     </style>
+
     <style name="wrapping_fa_text_fix">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">20dp</item>
     </style>
+
     <style name="wrapping_button">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginRight">4dp</item>
     </style>
+
     <style name="bottom_navigation">
         <item name="android:layout_margin">3dp</item>
         <item name="android:textSize">10dp</item>
@@ -154,10 +157,6 @@
     </style>
 
 
-
-
-
-
     <style name="PauseDialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowTitleStyle">@style/PauseDialogTitle</item>
     </style>
@@ -165,14 +164,12 @@
     <style name="PauseDialogTitle" parent="@android:style/TextAppearance.DialogWindowTitle">
         <item name="android:gravity">right</item>
     </style>
+
     <style name="DialogWindowTitle">
         <item name="android:maxLines">1</item>
         <item name="android:scrollHorizontally">true</item>
         <item name="android:textAppearance">@android:style/TextAppearance.DialogWindowTitle</item>
     </style>
-
-
-
 
 
     <style name="AlertDialogCustom" parent="@android:style/Theme.Dialog">
@@ -181,6 +178,21 @@
         <item name="android:textSize">10sp</item>
         <item name="android:gravity">right</item>
         <item name="android:title"></item>
+    </style>
+
+    <style name="ToolbarTheme" parent="Widget.AppCompat.Toolbar">
+        <item name="actionMenuTextColor">#1bff3a</item>
+        <item name="colorControlNormal">#FFF</item>
+        <item name="colorControlActivated">#FFF</item>
+        <item name="android:textColorPrimary">#FFF</item>
+        <item name="actionButtonStyle">@style/Widget.AppCompat.ActionButton</item>
+        <item name="selectableItemBackground">?android:selectableItemBackground</item>
+        <item name="selectableItemBackgroundBorderless">?android:selectableItemBackground</item>
+    </style>
+
+    <style name="optionMenu">
+        <item name="android:background">#88bdfd</item>
+
     </style>
 
 

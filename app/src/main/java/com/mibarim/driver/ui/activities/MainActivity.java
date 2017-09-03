@@ -229,14 +229,22 @@ public class MainActivity extends BootstrapActivity {
             }
         });
 
-        uploadButton.setOnTouchListener(new View.OnTouchListener() {
+        /*uploadButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN){
-                    goToUploadActivity();
+                if (event.getAction() == MotionEvent.ACTION_UP){
+
                     return true;
                 }
                 return false;
+            }
+        });*/
+
+
+        uploadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToUploadActivity();
             }
         });
 
@@ -700,6 +708,7 @@ public class MainActivity extends BootstrapActivity {
         final FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentByTag(DRIVE_FRAGMENT_TAG);
         ((DriverCardFragment) fragment).refresh();
+        showFab();
     }
 
     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
