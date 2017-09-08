@@ -37,6 +37,7 @@ import com.mibarim.driver.events.UnAuthorizedErrorEvent;
 import com.mibarim.driver.models.ApiResponse;
 import com.mibarim.driver.models.Plus.StationRouteModel;
 import com.mibarim.driver.models.Plus.SubStationModel;
+import com.mibarim.driver.models.RoutesDatabase;
 import com.mibarim.driver.models.SubmitResult;
 import com.mibarim.driver.services.RouteRequestService;
 import com.mibarim.driver.services.RouteResponseService;
@@ -48,11 +49,12 @@ import com.mibarim.driver.ui.fragments.DriverFragments.StationCardFragment;
 import com.mibarim.driver.util.SafeAsyncTask;
 import com.squareup.otto.Subscribe;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-
-import static com.mibarim.driver.R.id.searchView;
 
 //import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
 
@@ -120,6 +122,8 @@ public class StationRouteListActivity extends BootstrapActivity {
     char fsym5 = '\u0623'; //alef ba hamzeye bala
 
     char fsym8 = '\u0647'; // he
+
+    List<StationRouteModel> items;
 
 
     @Override
@@ -476,6 +480,29 @@ public class StationRouteListActivity extends BootstrapActivity {
 
         return super.onCreateOptionsMenu(menu);
     }
+
+
+
+    public ArrayList<StationRouteModel> getRoutesFromDatabase(){
+
+
+        ArrayList<StationRouteModel> latest = new ArrayList<>();
+
+        RoutesDatabase routesDatabase = new RoutesDatabase(this);
+        items = routesDatabase.routeResponseListQuery();
+
+        ArrayList<StationRouteModel> myArray = new ArrayList<>();
+//        ArrayList<String> myArray2 = new ArrayList<>();
+
+        for (int i = 0; i < items.size(); i++) {
+            StationRouteModel stationRouteModel = items.get(i);//.SrcStAdd + " - " + list.get(i).DstStAdd;
+            stationRouteModel.StRoutePrice = stationRouteModel.StRoutePrice + " تومان ";
+            latest.add(stationRouteModel);
+        }
+
+        return latest;
+    }
+
 
 
 

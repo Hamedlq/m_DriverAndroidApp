@@ -7,7 +7,7 @@
 
     <uses-sdk tools:overrideLibrary="android.support.test.uiautomator.v18" />
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -20,7 +20,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="driverer.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.SEND" />
@@ -29,8 +32,8 @@
 
     <application
         android:name="com.mibarim.driver.BootstrapApplicationImpl"
-        android:label="@string/app_name"
         android:icon="@mipmap/ic_circle_logo"
+        android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.Bootstrap.Dark.Me">
         <meta-data
@@ -54,18 +57,15 @@
         <activity
             android:name="com.mibarim.driver.ui.activities.CreditActivity"
             android:label="@string/credit_money"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.mibarim.driver.ui.activities.MainActivity"
             android:label=""
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.mibarim.driver.ui.activities.StationRouteListActivity"
             android:label="@string/route_list"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.activities.WebViewActivity"
             android:label=""
@@ -182,20 +182,20 @@
             android:label="@string/location_search"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".ui.activities.UserImageUploadActivity"
-            android:screenOrientation="portrait"
-            />
-        
+        <activity
+            android:name=".ui.activities.UserImageUploadActivity"
+            android:screenOrientation="portrait" />
+
         <!--<activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat"/> &lt;!&ndash; optional (needed if default theme has no action bar) &ndash;&gt;-->
 
-        <activity android:name=".ui.activities.UserDocumentsUploadActivity"
+        <activity
+            android:name=".ui.activities.UserDocumentsUploadActivity"
             android:label=""
             android:screenOrientation="portrait"
 
 
             />
-
 
 
         <!--

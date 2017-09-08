@@ -16,14 +16,13 @@ import android.widget.TextView;
 import com.github.brnunes.swipeablerecyclerview.SwipeableRecyclerViewTouchListener;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.google.gson.Gson;
 import com.mibarim.driver.BootstrapApplication;
 import com.mibarim.driver.R;
-import com.mibarim.driver.adapters.NewRoutesAdapter;
 import com.mibarim.driver.adapters.RoutesRecyclerAdapter;
 import com.mibarim.driver.models.ApiResponse;
 import com.mibarim.driver.models.Plus.StationRouteModel;
 import com.mibarim.driver.models.Route.RouteResponse;
+import com.mibarim.driver.models.RoutesDatabase;
 import com.mibarim.driver.services.RouteResponseService;
 import com.mibarim.driver.ui.ThrowableLoader;
 import com.mibarim.driver.ui.activities.StationRouteListActivity;
@@ -63,7 +62,6 @@ public class RoutesCardFragment extends Fragment
     //private ProgressBar mProgressView;
     private RoutesRecyclerAdapter mAdapter;
 
-    private NewRoutesAdapter newAdapter;
 
     private RecyclerView.LayoutManager mLayoutManager;
     private int selectedRow;
@@ -119,7 +117,7 @@ public class RoutesCardFragment extends Fragment
             @Override
             public void onCardViewTap(View view, int position) {
                 if (getActivity() instanceof StationRouteListActivity) {
-                    List<StationRouteModel> theItems=mAdapter.getItems();
+                    List<StationRouteModel> theItems = mAdapter.getItems();
                     StationRouteModel selectedItem = ((StationRouteModel) theItems.get(position));
                     ((StationRouteListActivity) getActivity()).selectStation(selectedItem);
                 }
@@ -159,9 +157,25 @@ public class RoutesCardFragment extends Fragment
 
     public void refresh() {
         getLoaderManager().restartLoader(0, null, this);
+//        getRoutesItemsFromDatabase();
         //showState(1);
         mAdapter = new RoutesRecyclerAdapter(getActivity(), items, itemTouchListener);
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+
+    private void getRoutesItemsFromDatabase() {
+        RoutesDatabase routesDatabase = new RoutesDatabase(getContext());
+        items = routesDatabase.routeResponseListQuery();
+
+
+        ArrayList<StationRouteModel> myArray = new ArrayList<>();
+//        ArrayList<String> myArray2 = new ArrayList<>();
+
+        for (int i = 0; i < items.size(); i++) {
+            StationRouteModel s = items.get(i);//.SrcStAdd + " - " + list.get(i).DstStAdd;
+            myArray.add(s);
+        }
     }
 
     @Override
@@ -182,6 +196,29 @@ public class RoutesCardFragment extends Fragment
         return new ThrowableLoader<List<StationRouteModel>>(getActivity(), items) {
             @Override
             public List<StationRouteModel> loadData() throws Exception {
+
+
+                latest = new ArrayList<StationRouteModel>();
+
+/*
+                RoutesDatabase routesDatabase = new RoutesDatabase(getContext());
+                items = routesDatabase.routeResponseListQuery();
+
+                ArrayList<StationRouteModel> myArray = new ArrayList<>();
+//        ArrayList<String> myArray2 = new ArrayList<>();
+
+                for (int i = 0; i < items.size(); i++) {
+                    StationRouteModel stationRouteModel = items.get(i);//.SrcStAdd + " - " + list.get(i).DstStAdd;
+                    stationRouteModel.StRoutePrice = stationRouteModel.StRoutePrice + " تومان ";
+                    latest.add(stationRouteModel);
+                }
+*/
+
+
+                latest = ((StationRouteListActivity) getActivity()).getRoutesFromDatabase();
+
+/*
+
                 latest = new ArrayList<StationRouteModel>();
                 Gson gson = new Gson();
                 if (getActivity() != null) {
@@ -194,6 +231,10 @@ public class RoutesCardFragment extends Fragment
                         }
                     }
                 }
+*/
+
+
+
                 if (latest != null) {
                     return latest;
                 } else {

@@ -169,6 +169,9 @@ public class DriverCardFragment extends Fragment
     }
 
     public void refresh() {
+
+        ((MainActivity) getActivity()).getRoutesListFromServer();
+
         getLoaderManager().restartLoader(0, null, this);
         //showState(1);
         mAdapter = new DriverRouteRecyclerAdapter(getActivity(), items, itemTouchListener);

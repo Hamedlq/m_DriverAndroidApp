@@ -1,6 +1,8 @@
 package com.mibarim.driver.ui.activities;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -60,6 +62,7 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
     private UserInfoModel newUserInfoModel;
     private View parentLayout;
     private int g = 0;
+    private ProgressDialog progressDialog;
 
     /*private String USER_NATIONAL_CARD = "UserNationalCard";
     private String LICENSE_CARD = "LicenseCard";
@@ -178,6 +181,11 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
         SharedPreferences sharedPreferences = this.getSharedPreferences("com.mibarim.driver", Context.MODE_PRIVATE);
         sharedPreferences.edit().putInt(SAVE_IMAGE_CODE, 0).apply();
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(getText(R.string.please_wait));
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
+
 //        sharedPreferences.edit().putInt(USER_NATIONAL_CARD, 2).apply();
 
         /*sharedPreferences.edit().putInt(USER_NATIONAL_CARD,2).apply();
@@ -210,6 +218,7 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
         }
 
         getUserInfoFromServer();
+        progressDialog.show();
 
 
         userNationalCardIv.setOnClickListener(this);
@@ -559,6 +568,7 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
             protected void onException(final Exception e) throws RuntimeException {
                 super.onException(e);
                 makeAllProgressBarsInvisible();
+                progressDialog.hide();
                 Toast.makeText(getBaseContext(), R.string.error_message, Toast.LENGTH_LONG).show();
             }
 
@@ -698,6 +708,8 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
         carBackPicPB.setVisibility(View.INVISIBLE);
         imageCarPB.setVisibility(View.INVISIBLE);
 
+        progressDialog.hide();
+
 
     }
 
@@ -736,6 +748,8 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
             @Override
             protected void onException(final Exception e) throws RuntimeException {
                 super.onException(e);
+                makeAllProgressBarsInvisible();
+                Toast.makeText(UserDocumentsUploadActivity.this,R.string.error_message,Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -770,6 +784,8 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
             @Override
             protected void onException(final Exception e) throws RuntimeException {
                 super.onException(e);
+                makeAllProgressBarsInvisible();
+                Toast.makeText(UserDocumentsUploadActivity.this,R.string.error_message,Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -825,6 +841,8 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
             @Override
             protected void onException(final Exception e) throws RuntimeException {
                 super.onException(e);
+                makeAllProgressBarsInvisible();
+                Toast.makeText(UserDocumentsUploadActivity.this,R.string.error_message,Toast.LENGTH_LONG).show();
                 if (e instanceof android.os.OperationCanceledException) {
                     // User cancelled the authentication process (back button, etc).
                     // Since auth could not take place, lets finish this activity.
@@ -868,6 +886,19 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
         carPicPB.setVisibility(View.INVISIBLE);
         carBackPicPB.setVisibility(View.INVISIBLE);
         imageCarPB.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setMessage(getText(R.string.please_wait));
+        dialog.setIndeterminate(true);
+        dialog.setCancelable(false);
+//        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+//            public void onCancel(final DialogInterface dialog) {
+//            }
+//        });
+        return dialog;
     }
 
 

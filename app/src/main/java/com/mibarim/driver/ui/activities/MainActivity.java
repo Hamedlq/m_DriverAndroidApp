@@ -43,6 +43,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mibarim.driver.BootstrapApplication;
 import com.mibarim.driver.BootstrapServiceProvider;
 import com.mibarim.driver.R;
@@ -60,9 +61,11 @@ import com.mibarim.driver.models.InviteModel;
 import com.mibarim.driver.models.Plus.DriverRouteModel;
 import com.mibarim.driver.models.Plus.DriverTripModel;
 import com.mibarim.driver.models.Plus.PaymentDetailModel;
+import com.mibarim.driver.models.Plus.StationRouteModel;
 import com.mibarim.driver.models.Plus.TripTimeModel;
 import com.mibarim.driver.models.Route.BriefRouteModel;
 import com.mibarim.driver.models.Route.RouteResponse;
+import com.mibarim.driver.models.RoutesDatabase;
 import com.mibarim.driver.models.ScoreModel;
 import com.mibarim.driver.models.UserInfoModel;
 import com.mibarim.driver.models.enums.TripStates;
@@ -79,7 +82,9 @@ import com.mibarim.driver.ui.fragments.DriverFragments.FabFragment;
 import com.mibarim.driver.util.SafeAsyncTask;
 import com.squareup.otto.Subscribe;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -150,6 +155,12 @@ public class MainActivity extends BootstrapActivity {
 
     private static final String DRIVE_FRAGMENT_TAG = "driveFragment";
 
+
+
+    private ApiResponse stationRouteResponse;
+    private List<StationRouteModel> routeDetails;
+
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
 
@@ -194,6 +205,9 @@ public class MainActivity extends BootstrapActivity {
     private void initScreen() {
         checkVersion();
         getUserInfoFromServer();
+
+//        getRoutesListFromServer();
+
         getUserScore();
         getTripState();
         getInviteFromServer();
@@ -202,9 +216,8 @@ public class MainActivity extends BootstrapActivity {
                 .add(R.id.main_container, new DriverCardFragment(), DRIVE_FRAGMENT_TAG)
                 .commit();
         fragmentManager.beginTransaction()
-                .add(R.id.main_container, new FabFragment(),"FabFragment")
+                .add(R.id.main_container, new FabFragment(), "FabFragment")
                 .commit();
-
 
 
         user_credit.setOnTouchListener(new View.OnTouchListener() {
@@ -252,6 +265,77 @@ public class MainActivity extends BootstrapActivity {
             gotoWebView(url);
         }
     }
+
+
+public void getRoutesListFromServer() {
+
+        routeDetails = new ArrayList<StationRouteModel>();
+
+        new SafeAsyncTask<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+//                ApiResponse response = userInfoService.GetRoutesSerivice();
+                ApiResponse myResponse = routeResponseService.GetStationRoutes(1);
+                //Gson gson = new Gson();
+                Gson gson = new GsonBuilder().create();
+                for (String json : myResponse.Messages) {
+                    //TypeToken<List<RouteDetails>> token = new TypeToken<List<RouteDetails>>() {};
+
+                    routeDetails.add(gson.fromJson(json, StationRouteModel.class));
+
+                }
+
+                RoutesDatabase myRoutesDatabase = new RoutesDatabase(MainActivity.this);
+                myRoutesDatabase.insertList(routeDetails);
+//                myRoutesContract.routeResponseListQuery();
+
+                return true;
+
+
+            }
+
+            @Override
+            protected void onException(final Exception e) throws RuntimeException {
+                super.onException(e);
+                if (e instanceof OperationCanceledException) {
+                    finish();
+                }
+            }
+
+            @Override
+            protected void onSuccess(final Boolean res) throws Exception {
+                super.onSuccess(res);
+                //SetPathPrice();
+            }
+        }.execute();
+
+        //insert();
+    }
+
+
+    public ArrayList<StationRouteModel> getRoutesFromDatabase(){
+
+        List<StationRouteModel> items;
+        ArrayList<StationRouteModel> latest = new ArrayList<>();
+
+        RoutesDatabase routesDatabase = new RoutesDatabase(this);
+        items = routesDatabase.routeResponseListQuery();
+
+        ArrayList<StationRouteModel> myArray = new ArrayList<>();
+//        ArrayList<String> myArray2 = new ArrayList<>();
+
+        for (int i = 0; i < items.size(); i++) {
+            StationRouteModel stationRouteModel = items.get(i);//.SrcStAdd + " - " + list.get(i).DstStAdd;
+            stationRouteModel.StRoutePrice = stationRouteModel.StRoutePrice + " تومان ";
+            latest.add(stationRouteModel);
+        }
+
+        return latest;
+    }
+
+
+
+
 
     @Override
     protected void onResume() {
@@ -729,6 +813,7 @@ public class MainActivity extends BootstrapActivity {
     public void gotoRouteLists() {
         Intent intent = new Intent(this, StationRouteListActivity.class);
         this.startActivityForResult(intent, ROUTESELECTED);
+
     }
 
     public void deleteRoute(final long driverRouteId) {
@@ -977,7 +1062,7 @@ public class MainActivity extends BootstrapActivity {
                         if (userInfoModel.UserImageId == null) {
                             Intent intent = new Intent(MainActivity.this, UserImageUploadActivity.class);
                             intent.putExtra(Constants.Auth.AUTH_TOKEN, authToken);
-                            startActivityForResult(intent,USER_PIC_REQUEST);
+                            startActivityForResult(intent, USER_PIC_REQUEST);
                         }
                     }
                 }
@@ -1051,8 +1136,8 @@ public class MainActivity extends BootstrapActivity {
         this.startActivity(intent);
     }
 
-    private void goToUploadActivity(){
-        Intent intent = new Intent(this,UserDocumentsUploadActivity.class);
+    private void goToUploadActivity() {
+        Intent intent = new Intent(this, UserDocumentsUploadActivity.class);
 //        Intent intent = new Intent(this,UserImageUploadActivity.class);
         intent.putExtra(Constants.Auth.AUTH_TOKEN, authToken);
         startActivity(intent);
@@ -1119,17 +1204,17 @@ public class MainActivity extends BootstrapActivity {
         }.execute();
     }
 
-    public void hidefab(){
+    public void hidefab() {
 //        FabFragment fabFragment =
         final FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentByTag("FabFragment");
-        ((FabFragment)fragment).hideTheFab();
+        ((FabFragment) fragment).hideTheFab();
     }
 
-    public void showFab(){
+    public void showFab() {
         final FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentByTag("FabFragment");
-        ((FabFragment)fragment).showTheFab();
+        ((FabFragment) fragment).showTheFab();
 
     }
 
