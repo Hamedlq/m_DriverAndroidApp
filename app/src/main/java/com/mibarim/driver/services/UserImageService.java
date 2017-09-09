@@ -6,8 +6,12 @@ import com.mibarim.driver.core.RestAdapterImageInterceptor;
 import com.mibarim.driver.core.RestErrorHandler;
 import com.mibarim.driver.models.ApiResponse;
 import com.mibarim.driver.util.DynamicJsonConverter;
+import com.squareup.okhttp.OkHttpClient;
+
+import java.util.concurrent.TimeUnit;
 
 import retrofit.RestAdapter;
+import retrofit.client.OkClient;
 import retrofit.mime.TypedFile;
 
 //import com.squareup.okhttp.RequestBody;
@@ -20,12 +24,17 @@ public class UserImageService {
     private RestAdapter restAdapter;
 
     public UserImageService(RestErrorHandler restErrorHandler) {
+        final OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.setReadTimeout(3, TimeUnit.MINUTES);
+        okHttpClient.setConnectTimeout(3, TimeUnit.MINUTES);
+
         this.restAdapter = new RestAdapter.Builder()
                 .setEndpoint(Constants.Http.URL_BASE)
                 .setErrorHandler(restErrorHandler)
                 .setRequestInterceptor(new RestAdapterImageInterceptor())
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setConverter(new DynamicJsonConverter())
+                .setClient(new OkClient(okHttpClient))
                 .build();
     }
 

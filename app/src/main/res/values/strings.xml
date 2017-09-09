@@ -44,7 +44,7 @@
     <string name="no_news">No News</string>
     <string name="avatar">Avatar</string>
     <string name="choose">Choose</string>
-    <string name="version">3.1.1</string>
+    <string name="version">3.1.2</string>
     <string name="testVersion">نسخه آزمایشی</string>
 
     <!-- AuthenticatorActivity -->
@@ -215,8 +215,8 @@
     <string name="update_msg">لطفا این برنامه را بروزرسانی کنید.</string>
     <string name="update">بروزرسانی</string>
     <string name="empty_user_info">نام و نام خانوادگی باید تکمیل شود</string>
-    <string name="carCard">تصویر روی کارت ماشین</string>
-    <string name="carCardBack">تصویر پشت کارت ماشین</string>
+    <string name="carCard">تصویر روی کارت خودرو</string>
+    <string name="carCardBack">تصویر پشت کارت خودرو</string>
     <string name="license">تصویر گواهینامه</string>
     <string name="id_card">تصویر کارت ملی</string>
     <string name="shaba">شماره شبای بانکی</string>

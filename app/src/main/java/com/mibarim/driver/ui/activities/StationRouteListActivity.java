@@ -249,9 +249,6 @@ public class StationRouteListActivity extends BootstrapActivity {
                 return false;
             }
         });
-
-
-
     }
 
     private void initScreen() {

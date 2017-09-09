@@ -286,7 +286,9 @@ public class RoutesCardFragment extends Fragment
     }
 
     public void searchText(String srcText, String dstText) {
-        mAdapter.getFilter(srcText, dstText).filter(null);
+        if(mAdapter !=null) {
+            mAdapter.getFilter(srcText, dstText).filter(null);
+        }
         // lv.setAdapter(myAdapter);
     }
 

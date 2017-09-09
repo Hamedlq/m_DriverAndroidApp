@@ -14,7 +14,7 @@ public enum ImageTypes {
     @SerializedName("3")
     LicensePic("LicensePic", 3),
     @SerializedName("4")
-    CarPic("CarPic", 4),
+    CarCardPic("CarCardPic", 4),
     @SerializedName("5")
     CarBckPic("CarBckPic", 5),
     @SerializedName("6")
