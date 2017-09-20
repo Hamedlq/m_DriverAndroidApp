@@ -64,6 +64,7 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
     private UserInfoModel newUserInfoModel;
     private View parentLayout;
     //private int g = 0;
+    ProgressDialog progressDialog;
 
     /*private String USER_NATIONAL_CARD = "UserNationalCard";
     private String LICENSE_CARD = "LicenseCard";

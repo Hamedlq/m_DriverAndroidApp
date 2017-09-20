@@ -152,9 +152,9 @@ public class MainActivity extends BootstrapActivity {
     ImageView uploadButton;
     private InviteModel inviteModel;
     NumberPicker seat_picker;
+    ApiResponse routeListResponse;
 
     private static final String DRIVE_FRAGMENT_TAG = "driveFragment";
-
 
 
     private ApiResponse stationRouteResponse;
@@ -206,7 +206,7 @@ public class MainActivity extends BootstrapActivity {
         checkVersion();
         getUserInfoFromServer();
 
-//        getRoutesListFromServer();
+        getRoutesListFromServer();
 
         getUserScore();
         getTripState();
@@ -267,27 +267,14 @@ public class MainActivity extends BootstrapActivity {
     }
 
 
-public void getRoutesListFromServer() {
-
-        routeDetails = new ArrayList<StationRouteModel>();
+    public void getRoutesListFromServer() {
 
         new SafeAsyncTask<Boolean>() {
             @Override
             public Boolean call() throws Exception {
 //                ApiResponse response = userInfoService.GetRoutesSerivice();
-                ApiResponse myResponse = routeResponseService.GetStationRoutes(1);
+                routeListResponse = routeResponseService.GetStationRoutes(1);
                 //Gson gson = new Gson();
-                Gson gson = new GsonBuilder().create();
-                for (String json : myResponse.Messages) {
-                    //TypeToken<List<RouteDetails>> token = new TypeToken<List<RouteDetails>>() {};
-
-                    routeDetails.add(gson.fromJson(json, StationRouteModel.class));
-
-                }
-
-                RoutesDatabase myRoutesDatabase = new RoutesDatabase(MainActivity.this);
-                myRoutesDatabase.insertList(routeDetails);
-//                myRoutesContract.routeResponseListQuery();
 
                 return true;
 
@@ -305,15 +292,19 @@ public void getRoutesListFromServer() {
             @Override
             protected void onSuccess(final Boolean res) throws Exception {
                 super.onSuccess(res);
-                //SetPathPrice();
+                routeDetails = new ArrayList<StationRouteModel>();
+                Gson gson = new GsonBuilder().create();
+                for (String json : routeListResponse.Messages) {
+                    routeDetails.add(gson.fromJson(json, StationRouteModel.class));
+                }
+                RoutesDatabase myRoutesDatabase = new RoutesDatabase(MainActivity.this);
+                myRoutesDatabase.insertList(routeDetails);
             }
         }.execute();
-
-        //insert();
     }
 
 
-    public ArrayList<StationRouteModel> getRoutesFromDatabase(){
+    public ArrayList<StationRouteModel> getRoutesFromDatabase() {
 
         List<StationRouteModel> items;
         ArrayList<StationRouteModel> latest = new ArrayList<>();
@@ -332,9 +323,6 @@ public void getRoutesListFromServer() {
 
         return latest;
     }
-
-
-
 
 
     @Override

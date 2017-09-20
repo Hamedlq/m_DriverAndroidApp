@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.SystemClock;
 import android.provider.BaseColumns;
 
 import com.mibarim.driver.models.Plus.StationRouteModel;
@@ -132,6 +133,8 @@ public class RoutesDatabase {
         ContentValues values;
 
         for (StationRouteModel routeResponse : routeResponseList) {
+
+            SystemClock.sleep(100);
             values = new ContentValues();
 
             values.put(SOURCE_STREET_ADDRESS, routeResponse.SrcStAdd);
@@ -152,6 +155,8 @@ public class RoutesDatabase {
 
 //            db.insert(MyRoutesContract.TABLE_NAME, null, values);
             db.insertWithOnConflict(TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+
+
 
         }
         //db.execSQL("select * from " + MyRoutesContract.TABLE_NAME);
