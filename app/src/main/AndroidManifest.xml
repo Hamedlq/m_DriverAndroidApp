@@ -193,9 +193,14 @@
             android:name=".ui.activities.UserDocumentsUploadActivity"
             android:label=""
             android:screenOrientation="portrait"
-
-
             />
+
+        <activity
+            android:windowSoftInputMode="adjustPan"
+            android:name=".ui.activities.RatingActivity"
+            android:screenOrientation="portrait" />
+
+
 
 
         <!--

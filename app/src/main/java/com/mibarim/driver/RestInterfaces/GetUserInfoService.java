@@ -35,6 +35,19 @@ public interface GetUserInfoService {
     UserInfoModel getUserInfo(@Header(Constants.Http.PARAM_AUTHORIZATION) String authToken,
                                     @Field("UserId") String Id);
 
+
+    @POST(Constants.Http.URL_GET_RATINGS)
+    @FormUrlEncoded
+    ApiResponse getRatings(@Header(Constants.Http.PARAM_AUTHORIZATION) String authToken,
+                           @Field("Name") String name);
+
+    @POST(Constants.Http.URL_SET_RATINGS)
+    @FormUrlEncoded
+    ApiResponse setRatings(@Header(Constants.Http.PARAM_AUTHORIZATION) String authToken,
+                           @Field("RatingsList") String ratingsList);
+
+
+
     @POST(Constants.Http.URL_SET_PERSON_INFO)
     @FormUrlEncoded
     ApiResponse SaveUserPersonalInfo(@Header(Constants.Http.PARAM_AUTHORIZATION) String authToken,

@@ -48,6 +48,19 @@ public class UserInfoService {
         return res;
     }
 
+
+    public ApiResponse getRatings(String authToken, String name) {
+        ApiResponse res = getService().getRatings("Bearer " + authToken, name);
+        return res;
+    }
+
+    public ApiResponse setRatings(String authToken, String list) {
+        ApiResponse res = getService().setRatings("Bearer " + authToken, list);
+        return res;
+    }
+
+
+
     public ApiResponse SaveUserPersonalInfo(String authToken, UserInfoModel personalInfoModel) {
         ApiResponse res = getService().SaveUserPersonalInfo("Bearer " + authToken,
                 personalInfoModel.Name,

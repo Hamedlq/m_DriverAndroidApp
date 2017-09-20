@@ -35,6 +35,7 @@ import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -63,6 +64,7 @@ import com.mibarim.driver.models.Plus.DriverTripModel;
 import com.mibarim.driver.models.Plus.PaymentDetailModel;
 import com.mibarim.driver.models.Plus.StationRouteModel;
 import com.mibarim.driver.models.Plus.TripTimeModel;
+import com.mibarim.driver.models.RatingModel;
 import com.mibarim.driver.models.Route.BriefRouteModel;
 import com.mibarim.driver.models.Route.RouteResponse;
 import com.mibarim.driver.models.RoutesDatabase;
@@ -157,8 +159,13 @@ public class MainActivity extends BootstrapActivity {
 
 
 
+
     private ApiResponse stationRouteResponse;
     private List<StationRouteModel> routeDetails;
+
+
+    ArrayList<RatingModel> ratingModelList = new ArrayList<>();
+    ApiResponse apiResponse;
 
 
     @Override
@@ -206,7 +213,9 @@ public class MainActivity extends BootstrapActivity {
         checkVersion();
         getUserInfoFromServer();
 
-//        getRoutesListFromServer();
+        getRoutesListFromServer();
+
+        getTheRatingsFromServer();
 
         getUserScore();
         getTripState();
@@ -267,7 +276,7 @@ public class MainActivity extends BootstrapActivity {
     }
 
 
-public void getRoutesListFromServer() {
+    public void getRoutesListFromServer() {
 
         routeDetails = new ArrayList<StationRouteModel>();
 
@@ -313,7 +322,7 @@ public void getRoutesListFromServer() {
     }
 
 
-    public ArrayList<StationRouteModel> getRoutesFromDatabase(){
+    public ArrayList<StationRouteModel> getRoutesFromDatabase() {
 
         List<StationRouteModel> items;
         ArrayList<StationRouteModel> latest = new ArrayList<>();
@@ -332,9 +341,6 @@ public void getRoutesListFromServer() {
 
         return latest;
     }
-
-
-
 
 
     @Override
@@ -1137,8 +1143,9 @@ public void getRoutesListFromServer() {
     }
 
     private void goToUploadActivity() {
-        Intent intent = new Intent(this, UserDocumentsUploadActivity.class);
+//        Intent intent = new Intent(this, UserDocumentsUploadActivity.class);
 //        Intent intent = new Intent(this,UserImageUploadActivity.class);
+        Intent intent = new Intent(this, RatingActivity.class);
         intent.putExtra(Constants.Auth.AUTH_TOKEN, authToken);
         startActivity(intent);
     }
@@ -1216,6 +1223,87 @@ public void getRoutesListFromServer() {
         Fragment fragment = fragmentManager.findFragmentByTag("FabFragment");
         ((FabFragment) fragment).showTheFab();
 
+    }
+
+
+    private void getTheRatingsFromServer() {
+        new SafeAsyncTask<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                /*if (authToken == null) {
+                    serviceProvider.invalidateAuthToken();
+                    authToken = serviceProvider.getAuthToken(UserDocumentsUploadActivity.this);
+                }*/
+
+//                progressDialog.show();
+                apiResponse = userInfoService.getRatings(authToken, "");
+
+//                ratingModelList = new ArrayList<RatingModel>();
+
+//                if (apiResponse.Count > 0)
+
+
+//                ApiResponse myResponse = routeResponseService.GetStationRoutes(1);
+                //Gson gson = new Gson();
+                /*Gson gson = new GsonBuilder().create();
+                for (String json : apiResponse.Messages) {
+                    ratingModelList.add(gson.fromJson(json, RatingModel.class));
+                }*/
+                return true;
+            }
+
+            @Override
+            protected void onException(final Exception e) throws RuntimeException {
+                super.onException(e);
+//                makeAllProgressBarsInvisible();
+//                progressDialog.hide();
+                Toast.makeText(MainActivity.this, R.string.error_message, Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            protected void onSuccess(final Boolean state) throws Exception {
+                super.onSuccess(state);
+//                userData.insertUserInfo(userInfoModel);
+//                getImageById(userInfoModel.UserImageId, R.mipmap.ic_camera);
+//                setInfoValues(userInfoModel.IsUserRegistered);
+                //setEmail();
+
+                //TODO move this to the onSuccess of the getImageFromServer
+//                listView = (ListView) findViewById(R.id.list);
+//                adapter = new RatingAdapter(ratingModelList, RatingActivity.this);
+//
+//                listView.setAdapter(adapter);
+//                Toast.makeText(RatingActivity.this, "پیغام موفقیت آمیز", Toast.LENGTH_LONG).show();
+
+/*
+                ArrayList<RatingModel> ratingModelList = new ArrayList<>();
+                for (int i = 0; i < ratingModelList.size(); i++) {
+                    String id = ratingModelList.get(i).getImageId();
+                    getImageById(id, i);
+                }
+
+
+*/
+                if (apiResponse.Count > 0) {
+                    Intent intent = new Intent(MainActivity.this, RatingActivity.class);
+                    intent.putExtra(Constants.Auth.AUTH_TOKEN, authToken);
+
+//                    intent.putParcelableArrayListExtra("ratingList", (ArrayList<? extends Parcelable>) ratingModelList);
+
+                    intent.putExtra(Constants.GlobalConstants.RAINTG_LIST_TAG , apiResponse);
+
+//                    intent.putExtra("myList",ratingModelList);
+
+
+                    startActivity(intent);
+                }
+
+
+//                String i = ratingModelList.get(0).getImageId();
+//                getImageById(i);
+
+            }
+        }.execute();
     }
 
 }

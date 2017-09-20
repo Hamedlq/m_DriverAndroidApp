@@ -217,23 +217,6 @@ public class RoutesCardFragment extends Fragment
 
                 latest = ((StationRouteListActivity) getActivity()).getRoutesFromDatabase();
 
-/*
-
-                latest = new ArrayList<StationRouteModel>();
-                Gson gson = new Gson();
-                if (getActivity() != null) {
-                    stationRouteResponse = routeResponseService.GetStationRoutes(1);
-                    if (stationRouteResponse != null) {
-                        for (String routeJson : stationRouteResponse.Messages) {
-                            StationRouteModel route = gson.fromJson(routeJson, StationRouteModel.class);
-                            route.StRoutePrice = route.StRoutePrice + " تومان ";
-                            latest.add(route);
-                        }
-                    }
-                }
-*/
-
-
 
                 if (latest != null) {
                     return latest;

@@ -152,6 +152,11 @@ public class RoutesDatabase {
 
 //            db.insert(MyRoutesContract.TABLE_NAME, null, values);
             db.insertWithOnConflict(TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
         }
         //db.execSQL("select * from " + MyRoutesContract.TABLE_NAME);

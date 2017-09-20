@@ -7,6 +7,7 @@ import com.mibarim.driver.ui.activities.HomeWorkStepActivity;
 import com.mibarim.driver.ui.activities.InviteActivity;
 import com.mibarim.driver.ui.activities.MainActivity;
 import com.mibarim.driver.ui.activities.MobileActivity;
+import com.mibarim.driver.ui.activities.RatingActivity;
 import com.mibarim.driver.ui.activities.RegisterActivity;
 import com.mibarim.driver.ui.activities.CheckSuggestRouteActivity;
 import com.mibarim.driver.ui.activities.HelpActivity;
@@ -368,5 +369,6 @@ public interface BootstrapComponent {
 
     void inject(UserDocumentsUploadActivity target);
 
+    void inject(RatingActivity target);
 
 }

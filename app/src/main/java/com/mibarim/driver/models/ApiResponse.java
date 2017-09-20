@@ -16,4 +16,5 @@ public class ApiResponse  implements Serializable {
     public List<MessageResponse> Infos;
     public List<String> Messages;
 
+
 }

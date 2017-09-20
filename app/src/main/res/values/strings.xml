@@ -410,4 +410,9 @@
     <string name="not_reserved">سفر رزرو نشده است</string>
     <string name="car_image">تصویر خودرو</string>
     <string name="error_message">خطا در ارتباط با سرور. لطفا مجددا تلاش کنید.</string>
+    <string name="joined_the_trip">حضور داشت</string>
+    <string name="add_description">افزودن توضیحات</string>
+    <string name="your_opinion">نظری دارید؟</string>
+    <string name="please_rate">امتیاز دهید!</string>
+
 </resources>

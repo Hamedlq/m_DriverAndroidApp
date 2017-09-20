@@ -104,6 +104,9 @@ public final class Constants {
         public static final String URL_CAR_INFO = "/GetCarInfo";
         public static final String URL_PERSON_INFO = "/GetPersonalInfo";
         public static final String URL_GET_USER_INFO = "/GetUserInfo";
+        public static final String URL_GET_RATINGS = "/GetRatings";
+        public static final String URL_SET_RATINGS = "/SetRatings";
+
         public static final String URL_SET_PERSON_INFO = "/InsertPersoanlInfo";
         public static final String URL_REGISTER_USER = "/RegisterDriverInfo";
         public static final String URL_SET_USER_INFO = "/InsertUserInfo";
@@ -248,6 +251,8 @@ public final class Constants {
     public static final class GlobalConstants {
         public static final String CREDIT_REMAIN = "CREDIT_REMAIN";
         public static final String DRIVER_TRIP_MODEL = "DriverTripModel";
+
+        public static final String RAINTG_LIST_TAG = "RATINGLIST";
 
         public static final String URL = "URL";
     }
