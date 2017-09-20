@@ -5,6 +5,7 @@ package com.mibarim.driver.ui.activities;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -21,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -249,9 +252,6 @@ public class StationRouteListActivity extends BootstrapActivity {
                 return false;
             }
         });
-
-
-
     }
 
     private void initScreen() {
@@ -384,6 +384,13 @@ public class StationRouteListActivity extends BootstrapActivity {
         fragmentManager.beginTransaction()
                 .add(R.id.container, new StationCardFragment(),SubStationFragment)
                 .commit();
+        // Check if no view has focus:
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
     }
     public void setRoute(final SubStationModel selectedItem) {
 
@@ -448,40 +455,6 @@ public class StationRouteListActivity extends BootstrapActivity {
 
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-/*
-
-
-        // Accessing the SearchAutoComplete
-        int queryTextViewId = getResources().getIdentifier("android:id/search_src_text", null, null);
-        View autoComplete = s1.findViewById(queryTextViewId);
-
-        Class clazz = Class.forName("android.widget.SearchView$SearchAutoComplete");
-
-        SpannableStringBuilder stopHint = new SpannableStringBuilder("   ");
-        stopHint.append(getString("my text"));
-
-// Add the icon as an spannable
-        Drawable searchIcon = getResources().getDrawable(R.drawable.ic_action_search);
-        Method textSizeMethod = clazz.getMethod("getTextSize");
-        Float rawTextSize = (Float)textSizeMethod.invoke(autoComplete);
-        int textSize = (int) (rawTextSize * 1.25);
-        searchIcon.setBounds(0, 0, textSize, textSize);
-        stopHint.setSpan(new ImageSpan(searchIcon), 1, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-// Set the new hint text
-        Method setHintMethod = clazz.getMethod("setHint", CharSequence.class);
-        setHintMethod.invoke(autoComplete, stopHint);
-
-*/
-
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-
 
     public ArrayList<StationRouteModel> getRoutesFromDatabase(){
 
@@ -502,9 +475,6 @@ public class StationRouteListActivity extends BootstrapActivity {
 
         return latest;
     }
-
-
-
 
 
 

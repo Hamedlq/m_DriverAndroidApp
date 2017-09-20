@@ -44,7 +44,7 @@
     <string name="no_news">No News</string>
     <string name="avatar">Avatar</string>
     <string name="choose">Choose</string>
-    <string name="version">3.1.1</string>
+    <string name="version">3.1.3</string>
     <string name="testVersion">نسخه آزمایشی</string>
 
     <!-- AuthenticatorActivity -->
@@ -215,8 +215,8 @@
     <string name="update_msg">لطفا این برنامه را بروزرسانی کنید.</string>
     <string name="update">بروزرسانی</string>
     <string name="empty_user_info">نام و نام خانوادگی باید تکمیل شود</string>
-    <string name="carCard">تصویر روی کارت ماشین</string>
-    <string name="carCardBack">تصویر پشت کارت ماشین</string>
+    <string name="carCard">تصویر روی کارت خودرو</string>
+    <string name="carCardBack">تصویر پشت کارت خودرو</string>
     <string name="license">تصویر گواهینامه</string>
     <string name="id_card">تصویر کارت ملی</string>
     <string name="shaba">شماره شبای بانکی</string>
@@ -410,6 +410,8 @@
     <string name="not_reserved">سفر رزرو نشده است</string>
     <string name="car_image">تصویر خودرو</string>
     <string name="error_message">خطا در ارتباط با سرور. لطفا مجددا تلاش کنید.</string>
+    <string name="car_card_pic">تصویر کارت خودرو</string>
+    <string name="car_card_bck_pic">تصویر پشت کارت خودرو</string>
     <string name="joined_the_trip">حضور داشت</string>
     <string name="add_description">افزودن توضیحات</string>
     <string name="your_opinion">نظری دارید؟</string>

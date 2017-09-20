@@ -31,6 +31,7 @@ import com.mibarim.driver.data.UserData;
 import com.mibarim.driver.models.ApiResponse;
 import com.mibarim.driver.models.ImageResponse;
 import com.mibarim.driver.models.UserInfoModel;
+import com.mibarim.driver.models.enums.ImageTypes;
 import com.mibarim.driver.services.UserImageService;
 import com.mibarim.driver.services.UserInfoService;
 import com.mibarim.driver.ui.BootstrapActivity;
@@ -39,6 +40,7 @@ import com.mibarim.driver.ui.HandleApiMessagesBySnackbar;
 import com.mibarim.driver.util.SafeAsyncTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 
 import javax.inject.Inject;
@@ -61,8 +63,8 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
     private String id;
     private UserInfoModel newUserInfoModel;
     private View parentLayout;
-    private int g = 0;
-    private ProgressDialog progressDialog;
+    //private int g = 0;
+    ProgressDialog progressDialog;
 
     /*private String USER_NATIONAL_CARD = "UserNationalCard";
     private String LICENSE_CARD = "LicenseCard";
@@ -244,37 +246,42 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
 
 
     @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public void onClick(View v) {
         SharedPreferences sharedPreferences = this.getSharedPreferences("com.mibarim.driver", Context.MODE_PRIVATE);
 
 
         if (v.getId() == R.id.user_national_card_tv | v.getId() == R.id.user_national_card_iv | v.getId() == R.id.user_national_card__title_tv) {
-            sharedPreferences.edit().putInt(SAVE_IMAGE_CODE, 2).apply();
-            g = 2;
+            sharedPreferences.edit().putInt(SAVE_IMAGE_CODE, ImageTypes.UserNationalCard.toInt()).apply();
+            //g = ImageTypes.UserNationalCard.toInt();
             selectImage();
         }
 
         if (v.getId() == R.id.license_card_iv | v.getId() == R.id.license_card_tv | v.getId() == R.id.license_card_title_tv) {
-            g = 3;
-            sharedPreferences.edit().putInt(SAVE_IMAGE_CODE, 3).apply();
+            //g = ImageTypes.LicensePic.toInt();
+            sharedPreferences.edit().putInt(SAVE_IMAGE_CODE, ImageTypes.LicensePic.toInt()).apply();
             selectImage();
         }
 
         if (v.getId() == R.id.car_pic_iv | v.getId() == R.id.car_pic_tv | v.getId() == R.id.car_pic_title_tv) {
-            sharedPreferences.edit().putInt(SAVE_IMAGE_CODE, 4).apply();
-            g = 4;
+            sharedPreferences.edit().putInt(SAVE_IMAGE_CODE, ImageTypes.CarCardPic.toInt()).apply();
+            //g = ImageTypes.CarCardPic.toInt();
             selectImage();
         }
 
         if (v.getId() == R.id.car_back_pic_iv | v.getId() == R.id.car_back_pic_tv | v.getId() == R.id.car_back_pic_title_tv) {
-            g = 5;
-            sharedPreferences.edit().putInt(SAVE_IMAGE_CODE, 5).apply();
+            //g = ImageTypes.CarBckPic.toInt();
+            sharedPreferences.edit().putInt(SAVE_IMAGE_CODE, ImageTypes.CarBckPic.toInt()).apply();
             selectImage();
         }
 
         if (v.getId() == R.id.image_car_iv | v.getId() == R.id.image_car_tv | v.getId() == R.id.image_car_title_tv) {
-            g = 8;
-            sharedPreferences.edit().putInt(SAVE_IMAGE_CODE, 8).apply();
+            //g = ImageTypes.CarImage.toInt();
+            sharedPreferences.edit().putInt(SAVE_IMAGE_CODE, ImageTypes.CarImage.toInt()).apply();
             selectImage();
         }
 
@@ -370,12 +377,23 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
             @Override
             public void onClick(DialogInterface dialog, int item) {
                 if (items[item].equals("دوربین")) {
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    File f = new File(getExternalCacheDir(), "temp1.jpg");
+                    try {
+                        f.createNewFile();
+                    } catch (IOException e) {
+                    }
+                    Uri uri = Uri.fromFile(f);
+
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+//                    takePictureIntent.putExtra("value", uri);
+                    startActivityForResult(takePictureIntent, REQUEST_CAMERA);
+
 //                    intent.putExtra(IMAGE_TYPE_INT, i);
 //                    File f = new File(android.os.Environment
 //                            .getExternalStorageDirectory(), "temp.jpg");
 //                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
-                    startActivityForResult(intent, REQUEST_CAMERA);
+                    //startActivityForResult(intent, REQUEST_CAMERA);
                 } else if (items[item].equals("انتخاب از گالری")) {
                     Intent intent = new Intent(
                             Intent.ACTION_PICK,
@@ -405,10 +423,23 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_CAMERA && resultCode == RESULT_OK) {
+            Bitmap photo;
+
 //            Intent reciecedIntent = getIntent();
 //            int imageTypeInt = reciecedIntent.getIntExtra(IMAGE_TYPE_INT, 0);
-            final Uri imageUri = data.getData();
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            //if (data != null) {
+
+                /*Bundle extras = data.getExtras();
+                Bitmap bitmap= extras.getParcelable("data");*/
+
+                Bitmap bitmap = BitmapFactory.decodeFile(getExternalCacheDir() + "/temp1.jpg");
+
+                photo = bitmap;
+//                progressBar.setVisibility(View.VISIBLE);
+
+
+//            final Uri imageUri = data.getData();
+//            Bitmap photo = (Bitmap) data.getExtras().get("data");
 //            Bitmap bitmap2;
             /*if(data.getData()==null){
                 bitmap2 = (Bitmap)data.getExtras().get("data");
@@ -449,7 +480,7 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
 
 //                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
             saveProfileImage(photo);
-
+            //}
 
 //            try {
 //                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
@@ -615,7 +646,8 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
                 userNationalCardIv.setImageResource(R.drawable.ic_check_circle_black_24dp);
                 break;
             case "Rejected":
-                userNationalCardDescriptionTv.setText(": " + userInfoModel.NationalCardImage.getRejectionDescription());
+                userNationalCardDescriptionTv.setVisibility(View.VISIBLE);
+                userNationalCardDescriptionTv.setText( userInfoModel.NationalCardImage.getRejectionDescription());
                 userNationalCardTv.setText(R.string.state_rejected);
                 userNationalCardIv.setImageResource(R.drawable.ic_highlight_off_black_24dp);
                 break;
@@ -635,7 +667,8 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
                 licenseCardIv.setImageResource(R.drawable.ic_check_circle_black_24dp);
                 break;
             case "Rejected":
-                licenseCardDescriptionTv.setText(": " + userInfoModel.LicenseImage.getRejectionDescription());
+                licenseCardDescriptionTv.setVisibility(View.VISIBLE);
+                licenseCardDescriptionTv.setText( userInfoModel.LicenseImage.getRejectionDescription());
                 licenseCardTv.setText(R.string.state_rejected);
                 licenseCardIv.setImageResource(R.drawable.ic_highlight_off_black_24dp);
                 break;
@@ -654,7 +687,8 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
                 carPicIv.setImageResource(R.drawable.ic_check_circle_black_24dp);
                 break;
             case "Rejected":
-                carPicDescriptionTv.setText(": " + userInfoModel.CarCardImage.getRejectionDescription());
+                carPicDescriptionTv.setVisibility(View.VISIBLE);
+                carPicDescriptionTv.setText(userInfoModel.CarCardImage.getRejectionDescription());
                 carPicTv.setText(R.string.state_rejected);
                 carPicIv.setImageResource(R.drawable.ic_highlight_off_black_24dp);
                 break;
@@ -673,7 +707,8 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
                 carBackPicIv.setImageResource(R.drawable.ic_check_circle_black_24dp);
                 break;
             case "Rejected":
-                carBackPicDescriptionTv.setText(": " + userInfoModel.CarCardBckImage.getRejectionDescription());
+                carBackPicDescriptionTv.setVisibility(View.VISIBLE);
+                carBackPicDescriptionTv.setText(userInfoModel.CarCardBckImage.getRejectionDescription());
                 carBackPicTv.setText(R.string.state_rejected);
                 carBackPicIv.setImageResource(R.drawable.ic_highlight_off_black_24dp);
                 break;
@@ -695,7 +730,8 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
                 imageCarIv.setImageResource(R.drawable.ic_check_circle_black_24dp);
                 break;
             case "Rejected":
-                imageCarDescriptionDescriptionTv.setText(": " + userInfoModel.CarCardBckImage.getRejectionDescription());
+                imageCarDescriptionDescriptionTv.setVisibility(View.VISIBLE);
+                imageCarDescriptionDescriptionTv.setText(userInfoModel.CarCardBckImage.getRejectionDescription());
                 imageCarTv.setText(R.string.state_rejected);
                 imageCarIv.setImageResource(R.drawable.ic_highlight_off_black_24dp);
                 break;
@@ -727,11 +763,10 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
                 image.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
                 String encodedImage = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
 //                licenseCardPB.setProgress(60);
-                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.mibarim.driver", Context.MODE_PRIVATE);
+                SharedPreferences sharedPreferences = UserDocumentsUploadActivity.this.getSharedPreferences("com.mibarim.driver", Context.MODE_PRIVATE);
                 int imageSaveCode = sharedPreferences.getInt(SAVE_IMAGE_CODE, 0);
                 response = userImageService.SaveImage(authToken, encodedImage, imageSaveCode);
                 if ((response.Errors == null || response.Errors.size() == 0) && response.Status.equals("OK")) {
-
                     if (response != null) {
                         for (String tripJson : response.Messages) {
                             id = tripJson.replace("\"", "");
@@ -758,12 +793,6 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
                 if (!uploadSuccess) {
                     new HandleApiMessages(UserDocumentsUploadActivity.this, response).showMessages();
                 }
-//                getImageById(imageResponse.UserImageId);
-//                getImageById(id,i);
-//                reloadUserInfo();
-//                licenseCardPB.setProgress(100);
-//                Toast.makeText(getBaseContext(), "عکس بارگذاری شد.", Toast.LENGTH_LONG).show();
-//                licenseCardPB.setVisibility(View.GONE);
                 getUserInfoFromServer();
             }
         }.execute();
@@ -828,7 +857,6 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
 
             @Override
             public Boolean call() throws Exception {
-//                String token = serviceProvider.getAuthToken(UserDocumentsUploadActivity.this);
                 imageResponse = userInfoService.GetImageById(authToken, imageId);
                 if (imageResponse != null && imageResponse.Base64ImageFile != null) {
                     return true;
@@ -848,6 +876,7 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
                     // Since auth could not take place, lets finish this activity.
 //                    finish();
                 }
+                makeAllProgressBarsInvisible();
             }
 
             @Override
@@ -857,24 +886,11 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
                     Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                     String path = ImageUtils.saveImageToInternalStorage(getApplicationContext(), decodedByte, imageResponse.ImageId);
                     userData.insertImage(imageResponse, path);
-//                    imageToUpload.setImageURI();
-
-
-//                    progressBar.setVisibility(View.GONE);
-//                    progressDialog.hide();
 
                     Toast.makeText(getBaseContext(), "عکس بارگذاری شد.", Toast.LENGTH_LONG).show();
 
-/*
-
-                    hideProgress();
-                    if (imageLoaded) {
-                        gotoBankPayPage(paymentDetailModel);
-                    }
-*/
-
                     new HandleApiMessagesBySnackbar(parentLayout, response).showMessages();
-//                    setImage(imageResponse);
+
                 }
             }
         }.execute();

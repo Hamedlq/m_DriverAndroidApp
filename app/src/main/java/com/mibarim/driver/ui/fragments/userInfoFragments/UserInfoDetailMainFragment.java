@@ -153,7 +153,7 @@ public class UserInfoDetailMainFragment extends Fragment {
                 Fragment lifragment = fragmentManager.findFragmentById(R.id.license_fragment);
                 ((LicenseFragment) lifragment).setLicenseImage(imageResponse);
                 break;
-            case CarPic:
+            case CarCardPic:
                 Fragment carfragment = fragmentManager.findFragmentById(R.id.car_info_fragment);
                 ((CarInfoFragment) carfragment).setCarImage(imageResponse);
                 break;

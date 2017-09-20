@@ -207,7 +207,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right"
-                        android:text="تصویر کارت ماشین"
+                        android:text="@string/car_card_pic"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -293,7 +293,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right"
-                        android:text="تصویر پشت کارت ماشین"
+                        android:text="@string/car_card_bck_pic"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 

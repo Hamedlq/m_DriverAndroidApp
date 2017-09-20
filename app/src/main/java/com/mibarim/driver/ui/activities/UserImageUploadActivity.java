@@ -149,14 +149,14 @@ public class UserImageUploadActivity extends BootstrapActivity implements View.O
 //                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 //                startActivityForResult(takePictureIntent, REQUEST_TAKE_PICTURE);
 
-                if (ActivityCompat.checkSelfPermission(UserImageUploadActivity.this, Manifest.permission.CAMERA)
+                /*if (ActivityCompat.checkSelfPermission(UserImageUploadActivity.this, Manifest.permission.CAMERA)
                         != PackageManager.PERMISSION_GRANTED) {
                     // Check Permissions Now
                     // Callback onRequestPermissionsResult interceptado na Activity MainActivity0
                     ActivityCompat.requestPermissions(UserImageUploadActivity.this,
                             new String[]{Manifest.permission.CAMERA},
                             1);
-                } else {
+                } else {*/
                     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     File f = new File(getExternalCacheDir(), "temp1.jpg");
                     try {
@@ -169,7 +169,7 @@ public class UserImageUploadActivity extends BootstrapActivity implements View.O
 //                    takePictureIntent.putExtra("value", uri);
                     startActivityForResult(takePictureIntent, REQUEST_TAKE_PICTURE);
 
-                }
+                //}
 
 
 
@@ -189,12 +189,10 @@ public class UserImageUploadActivity extends BootstrapActivity implements View.O
                 break;
 
             case R.id.continue_btn:
+                Intent i=getIntent();
+                setResult(RESULT_OK, i);
                 finish();
-
-
         }
-
-
     }
 
     private void doCrop(Uri picUri) {
@@ -273,18 +271,18 @@ public class UserImageUploadActivity extends BootstrapActivity implements View.O
 
         if (requestCode == CROP_PIC_REQUEST_CODE) {
 
-            if (data != null) {
+            //if (data != null) {
 
-                Bundle extras = data.getExtras();
-                Bitmap bitmap= extras.getParcelable("data");
+                /*Bundle extras = data.getExtras();
+                Bitmap bitmap= extras.getParcelable("data");*/
 
-                //Bitmap bitmap = BitmapFactory.decodeFile(getExternalCacheDir() + "/temp2.jpg");
+                Bitmap bitmap = BitmapFactory.decodeFile(getExternalCacheDir() + "/temp2.jpg");
 
                 image = bitmap;
 //                progressBar.setVisibility(View.VISIBLE);
 
                 saveProfileImage();
-            }
+            //}
         }
 
 /*
@@ -474,7 +472,6 @@ public class UserImageUploadActivity extends BootstrapActivity implements View.O
                 }
 
                 return false;
-
             }
 
             @Override
@@ -518,7 +515,7 @@ public class UserImageUploadActivity extends BootstrapActivity implements View.O
         }.execute();
     }
 
-    @Override
+    /*@Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
@@ -547,5 +544,5 @@ public class UserImageUploadActivity extends BootstrapActivity implements View.O
         }
 
 
-    }
+    }*/
 }
