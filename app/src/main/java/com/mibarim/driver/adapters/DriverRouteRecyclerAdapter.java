@@ -251,6 +251,7 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
         }
     }
 
+
     // Provide a suitable constructor (depends on the kind of dataset)
     public DriverRouteRecyclerAdapter(Activity activity, List<DriverRouteModel> list, DriverCardFragment.ItemTouchListener onItemTouchListener) {
         _activity = activity;
@@ -291,6 +292,7 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
             }
         }
 
+
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -298,4 +300,6 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
     public int getItemCount() {
         return items.size();
     }
+
+
 }

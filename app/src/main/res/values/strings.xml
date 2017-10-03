@@ -416,5 +416,6 @@
     <string name="add_description">افزودن توضیحات</string>
     <string name="your_opinion">نظری دارید؟</string>
     <string name="please_rate">امتیاز دهید!</string>
+    <string name="add_route_guide_title">انتخاب مسیر</string>
 
 </resources>

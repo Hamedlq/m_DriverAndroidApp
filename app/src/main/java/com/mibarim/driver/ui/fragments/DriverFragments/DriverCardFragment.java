@@ -1,5 +1,7 @@
 package com.mibarim.driver.ui.fragments.DriverFragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -12,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.github.brnunes.swipeablerecyclerview.SwipeableRecyclerViewTouchListener;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -99,6 +103,7 @@ public class DriverCardFragment extends Fragment
         mRecyclerView.setLayoutManager(mLayoutManager);
         //showState(1);
 
+
         itemTouchListener = new ItemTouchListener() {
 
             @Override
@@ -176,6 +181,8 @@ public class DriverCardFragment extends Fragment
         //showState(1);
         mAdapter = new DriverRouteRecyclerAdapter(getActivity(), items, itemTouchListener);
         mRecyclerView.setAdapter(mAdapter);
+
+
     }
 
     @Override
@@ -186,7 +193,10 @@ public class DriverCardFragment extends Fragment
         mTracker.send(new HitBuilders.EventBuilder().setCategory("Fragment").setAction("SuggestRouteCardFragment").build());
         getLoaderManager().initLoader(0, null, this);
         //setEmptyText(R.string.no_routes);
+
     }
+
+
 
     /*public void showState(int showState) {
         mEmptyView.setVisibility(View.GONE);
@@ -242,15 +252,29 @@ public class DriverCardFragment extends Fragment
         };
     }
 
+
+
+
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+
+    }
+
     @Override
     public void onLoadFinished(Loader<List<DriverRouteModel>> loader, List<DriverRouteModel> data) {
         items = data;
         if (items.size() == 0) {
             mEmptyView.setVisibility(View.VISIBLE);
         }
-        // specify an adapter (see also next example)
+        // specify an adapter (see also next ex`ample)
         mAdapter = new DriverRouteRecyclerAdapter(getActivity(), items, itemTouchListener);
         mRecyclerView.setAdapter(mAdapter);
+
+
 
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -284,7 +308,6 @@ public class DriverCardFragment extends Fragment
         });
 
 
-
         mRecyclerView.addOnItemTouchListener(new SwipeableRecyclerViewTouchListener(mRecyclerView,
                 new SwipeableRecyclerViewTouchListener.SwipeListener() {
                     @Override
@@ -306,6 +329,9 @@ public class DriverCardFragment extends Fragment
                     }
                 }));
         mSwipeRefreshLayout.setRefreshing(false);
+
+        ((MainActivity)getActivity()).showSecondGuideTest();
+
     }
 
     @Override
@@ -327,6 +353,72 @@ public class DriverCardFragment extends Fragment
         public void onBtnClick(View view, int position);
 
 
+    }
+
+
+    public void showUserGuideForDriverCardFragment() {
+
+
+        SharedPreferences prefs = getActivity().getSharedPreferences(
+                "com.mibarim.driver", Context.MODE_PRIVATE);
+
+        int k = prefs.getInt("ShowDriverCardGuide",0);
+        View v = mRecyclerView.getChildAt(0);
+        if (mRecyclerView.getChildAt(0) != null && prefs.getInt("ShowDriverCardGuide",0) == 0 ) {
+//        if (mRecyclerView.getChildAt(0) != null) {
+
+
+
+            final TapTargetSequence sequence = new TapTargetSequence(getActivity())
+                    .targets(
+                            // This tap target will target the back button, we just need to pass its containing toolbar
+
+                            // Likewise, this tap target will target the search button
+                            TapTarget
+                                    .forView(mRecyclerView.getChildAt(0).findViewById(R.id.switch_trip), "روشن کردن مسیر", "بعد از انتخاب مسیر لازم است هر روز ساعت حضور در ایستگاه را تعیین کنید.")
+                                    .cancelable(false)
+                                    .targetCircleColor(android.R.color.white)
+                                    .transparentTarget(false)
+                                    .outerCircleColor(R.color.google_blue)
+                                    .textColor(android.R.color.white)
+                                    .id(2),
+                            // You can also target the overflow button in your toolbar
+                            TapTarget.forView(mRecyclerView.getChildAt(0).findViewById(R.id.src_station), "مشاهده ایستگاه مبدا", "مکان ایستگاه مبدا را با لمس دکمه مبدا مشاهده کنید.").id(3)
+                                    .cancelable(false)
+                                    .tintTarget(false)
+                                    .targetCircleColor(android.R.color.white)
+                                    .outerCircleColor(R.color.google_red)
+                                    .transparentTarget(false)
+                                    .textColor(android.R.color.white),
+                            // This tap target will target our droid buddy at the given target rect
+//                        TapTarget.forBounds(droidTarget, "Oh look!", "You can point to any part of the screen. You also can't cancel this one!")
+//                                .cancelable(false)
+//                                .icon(droid)
+//                                .id(4)
+                            TapTarget.forView(mRecyclerView.getChildAt(0).findViewById(R.id.st_destination), "مشاهده ایستگاه مقصد", "مکان ایستگاه مقصد را با لمس دکمه مقصد مشاهده کنید.").id(1)
+                                    .cancelable(false)
+                                    .tintTarget(false)
+                                    .textColor(android.R.color.white)
+                                    .outerCircleColor(R.color.goole_yellow)
+                                    .targetCircleColor(android.R.color.white)
+                                    .transparentTarget(false),
+
+                            TapTarget.forView(mRecyclerView.getChildAt(0).findViewById(R.id.fa_trash), "حذف مسیر", "مسیر هایی که در آن رفت و آمد نمی کنید را حذف کنید.").id(1)
+                                    .cancelable(false)
+                                    .textColor(android.R.color.white)
+                                    .targetCircleColor(android.R.color.white)
+                                    .outerCircleColor(R.color.google_green)
+                                    .transparentTarget(false)
+
+
+                    );
+
+            sequence.start();
+
+
+
+            prefs.edit().putInt("ShowDriverCardGuide",1).apply();
+        }
     }
 
 

@@ -37,6 +37,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
@@ -156,6 +158,7 @@ public class MainActivity extends BootstrapActivity {
     NumberPicker seat_picker;
     ApiResponse routeListResponse;
 
+
     private static final String DRIVE_FRAGMENT_TAG = "driveFragment";
 
 
@@ -223,9 +226,14 @@ public class MainActivity extends BootstrapActivity {
         fragmentManager.beginTransaction()
                 .add(R.id.main_container, new DriverCardFragment(), DRIVE_FRAGMENT_TAG)
                 .commit();
+
+
         fragmentManager.beginTransaction()
                 .add(R.id.main_container, new FabFragment(), "FabFragment")
                 .commit();
+
+
+//        showUserGuide();
 
 
         user_credit.setOnTouchListener(new View.OnTouchListener() {
@@ -274,6 +282,82 @@ public class MainActivity extends BootstrapActivity {
         }
     }
 
+    public void showUserGuide() {
+
+
+        SharedPreferences prefs = this.getSharedPreferences(
+                "com.mibarim.driver", Context.MODE_PRIVATE);
+        if (prefs.getInt("ShowTheMainGuide", 0) == 0) {
+
+            prefs.edit().putInt("ShowTheMainGuide", 1).apply();
+
+            final TapTargetSequence sequence = new TapTargetSequence(this)
+                    .targets(
+                            // This tap target will target the back button, we just need to pass its containing toolbar
+
+                            // Likewise, this tap target will target the search button
+                            TapTarget.forToolbarMenuItem(toolbar, R.id.invite_btn, "دریافت هدیه", "با معرفی می‌بریم به دوستان خود وجه نقد دریافت کنید.")
+                                    .cancelable(false)
+                                    .targetCircleColor(android.R.color.white)
+                                    .transparentTarget(false)
+                                    .outerCircleColor(R.color.google_green)
+                                    .textColor(android.R.color.white)
+                                    .id(2),
+                            // You can also target the overflow button in your toolbar
+                            TapTarget.forToolbarMenuItem(toolbar, R.id.upload_button, "افزایش امنیت", "با آپلود مدارک خود مسافرهای مطمئن تری پیدا کنید.").id(3)
+                                    .cancelable(false)
+                                    .targetCircleColor(android.R.color.white)
+                                    .transparentTarget(false)
+                                    .textColor(android.R.color.white)
+                                    .outerCircleColor(R.color.goole_yellow)
+                            ,
+                            // This tap target will target our droid buddy at the given target rect
+//                        TapTarget.forBounds(droidTarget, "Oh look!", "You can point to any part of the screen. You also can't cancel this one!")
+//                                .cancelable(false)
+//                                .icon(droid)
+//                                .id(4)
+                            TapTarget.forToolbarMenuItem(toolbar, R.id.user_credit_layout, "درآمد", "میزان درآمد خود را مشاهده و برای تصفیه حساب کلیک کنید.").id(1)
+                                    .cancelable(false)
+                                    .outerCircleColor(R.color.google_red)
+                                    .textColor(android.R.color.white)
+                                    .targetCircleColor(android.R.color.white)
+                                    .transparentTarget(false)
+                    ).listener(new TapTargetSequence.Listener() {
+                        // This listener will tell us when interesting(tm) events happen in regards
+                        // to the sequence
+                        @Override
+                        public void onSequenceFinish() {
+
+                            FragmentManager fragmentManager = getSupportFragmentManager();
+                            Fragment fragment = fragmentManager.findFragmentByTag(DRIVE_FRAGMENT_TAG);
+
+                            ((DriverCardFragment) fragment).showUserGuideForDriverCardFragment();
+
+
+                        }
+
+                        @Override
+                        public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+
+                        }
+
+                        @Override
+                        public void onSequenceCanceled(TapTarget lastTarget) {
+
+                        }
+                    });
+
+            sequence.start();
+
+        } else {
+            final FragmentManager fragmentManager = getSupportFragmentManager();
+            final Fragment fragment = fragmentManager.findFragmentByTag(DRIVE_FRAGMENT_TAG);
+            ((DriverCardFragment) fragment).showUserGuideForDriverCardFragment();
+
+        }
+
+    }
+
 
     public void getRoutesListFromServer() {
 
@@ -283,6 +367,13 @@ public class MainActivity extends BootstrapActivity {
 //                ApiResponse response = userInfoService.GetRoutesSerivice();
                 routeListResponse = routeResponseService.GetStationRoutes(1);
                 //Gson gson = new Gson();
+                routeDetails = new ArrayList<StationRouteModel>();
+                Gson gson = new GsonBuilder().create();
+                for (String json : routeListResponse.Messages) {
+                    routeDetails.add(gson.fromJson(json, StationRouteModel.class));
+                }
+                RoutesDatabase myRoutesDatabase = new RoutesDatabase(MainActivity.this);
+                myRoutesDatabase.insertList(routeDetails);
 
                 return true;
 
@@ -300,13 +391,7 @@ public class MainActivity extends BootstrapActivity {
             @Override
             protected void onSuccess(final Boolean res) throws Exception {
                 super.onSuccess(res);
-                routeDetails = new ArrayList<StationRouteModel>();
-                Gson gson = new GsonBuilder().create();
-                for (String json : routeListResponse.Messages) {
-                    routeDetails.add(gson.fromJson(json, StationRouteModel.class));
-                }
-                RoutesDatabase myRoutesDatabase = new RoutesDatabase(MainActivity.this);
-                myRoutesDatabase.insertList(routeDetails);
+
             }
         }.execute();
     }
@@ -789,6 +874,21 @@ public class MainActivity extends BootstrapActivity {
         Fragment fragment = fragmentManager.findFragmentByTag(DRIVE_FRAGMENT_TAG);
         ((DriverCardFragment) fragment).refresh();
         showFab();
+
+
+        SharedPreferences prefs = this.getSharedPreferences(
+                "com.mibarim.driver", Context.MODE_PRIVATE);
+
+        int k = prefs.getInt("ShowDriverCardGuide", 0);
+        int j = prefs.getInt("ShowTheMainGuide", 0);
+
+        if (prefs.getInt("ShowTheMainGuide", 0) == 1 && prefs.getInt("ShowDriverCardGuide", 0) == 0) {
+
+            FragmentManager fragmentmanager = getSupportFragmentManager();
+
+            Fragment driveFragment = fragmentManager.findFragmentByTag(DRIVE_FRAGMENT_TAG);
+            ((DriverCardFragment) driveFragment).showUserGuideForDriverCardFragment();
+        }
     }
 
     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -1133,9 +1233,9 @@ public class MainActivity extends BootstrapActivity {
     }
 
     private void goToUploadActivity() {
-//        Intent intent = new Intent(this, UserDocumentsUploadActivity.class);
+        Intent intent = new Intent(this, UserDocumentsUploadActivity.class);
 //        Intent intent = new Intent(this,UserImageUploadActivity.class);
-        Intent intent = new Intent(this, RatingActivity.class);
+//        Intent intent = new Intent(this, RatingActivity.class);
         intent.putExtra(Constants.Auth.AUTH_TOKEN, authToken);
         startActivity(intent);
     }
@@ -1280,7 +1380,7 @@ public class MainActivity extends BootstrapActivity {
 
 //                    intent.putParcelableArrayListExtra("ratingList", (ArrayList<? extends Parcelable>) ratingModelList);
 
-                    intent.putExtra(Constants.GlobalConstants.RAINTG_LIST_TAG , apiResponse);
+                    intent.putExtra(Constants.GlobalConstants.RAINTG_LIST_TAG, apiResponse);
 
 //                    intent.putExtra("myList",ratingModelList);
 
@@ -1294,6 +1394,25 @@ public class MainActivity extends BootstrapActivity {
 
             }
         }.execute();
+    }
+
+
+    public void showSecondGuideTest() {
+
+        SharedPreferences prefs = getSharedPreferences("com.mibarim.driver", Context.MODE_PRIVATE);
+
+        if (prefs.getInt("ShowTheMainGuide", 0) == 1 && prefs.getInt("ShowDriverCardGuide",0) == 0) {
+            final FragmentManager fragmentManager = getSupportFragmentManager();
+            final Fragment fragment = fragmentManager.findFragmentByTag(DRIVE_FRAGMENT_TAG);
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ((DriverCardFragment) fragment).showUserGuideForDriverCardFragment();
+
+                }
+            }, 700);
+        }
     }
 
 }

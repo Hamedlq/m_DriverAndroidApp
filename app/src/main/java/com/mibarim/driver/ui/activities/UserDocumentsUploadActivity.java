@@ -611,6 +611,7 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
 //                setInfoValues(userInfoModel.IsUserRegistered);
                 //setEmail();
 
+
                 SharedPreferences sharedPreferences = UserDocumentsUploadActivity.this.getSharedPreferences("com.mibarim.driver", Context.MODE_PRIVATE);
                 int i = sharedPreferences.getInt(SAVE_IMAGE_CODE, -1);
                 if (i != 0) {
