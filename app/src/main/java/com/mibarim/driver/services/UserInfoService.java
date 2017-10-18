@@ -224,4 +224,10 @@ public class UserInfoService {
         ApiResponse res = getService().sendFeedback(mobile,"mobile@mibarim.com", txt);
         return res;
     }
+
+    public ApiResponse checkWebviewContent(String authToken) {
+        ApiResponse res = getService().checkWebViewContent("Bearer " + authToken, "notusefultext");
+        return res;
+    }
+
 }

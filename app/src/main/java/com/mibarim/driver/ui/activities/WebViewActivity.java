@@ -126,4 +126,5 @@ public class WebViewActivity extends BootstrapActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
 }

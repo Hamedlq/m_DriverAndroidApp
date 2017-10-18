@@ -26,10 +26,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
@@ -43,6 +45,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.server.converter.StringToIntConverter;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 import com.google.gson.Gson;
@@ -66,6 +69,7 @@ import com.mibarim.driver.models.Plus.DriverTripModel;
 import com.mibarim.driver.models.Plus.PaymentDetailModel;
 import com.mibarim.driver.models.Plus.StationRouteModel;
 import com.mibarim.driver.models.Plus.TripTimeModel;
+import com.mibarim.driver.models.PresentViewModel;
 import com.mibarim.driver.models.RatingModel;
 import com.mibarim.driver.models.Route.BriefRouteModel;
 import com.mibarim.driver.models.Route.RouteResponse;
@@ -83,6 +87,7 @@ import com.mibarim.driver.ui.BootstrapActivity;
 import com.mibarim.driver.ui.HandleApiMessagesBySnackbar;
 import com.mibarim.driver.ui.fragments.DriverFragments.DriverCardFragment;
 import com.mibarim.driver.ui.fragments.DriverFragments.FabFragment;
+import com.mibarim.driver.ui.fragments.MoreInteractionWebviewFragment;
 import com.mibarim.driver.util.SafeAsyncTask;
 import com.squareup.otto.Subscribe;
 
@@ -92,6 +97,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 //import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
@@ -146,6 +152,9 @@ public class MainActivity extends BootstrapActivity {
     private boolean netErrorMsg = false;
     boolean doubleBackToExitPressedOnce = false;
     private UserInfoModel userInfoModel;
+    private FrameLayout moreInteractionWebviewLayout;
+
+
     DriverRouteModel selectedRouteTrip;
     int selectedRouteHour;
     int seatPickerVal;
@@ -157,6 +166,7 @@ public class MainActivity extends BootstrapActivity {
     private InviteModel inviteModel;
     NumberPicker seat_picker;
     ApiResponse routeListResponse;
+    ApiResponse webViewRespone;
 
 
     private static final String DRIVE_FRAGMENT_TAG = "driveFragment";
@@ -168,6 +178,11 @@ public class MainActivity extends BootstrapActivity {
 
     ArrayList<RatingModel> ratingModelList = new ArrayList<>();
     ApiResponse apiResponse;
+    List<PresentViewModel> webViewModelList;
+
+
+    String MORE_INTERACTION_WEBVIEW_FRAG = "MoreInteractionWebviewFragment";
+
 
 
     @Override
@@ -195,6 +210,8 @@ public class MainActivity extends BootstrapActivity {
             url = getIntent().getExtras().getString(Constants.GlobalConstants.URL);
         }
         parentLayout = findViewById(R.id.main_activity_root);
+
+        moreInteractionWebviewLayout = (FrameLayout) findViewById(R.id.more_interaction_webview_container);
         // View injection with Butterknife
         ButterKnife.bind(this);
 
@@ -205,7 +222,7 @@ public class MainActivity extends BootstrapActivity {
         toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         user_credit = (TextView) toolbar.findViewById(R.id.user_credit);
-        invite_btn = (ImageView) toolbar.findViewById(R.id.invite_btn);
+        invite_btn = (ImageView) toolbar.findViewById(R.id.invite_button);
         uploadButton = (ImageView) toolbar.findViewById(R.id.upload_button);
         checkAuth();
         //initScreen();
@@ -215,9 +232,14 @@ public class MainActivity extends BootstrapActivity {
         checkVersion();
         getUserInfoFromServer();
 
+
+        checkWebviewContentFromServer();
+//        addWebviewFragment();
+
         getRoutesListFromServer();
 
         getTheRatingsFromServer();
+
 
         getUserScore();
         getTripState();
@@ -282,6 +304,8 @@ public class MainActivity extends BootstrapActivity {
         }
     }
 
+
+
     public void showUserGuide() {
 
 
@@ -296,7 +320,7 @@ public class MainActivity extends BootstrapActivity {
                             // This tap target will target the back button, we just need to pass its containing toolbar
 
                             // Likewise, this tap target will target the search button
-                            TapTarget.forToolbarMenuItem(toolbar, R.id.invite_btn, "دریافت هدیه", "با معرفی می‌بریم به دوستان خود وجه نقد دریافت کنید.")
+                            TapTarget.forToolbarMenuItem(toolbar, R.id.invite_button, "دریافت هدیه", "با معرفی می‌بریم به دوستان خود وجه نقد دریافت کنید.")
                                     .cancelable(false)
                                     .targetCircleColor(android.R.color.white)
                                     .transparentTarget(false)
@@ -556,6 +580,12 @@ public class MainActivity extends BootstrapActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                return true;
+            case R.id.upload_button:
+                goToUploadActivity();
+                return true;
+            case R.id.invite_button:
+                gotoInviteActivity();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -1414,5 +1444,91 @@ public class MainActivity extends BootstrapActivity {
             }, 700);
         }
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+
+    public void addWebviewFragment(){
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .add(R.id.more_interaction_webview_container, new MoreInteractionWebviewFragment(), MORE_INTERACTION_WEBVIEW_FRAG)
+                .commit();
+
+
+    }
+
+
+    public void removeMoreInteractionWebviewFragment() {
+//        final FragmentManager fragmentManager = getSupportFragmentManager();
+//        Fragment fragment = fragmentManager.findFragmentByTag(MORE_INTERACTION_WEBVIEW_FRAG);
+//        if (fragment != null) {
+//            fragmentManager.beginTransaction().remove(fragment).commit();
+//        }
+
+        moreInteractionWebviewLayout.setVisibility(View.GONE);
+    }
+
+
+
+    public void checkWebviewContentFromServer() {
+
+        new SafeAsyncTask<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+//                ApiResponse response = userInfoService.GetRoutesSerivice();
+                webViewRespone = userInfoService.checkWebviewContent(authToken);
+                //Gson gson = new Gson();
+
+                webViewModelList = new ArrayList<PresentViewModel>();
+                Gson gson = new GsonBuilder().create();
+                for (String json : webViewRespone.Messages) {
+                    webViewModelList.add(gson.fromJson(json, PresentViewModel.class));
+                }
+
+
+                return true;
+
+
+            }
+
+            @Override
+            protected void onException(final Exception e) throws RuntimeException {
+                super.onException(e);
+                if (e instanceof OperationCanceledException) {
+                    finish();
+                }
+            }
+
+            @Override
+            protected void onSuccess(final Boolean res) throws Exception {
+                super.onSuccess(res);
+
+                if(webViewModelList.get(0).getPresentUrl() != null){
+                    addWebviewFragment();
+                }
+
+            }
+        }.execute();
+
+
+    }
+
+    public String getPresentWebview(){
+        String url = webViewModelList.get(0).getPresentUrl();
+        return url;
+    }
+
+    public String getWebviewPageURL(){
+        String url = webViewModelList.get(0).getWebViewPageUrl();
+        return url;
+    }
+
 
 }

@@ -4,16 +4,31 @@
     android:id="@+id/main_activity_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#eeeeee"
     tools:context=".ui.activities.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:background="@color/transparent"
         android:layout_height="match_parent"
-        android:background="#fff"
         android:orientation="vertical">
 
-        <include layout="@layout/toolbar_main"></include>
+        <include layout="@layout/toolbar_main"> </include>
+
+        <FrameLayout
+            android:elevation="5dp"
+            android:background="#ffffff"
+            android:layout_margin="10dp"
+            android:id="@+id/more_interaction_webview_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </FrameLayout>
+
+
         <!-- The tm content view -->
+
+
         <FrameLayout
             android:id="@+id/main_container"
             android:layout_width="match_parent"
