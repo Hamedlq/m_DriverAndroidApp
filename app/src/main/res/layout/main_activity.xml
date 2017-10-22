@@ -17,6 +17,7 @@
 
         <FrameLayout
             android:elevation="5dp"
+            android:visibility="gone"
             android:background="#ffffff"
             android:layout_margin="10dp"
             android:id="@+id/more_interaction_webview_container"

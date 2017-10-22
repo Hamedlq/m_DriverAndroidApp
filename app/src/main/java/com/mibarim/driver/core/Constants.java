@@ -91,6 +91,7 @@ public final class Constants {
         public static final String URL_SET_ROUTE_TRIP = "/SetTrip";
         public static final String URL_DISABLE_TRIP = "/DisableTrip";
         public static final String URL_INSERT_RIDE_REQUEST = "/InsertRideRequest";
+        public static final String URL_SET_ROUTE = "/SetRoute";
         /**
          * UserInfoService
          */
@@ -184,6 +185,9 @@ public final class Constants {
         public static final String SIMILAR_SUGGEST_ROUTE_URL = "/GetSimilarSuggestRoute";
         public static final String TRIP_PROFILE_URL = "/GetTripProfile";
         public static final String GET_STATION_URL = "/GetStations";
+        public static final String GET_MAIN_STATIONS_URL = "/GetMainStations";
+        public static final String GET_SUB_STATIONS_URL = "/GetSubStations";
+        public static final String GET_ALL_SUB_STATIONS_URL = "/GetAllSubStations";
 
         public static final String URL_GET_EVENT = "/GetAllEvents";
         public static final String URL_GET_CITY_LOCATION = "/GetCityLocations";
@@ -255,7 +259,17 @@ public final class Constants {
 
         public static final String RAINTG_LIST_TAG = "RATINGLIST";
 
+        public static final String MAIN_STATIONS_INTENT_TAG = "MainStationsIntentTag";
+
+        public static final String ALL_SUBSTATIONS_INTENT_TAG = "AllSubstationsIntentTag";
+
+        public static final String STATE_OF_WHETHER_CHOOSING_ORIGIN_OR_DESTINATION = "StateOfWhetherChoosingOriginOrDestination";
+
         public static final String URL = "URL";
+
+        public static final String DESTINATION_MAIN_STATION_ID_INTENT_TAG = "DestinationIdIntentTag";
+        public static final String ORIGIN_MAIN_STATION_ID_INTENT_TAG = "DestinationIdIntentTag";
+
     }
 }
 

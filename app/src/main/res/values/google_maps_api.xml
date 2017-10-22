@@ -6,4 +6,5 @@
     <!--<string name="google_maps_key" translatable="false" templateMergeStrategy="preserve">AIzaSyDGuR7SvgffT8SCFk6nKB5vgb-8c-Y843U</string>-->
     <!--none key-->
     <string name="google_maps_key" translatable="false" templateMergeStrategy="preserve">AIzaSyBbDiZnEznRjNa7ROBU1zbQqgzEwmOTpKI</string>
+    <string name="google_maps_key_2" translatable="false" templateMergeStrategy="preserve">AIzaSyC1tlOfpDffMUSCQF0h2t-HEKelJVUHGYs</string>
 </resources>

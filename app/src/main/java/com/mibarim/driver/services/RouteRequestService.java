@@ -254,4 +254,11 @@ public class RouteRequestService {
                 driverRouteId);
         return res;
     }
+
+    public ApiResponse setRoute(String authToken, long desStId, long SrcSubStId) {
+        ApiResponse res = getService().setRoute("Bearer " + authToken,
+                desStId, SrcSubStId);
+        return res;
+    }
+
 }

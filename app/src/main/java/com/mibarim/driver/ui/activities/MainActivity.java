@@ -148,6 +148,7 @@ public class MainActivity extends BootstrapActivity {
     private int FINISH_USER_INFO = 5649;
     private int CREDIT_RETURN = 9999;
     private int ROUTESELECTED = 2456;
+    private int SEARCH_STATION_REQUEST_CODE =7464;
     private View parentLayout;
     private boolean netErrorMsg = false;
     boolean doubleBackToExitPressedOnce = false;
@@ -614,6 +615,10 @@ public class MainActivity extends BootstrapActivity {
         if (requestCode == USER_PIC_REQUEST && resultCode == RESULT_OK) {
             getUserInfoFromServer();
         }
+
+        if (requestCode == SEARCH_STATION_REQUEST_CODE && resultCode == RESULT_OK) {
+            refreshList();
+        }
     }
 
     @Override
@@ -937,8 +942,12 @@ public class MainActivity extends BootstrapActivity {
     };
 
     public void gotoRouteLists() {
-        Intent intent = new Intent(this, StationRouteListActivity.class);
-        this.startActivityForResult(intent, ROUTESELECTED);
+//        Intent intent = new Intent(this, StationRouteListActivity.class);
+//        this.startActivityForResult(intent, ROUTESELECTED);
+
+        Intent intent = new Intent(this, SearchStationActivity.class);
+        intent.putExtra(Constants.Auth.AUTH_TOKEN, authToken);
+        startActivityForResult(intent, SEARCH_STATION_REQUEST_CODE);
 
     }
 
@@ -1360,13 +1369,13 @@ public class MainActivity extends BootstrapActivity {
 
 //                ratingModelList = new ArrayList<RatingModel>();
 
-//                if (apiResponse.Count > 0)
+//                if (mainStationsApiResponse.Count > 0)
 
 
 //                ApiResponse myResponse = routeResponseService.GetStationRoutes(1);
                 //Gson gson = new Gson();
                 /*Gson gson = new GsonBuilder().create();
-                for (String json : apiResponse.Messages) {
+                for (String json : mainStationsApiResponse.Messages) {
                     ratingModelList.add(gson.fromJson(json, RatingModel.class));
                 }*/
                 return true;
@@ -1512,6 +1521,7 @@ public class MainActivity extends BootstrapActivity {
 
                 if(webViewModelList.get(0).getPresentUrl() != null){
                     addWebviewFragment();
+                    moreInteractionWebviewLayout.setVisibility(View.VISIBLE);
                 }
 
             }
