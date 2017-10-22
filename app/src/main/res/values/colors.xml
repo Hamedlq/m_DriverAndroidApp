@@ -101,4 +101,7 @@
     <color name="goole_yellow">#f4c20d</color>
     <color name="google_green">#3cba54</color>
 
+    <color name="defining_route_origin_color">#00a421</color>
+    <color name="defining_route_destination_color">#bc001c</color>
+
 </resources>
