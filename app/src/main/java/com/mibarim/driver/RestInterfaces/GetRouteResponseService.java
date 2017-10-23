@@ -56,4 +56,23 @@ public interface GetRouteResponseService {
     @FormUrlEncoded
     ApiResponse GetStations(@Field("StRouteId") long stRouteId);
 
+
+    @POST(Constants.Http.GET_MAIN_STATIONS_URL)
+    @FormUrlEncoded
+    ApiResponse GetMainStations(@Header(Constants.Http.PARAM_AUTHORIZATION) String authToken,
+                                @Field("None") long Id);
+
+    @POST(Constants.Http.GET_SUB_STATIONS_URL)
+    @FormUrlEncoded
+    ApiResponse GetSubStations(@Header(Constants.Http.PARAM_AUTHORIZATION) String authToken,
+                               @Field("MainStationId") long Id);
+
+    @POST(Constants.Http.GET_ALL_SUB_STATIONS_URL)
+    @FormUrlEncoded
+    ApiResponse GetAllSubStations(@Header(Constants.Http.PARAM_AUTHORIZATION) String authToken,
+                               @Field("TestText") String Id);
+
+
+
+
 }

@@ -217,4 +217,10 @@ public interface SaveRouteRequestService {
     ApiResponse disableTrip(@Header(Constants.Http.PARAM_AUTHORIZATION) String authToken,
                              @Field("DriverRouteId") long driverRouteId);
 
+    @POST(Constants.Http.URL_SET_ROUTE)
+    @FormUrlEncoded
+    ApiResponse setRoute(@Header(Constants.Http.PARAM_AUTHORIZATION) String authToken,
+                         @Field("DstStId") long dstStId,
+                         @Field("SrcStId") long srcSubStId);
+
 }

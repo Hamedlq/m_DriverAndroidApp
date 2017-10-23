@@ -15,6 +15,7 @@ import com.mibarim.driver.ui.activities.MessagingActivity;
 import com.mibarim.driver.ui.activities.MobileValidationActivity;
 import com.mibarim.driver.ui.activities.RidingActivity;
 import com.mibarim.driver.ui.activities.RouteStepActivity;
+import com.mibarim.driver.ui.activities.SearchStationActivity;
 import com.mibarim.driver.ui.activities.SplashActivity;
 import com.mibarim.driver.ui.activities.RideMainActivity;
 import com.mibarim.driver.ui.activities.RideRequestMapActivity;
@@ -45,6 +46,7 @@ import com.mibarim.driver.ui.fragments.DriverFragments.FabFragment;
 import com.mibarim.driver.ui.fragments.DriverFragments.RoutesCardFragment;
 import com.mibarim.driver.ui.fragments.DriverFragments.StationCardFragment;
 import com.mibarim.driver.ui.fragments.HelpFragment;
+import com.mibarim.driver.ui.fragments.SubstationListFragment;
 import com.mibarim.driver.ui.fragments.TripProfileFragments.ProfileRouteInfoFragment;
 import com.mibarim.driver.ui.fragments.TripProfileFragments.ProfileScoreInfoFragment;
 import com.mibarim.driver.ui.fragments.TripProfileFragments.ProfileUserInfoFragment;
@@ -370,5 +372,9 @@ public interface BootstrapComponent {
     void inject(UserDocumentsUploadActivity target);
 
     void inject(RatingActivity target);
+
+    void inject(SearchStationActivity target);
+
+    void inject(SubstationListFragment target);
 
 }

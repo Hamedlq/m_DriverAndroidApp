@@ -207,4 +207,9 @@ public interface GetUserInfoService {
                                   @Field("Email") String email,
                                   @Field("Text") String txt);
 
+    @POST(Constants.Http.URL_CHECK_WEBVIEW)
+    @FormUrlEncoded
+    ApiResponse checkWebViewContent(@Header(Constants.Http.PARAM_AUTHORIZATION) String authToken ,
+                             @Field("nulltext") String text);
+
 }

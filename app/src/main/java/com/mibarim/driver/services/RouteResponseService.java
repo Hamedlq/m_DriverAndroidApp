@@ -69,4 +69,24 @@ public class RouteResponseService {
         ApiResponse res = getService().GetStations(stRouteId);
         return res;
     }
+
+
+    public ApiResponse GetMainStations(String authToken) {
+        ApiResponse res = getService().GetMainStations("Bearer " + authToken, 1);
+        return res;
+    }
+
+
+    public ApiResponse GetSubStations(String authToken, long mainStationId) {
+        ApiResponse res = getService().GetSubStations("Bearer " + authToken, mainStationId);
+        return res;
+    }
+
+    public ApiResponse GetAllSubStations(String authToken) {
+        ApiResponse res = getService().GetAllSubStations("Bearer " + authToken, "testtext");
+        return res;
+    }
+
+
+
 }
