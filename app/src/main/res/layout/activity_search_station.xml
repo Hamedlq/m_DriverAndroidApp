@@ -6,10 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
+    android:background="#e9e9e9"
     android:fitsSystemWindows="true"
-    android:orientation="vertical"
-    android:background="#e9e9e9">
-
+    android:orientation="vertical">
 
 
     <include layout="@layout/list_of_stations" />
@@ -90,54 +89,50 @@
     </LinearLayout>
 
 
-
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
-            app:contentInsetLeft="0dp"
-            app:contentInsetStart="0dp"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
+            app:contentInsetLeft="0dp"
+            app:contentInsetStart="0dp"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <RelativeLayout
-                android:layout_marginLeft="8dp"
-                android:background="@drawable/search_edittext_background"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/search_edittext_background">
 
                 <EditText
                     android:id="@+id/search_edittext"
-                    android:layout_margin="6dp"
                     android:layout_width="match_parent"
-                    android:layout_toStartOf="@+id/refresh_imageview"
                     android:layout_height="35dp"
                     android:layout_gravity="center"
-                    android:padding="3dp"
+                    android:layout_margin="6dp"
                     android:layout_marginEnd="25dp"
-
+                    android:layout_toStartOf="@+id/refresh_imageview"
                     android:background="#ffffff"
+
                     android:hint="جست و جوی مبدا"
-                    android:textColorHint="#515151"
-                    android:textColor="@android:color/black" />
+                    android:padding="3dp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="#515151" />
 
                 <ImageView
-                    android:layout_marginLeft="14dp"
                     android:id="@+id/refresh_imageview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerInParent="true"
-                    android:src="@drawable/ic_refresh_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_marginLeft="14dp"
+                    android:src="@drawable/ic_refresh_icon" />
 
             </RelativeLayout>
-
-
 
 
         </android.support.v7.widget.Toolbar>
@@ -180,6 +175,8 @@
         android:id="@+id/substation_card_fragment_holder"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+
 
 
 </android.support.design.widget.CoordinatorLayout>
