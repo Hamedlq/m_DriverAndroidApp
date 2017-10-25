@@ -385,21 +385,19 @@ public class MainActivity extends BootstrapActivity {
 
 
     public void getRoutesListFromServer() {
-
+        routeDetails = new ArrayList<StationRouteModel>();
         new SafeAsyncTask<Boolean>() {
             @Override
             public Boolean call() throws Exception {
 //                ApiResponse response = userInfoService.GetRoutesSerivice();
                 routeListResponse = routeResponseService.GetStationRoutes(1);
                 //Gson gson = new Gson();
-                routeDetails = new ArrayList<StationRouteModel>();
                 Gson gson = new GsonBuilder().create();
                 for (String json : routeListResponse.Messages) {
                     routeDetails.add(gson.fromJson(json, StationRouteModel.class));
                 }
                 RoutesDatabase myRoutesDatabase = new RoutesDatabase(MainActivity.this);
                 myRoutesDatabase.insertList(routeDetails);
-
                 return true;
 
 
@@ -1274,7 +1272,7 @@ public class MainActivity extends BootstrapActivity {
     private void goToUploadActivity() {
         Intent intent = new Intent(this, UserDocumentsUploadActivity.class);
 //        Intent intent = new Intent(this,UserImageUploadActivity.class);
-//        Intent intent = new Intent(this, RatingActivity.class);
+        //Intent intent = new Intent(this, RatingActivity.class);
         intent.putExtra(Constants.Auth.AUTH_TOKEN, authToken);
         startActivity(intent);
     }
