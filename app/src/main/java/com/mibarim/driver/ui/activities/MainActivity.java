@@ -15,6 +15,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -168,6 +169,9 @@ public class MainActivity extends BootstrapActivity {
     NumberPicker seat_picker;
     ApiResponse routeListResponse;
     ApiResponse webViewRespone;
+
+    NumberPicker hourPicker;
+    NumberPicker minutePicker;
 
 
     private static final String DRIVE_FRAGMENT_TAG = "driveFragment";
@@ -1037,8 +1041,213 @@ public class MainActivity extends BootstrapActivity {
         }
     };
 
+
+
+
+
+
     private void showSetTime() {
-        /*LayoutInflater inflater = getLayoutInflater();
+        LayoutInflater inflater = getLayoutInflater();
+        View alertLayout = inflater.inflate(R.layout.time_picker_dialog, null);
+
+        View titleLayout = inflater.inflate(R.layout.timepicker_dialog_custom_title,null);
+
+
+
+        hourPicker = (NumberPicker) alertLayout.findViewById(R.id.hour);
+        minutePicker = (NumberPicker) alertLayout.findViewById(R.id.minute);
+
+        LinearLayout hourUp = (LinearLayout) alertLayout.findViewById(R.id.add_to_hours);
+        LinearLayout hourDown = (LinearLayout) alertLayout.findViewById(R.id.reduce_from_hours);
+
+        LinearLayout minuteUp = (LinearLayout) alertLayout.findViewById(R.id.add_to_minutes);
+        LinearLayout minuteDown = (LinearLayout) alertLayout.findViewById(R.id.reduce_from_minutes);
+        final TextView stateOfTheDay = (TextView) alertLayout.findViewById(R.id.state_of_the_day);
+
+
+        hourDown.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    int val = hourPicker.getValue();
+                    int temp = 28 - val;
+                    temp = temp -1;
+                    if (temp == 24) {
+                        temp = (val + 1) % 23 + 4;
+                    }
+                    if (temp == 4)
+                        temp = 23;
+                    if (temp > 12 && temp <= 23) {
+                        stateOfTheDay.setText("بعد از ظهر");
+                    }
+                    if (temp < 12 && temp >= 5)
+                        stateOfTheDay.setText("صبح");
+
+                    if (temp == 12)
+                        stateOfTheDay.setText("ظهر");
+
+                    hourPicker.setValue(val + 1);
+
+                }
+                return true;
+            }
+        });
+        hourUp.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    int val = hourPicker.getValue();
+                    int temp = 28 - val;
+                    temp = temp + 1;
+                    if (temp == 24)
+                        temp = (val + 1) % 23 + 4;
+
+                    if (temp > 12 && temp <= 23) {
+                        stateOfTheDay.setText("بعد از ظهر");
+                    }
+                    if (temp < 12 && temp >= 5)
+                        stateOfTheDay.setText("صبح");
+                    if (temp == 12)
+                        stateOfTheDay.setText("ظهر");
+
+                    hourPicker.setValue(val - 1);
+                }
+                return true;
+            }
+        });
+
+        hourPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker numberPicker, int i, int i1) {
+                int current = 28 - i1;
+                if (current == 12)
+                    stateOfTheDay.setText("ظهر");
+                if (current < 12 && current>= 5)
+                    stateOfTheDay.setText("صبح");
+                if (current > 12 && current <= 23)
+                    stateOfTheDay.setText("بعد از ظهر");
+            }
+        });
+
+
+        minuteDown.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    int val = minutePicker.getValue();
+                    minutePicker.setValue(val + 1);
+                }
+                return true;
+            }
+        });
+        minuteUp.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    int val = minutePicker.getValue();
+                    minutePicker.setValue(val - 1);
+                }
+                return true;
+            }
+        });
+
+
+        String[] hourValues = new String[]{"5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"};
+
+
+        String[] hourValues2 = new String[19];
+
+        for (int i = 23; i >=5  ; i--) {
+//            hourValues2[23-i] = String.valueOf(i);
+            hourValues2[23-i] = String.format("%02d", i);
+        }
+
+        String[] minuteValues = new String[]{"45", "30", "15", "00"};
+        hourPicker.setMinValue(5);
+        hourPicker.setMaxValue(23);
+
+        hourPicker.setWrapSelectorWheel(true);
+
+
+        minutePicker.setMinValue(1);
+        minutePicker.setMaxValue(4);
+
+        minutePicker.setDisplayedValues(minuteValues);
+        minutePicker.setValue(1);
+        minutePicker.setWrapSelectorWheel(true);
+
+        hourPicker.setValue(1);
+        hourPicker.setDisplayedValues(hourValues2);
+        int currentHourValue = 28 - hourPicker.getValue();
+        if (currentHourValue == 12)
+            stateOfTheDay.setText("ظهر");
+        if (currentHourValue < 12 && currentHourValue>= 5)
+            stateOfTheDay.setText("صبح");
+        if (currentHourValue > 12 && currentHourValue <= 23)
+            stateOfTheDay.setText("بعدازظهر");
+
+        TextView title = new TextView(this);
+// You Can Customise your Title here
+        title.setText("Custom");
+        title.setBackgroundColor(Color.DKGRAY);
+        title.setPadding(10, 10, 10, 10);
+        title.setGravity(View.TEXT_ALIGNMENT_CENTER);
+        title.setTextColor(Color.WHITE);
+        title.setTextSize(20);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("انتخاب زمان");
+        builder.setCustomTitle(titleLayout);
+        builder.setView(alertLayout);
+        builder.setCancelable(false);
+        builder.setPositiveButton("تایید", TimeDialogClickListener)
+                .setNegativeButton("بیخیال", TimeDialogClickListener).show();
+    }
+
+
+    DialogInterface.OnClickListener TimeDialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+//                    int seatPickerVal = hourPicker.getValue();
+                    selectedRouteHour = 28 - hourPicker.getValue();
+                    int minValue = minutePicker.getValue();
+                    switch (minValue){
+                        case 0:
+                            selectedRouteMin = 0;
+                            break;
+                        case 1:
+                            selectedRouteMin = 45;
+                            break;
+                        case 2:
+                            selectedRouteMin = 30;
+                            break;
+                        case 3:
+                            selectedRouteMin = 15;
+                            break;
+                    }
+
+                    setEmptySeats();
+
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
+                    dialog.dismiss();
+//                    refreshList();
+                    break;
+            }
+        }
+    };
+
+
+
+
+
+
+
+
+    /*private void showSetTime() {
+        *//*LayoutInflater inflater = getLayoutInflater();
         View alertLayout = inflater.inflate(R.layout.clock_dialog, null);
         final NumberPicker minute_picker = (NumberPicker) alertLayout.findViewById(R.id.minute_picker);
         final LinearLayout minute_up = (LinearLayout) alertLayout.findViewById(R.id.minute_up);
@@ -1061,7 +1270,7 @@ public class MainActivity extends BootstrapActivity {
         builder.setView(alertLayout);
         builder.setCancelable(false);
         builder.setPositiveButton("تایید زمان", TimeDialogClickListener)
-                .setNegativeButton("خیر", TimeDialogClickListener).show();*/
+                .setNegativeButton("خیر", TimeDialogClickListener).show();*//*
         //Calendar mcurrentTime = Calendar.getInstance();
         int hour = selectedRouteTrip.TimingHour;
         int minute = selectedRouteTrip.TimingMin;
@@ -1078,12 +1287,12 @@ public class MainActivity extends BootstrapActivity {
 
 
         }, hour, minute, true);
-        /*mTimePicker.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        *//*mTimePicker.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
                 refreshList();
             }
-        });*/
+        });*//*
 
         mTimePicker.setTitle("زمان دقیق حضور در مبدا");
         mTimePicker.setButton(DialogInterface.BUTTON_POSITIVE, "تایید زمان", mTimePicker);
@@ -1104,7 +1313,63 @@ public class MainActivity extends BootstrapActivity {
                     break;
             }
         }
-    };
+    };*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     private void setEmptySeats() {
