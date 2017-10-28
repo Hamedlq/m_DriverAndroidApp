@@ -70,7 +70,6 @@ public class RatingActivity extends BootstrapActivity {
 
     Button confirmButton2;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

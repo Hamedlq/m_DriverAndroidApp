@@ -23,9 +23,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -135,10 +133,6 @@ public class SearchStationActivity extends AppCompatActivity {
 
     long originMainStationId;
 
-    FrameLayout footerLayout;
-
-    Button suggestButton;
-
 
     ProgressDialog progressDialog;
 
@@ -182,12 +176,6 @@ public class SearchStationActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 
-
-
-
-
-
-
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(getText(R.string.please_wait));
         progressDialog.setIndeterminate(true);
@@ -203,13 +191,6 @@ public class SearchStationActivity extends AppCompatActivity {
 //        destinationSearchLayout = (LinearLayout) findViewById(R.id.destination_search_layout1);
 
         mainStationsListView = (ListView) findViewById(R.id.main_stations_listview);
-
-
-        footerLayout = (FrameLayout) getLayoutInflater().inflate(R.layout.button_under_main_search_list, null);
-        suggestButton = (Button) footerLayout.findViewById(R.id.suggest_station_button);
-        mainStationsListView.addFooterView(footerLayout);
-
-
 
 
         chooseFromMapListview = (ListView) findViewById(R.id.choose_from_map_listview);
@@ -312,16 +293,6 @@ public class SearchStationActivity extends AppCompatActivity {
         transition.enableTransitionType(LayoutTransition.CHANGING);
         linflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 //        final View myView = linflater.inflate(R.layout.destination_search_layout, null);
-
-
-
-        suggestButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gotoSuggestStation();
-
-            }
-        });
 
 
         mainStationsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -913,11 +884,4 @@ public class SearchStationActivity extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-
-    public void gotoSuggestStation() {
-        Intent intent = new Intent(SearchStationActivity.this, WebViewActivity.class);
-        intent.putExtra("URL", "https://goo.gl/forms/igP3kx2E3ilzGYDf1");
-        startActivity(intent);
-    }
-
 }
