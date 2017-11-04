@@ -116,10 +116,10 @@ public class DriverCardFragment extends Fragment
 
             @Override
             public void onCardViewTap(View view, int position) {
-                if (getActivity() instanceof MainActivity) {
+                /*if (getActivity() instanceof MainActivity) {
                     DriverRouteModel selectedItem = ((DriverRouteModel) items.get(position));
                     ((MainActivity) getActivity()).ToggleTrip(selectedItem);
-                }
+                }*/
             }
 
             @Override

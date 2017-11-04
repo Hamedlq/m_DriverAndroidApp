@@ -1,10 +1,12 @@
 package com.mibarim.driver.models;
 
+import java.io.Serializable;
+
 /**
  * Created by Alireza on 10/17/2017.
  */
 
-public class PresentViewModel {
+public class PresentViewModel implements Serializable {
 
     public String PresentUrl;
     public String WebViewPageUrl;

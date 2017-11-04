@@ -23,7 +23,9 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -133,6 +135,10 @@ public class SearchStationActivity extends AppCompatActivity {
 
     long originMainStationId;
 
+    FrameLayout footerLayout;
+
+    Button suggestButton;
+
 
     ProgressDialog progressDialog;
 
@@ -192,6 +198,9 @@ public class SearchStationActivity extends AppCompatActivity {
 
         mainStationsListView = (ListView) findViewById(R.id.main_stations_listview);
 
+        footerLayout = (FrameLayout) getLayoutInflater().inflate(R.layout.button_under_main_search_list, null);
+        suggestButton = (Button) footerLayout.findViewById(R.id.suggest_station_button);
+        mainStationsListView.addFooterView(footerLayout);
 
         chooseFromMapListview = (ListView) findViewById(R.id.choose_from_map_listview);
 
@@ -294,8 +303,15 @@ public class SearchStationActivity extends AppCompatActivity {
         linflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 //        final View myView = linflater.inflate(R.layout.destination_search_layout, null);
 
+        suggestButton.setOnClickListener(new View.OnClickListener() {
+                                             @Override
+                                             public void onClick(View v) {
+                                                 gotoSuggestStation();
 
-        mainStationsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                             }});
+
+
+                                             mainStationsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                List<StationModel> theItems = routeResponseList;
@@ -311,8 +327,9 @@ public class SearchStationActivity extends AppCompatActivity {
 
                 if (stat == 1) {
                     destinationStationId = selectedItem.MainStationId;
-                    Toast.makeText(SearchStationActivity.this,R.string.destination_selected,Toast.LENGTH_SHORT).show();
-                    checkToSeeWhatToDo();
+                    if(checkToSeeWhatToDo()){
+                        Toast.makeText(SearchStationActivity.this,R.string.destination_selected,Toast.LENGTH_SHORT).show();
+                    }
                 }
 
 
@@ -456,19 +473,23 @@ public class SearchStationActivity extends AppCompatActivity {
             // pre-condition
             return;
         }
+        try {
+            int totalHeight = 0;
+            int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
+            for (int i = 0; i < listAdapter.getCount(); i++) {
+                View listItem = listAdapter.getView(i, null, listView);
+                listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+                totalHeight += listItem.getMeasuredHeight();
+            }
 
-        int totalHeight = 0;
-        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-            totalHeight += listItem.getMeasuredHeight();
+            ViewGroup.LayoutParams params = listView.getLayoutParams();
+            params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+            listView.setLayoutParams(params);
+            listView.requestLayout();
+        }catch (Exception ee){
+
         }
 
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        listView.setLayoutParams(params);
-        listView.requestLayout();
     }
 
 
@@ -534,22 +555,20 @@ public class SearchStationActivity extends AppCompatActivity {
                     stationsArray[i] = stationsArrayList.get(i);
                 }
 
-                final ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(SearchStationActivity.this,
-                        R.layout.search_row_item, R.id.station_name, stationsArray);
+                /*final ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(SearchStationActivity.this,
+                        R.layout.search_row_item, R.id.station_name, stationsArray);*/
 
 
                 mySearchCustomAdapter = new SearchCustomAdapter(SearchStationActivity.this, routeResponseList);
-
 
 //                mainStationsListView.setAdapter(adapter3);
 
                 mainStationsListView.setAdapter(mySearchCustomAdapter);
 
-
                 setListViewHeightBasedOnChildren(mainStationsListView);
 
-
                 setListViewHeightBasedOnChildren(chooseFromMapListview);
+
 
 
 //                progressDialog.hide();
@@ -691,16 +710,17 @@ public class SearchStationActivity extends AppCompatActivity {
     }
 
 
-    public void checkToSeeWhatToDo() {
+    public boolean checkToSeeWhatToDo() {
 
+        if (originSubstationId >= 0 && destinationStationId >= 0 && originMainStationId == destinationStationId) {
+            Toast.makeText(SearchStationActivity.this, "مبدا و مقصد نمی توانند یکی باشند", Toast.LENGTH_LONG).show();
+            return false;
+        }
 
         if (originSubstationId >= 0 && destinationStationId >= 0 && originMainStationId != destinationStationId) {
             setRoute(destinationStationId, originSubstationId);
             progressDialog.show();
-        }
-
-        if (originSubstationId >= 0 && destinationStationId >= 0 && originMainStationId == destinationStationId) {
-            Toast.makeText(SearchStationActivity.this, "مبدا و مقصد نمی توانند یکی باشند", Toast.LENGTH_LONG).show();
+            return false;
         }
 
 
@@ -726,7 +746,7 @@ public class SearchStationActivity extends AppCompatActivity {
 
         }
 
-
+        return true;
     }
 
     public void setOriginSubStationId(long i) {
@@ -823,9 +843,9 @@ public class SearchStationActivity extends AppCompatActivity {
                     stationsArray[i] = stationsArrayList.get(i);
                 }
 
-                final ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(SearchStationActivity.this,
+                /*final ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(SearchStationActivity.this,
                         R.layout.search_row_item, R.id.station_name, stationsArray);
-
+*/
 
                 mySearchCustomAdapter = new SearchCustomAdapter(SearchStationActivity.this, routeResponseList);
 
@@ -835,10 +855,10 @@ public class SearchStationActivity extends AppCompatActivity {
                 mainStationsListView.setAdapter(mySearchCustomAdapter);
 
 
-                setListViewHeightBasedOnChildren(mainStationsListView);
+                /*setListViewHeightBasedOnChildren(mainStationsListView);
 
 
-                setListViewHeightBasedOnChildren(chooseFromMapListview);
+                setListViewHeightBasedOnChildren(chooseFromMapListview);*/
 
 
 //                progressDialog.hide();
@@ -883,5 +903,12 @@ public class SearchStationActivity extends AppCompatActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    public void gotoSuggestStation() {
+        Intent intent = new Intent(SearchStationActivity.this, WebViewActivity.class);
+        intent.putExtra("URL", "https://goo.gl/forms/igP3kx2E3ilzGYDf1");
+        startActivity(intent);
+
     }
 }

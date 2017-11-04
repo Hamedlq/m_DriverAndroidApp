@@ -8,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.design.widget.Snackbar;
@@ -139,6 +140,8 @@ public class SmsValidationActivity extends AccountAuthenticatorActivity {
             authToken = getIntent().getStringExtra("AuthToken");
         }*/
         mobile_no.setText(mobileNo);
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/IRANSans(FaNum)_Light.ttf");
+        mobile_confirm_btn.setTypeface(font);
 
 //        mobile_number.setText(mobileNo);
         mobile_confirm_btn.setOnTouchListener(new View.OnTouchListener() {

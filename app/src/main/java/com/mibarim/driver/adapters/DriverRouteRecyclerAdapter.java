@@ -278,7 +278,7 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.timing.setText(items.get(position).TimingString);
-        holder.src_address.setText(items.get(position).SrcAddress);
+        holder.src_address.setText(items.get(position).SrcMainAddress +"، "+ items.get(position).SrcAddress);
         holder.dst_address.setText(items.get(position).DstAddress);
         holder.carString.setText(items.get(position).CarString);
         holder.switch_trip.setChecked(items.get(position).HasTrip);

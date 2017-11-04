@@ -183,7 +183,7 @@ public class MainActivity extends BootstrapActivity {
 
     ArrayList<RatingModel> ratingModelList = new ArrayList<>();
     ApiResponse apiResponse;
-    List<PresentViewModel> webViewModelList;
+    PresentViewModel webViewModel;
 
 
     String MORE_INTERACTION_WEBVIEW_FRAG = "MoreInteractionWebviewFragment";
@@ -950,7 +950,6 @@ public class MainActivity extends BootstrapActivity {
         Intent intent = new Intent(this, SearchStationActivity.class);
         intent.putExtra(Constants.Auth.AUTH_TOKEN, authToken);
         startActivityForResult(intent, SEARCH_STATION_REQUEST_CODE);
-
     }
 
     public void deleteRoute(final long driverRouteId) {
@@ -1052,8 +1051,6 @@ public class MainActivity extends BootstrapActivity {
 
         View titleLayout = inflater.inflate(R.layout.timepicker_dialog_custom_title,null);
 
-
-
         hourPicker = (NumberPicker) alertLayout.findViewById(R.id.hour);
         minutePicker = (NumberPicker) alertLayout.findViewById(R.id.minute);
 
@@ -1078,13 +1075,13 @@ public class MainActivity extends BootstrapActivity {
                     if (temp == 4)
                         temp = 23;
                     if (temp > 12 && temp <= 23) {
-                        stateOfTheDay.setText("بعد از ظهر");
+                        stateOfTheDay.setText(getString(R.string.afternoon));
                     }
                     if (temp < 12 && temp >= 5)
-                        stateOfTheDay.setText("صبح");
+                        stateOfTheDay.setText(getString(R.string.morning));
 
                     if (temp == 12)
-                        stateOfTheDay.setText("ظهر");
+                        stateOfTheDay.setText(getString(R.string.noon));
 
                     hourPicker.setValue(val + 1);
 
@@ -1103,13 +1100,12 @@ public class MainActivity extends BootstrapActivity {
                         temp = (val + 1) % 23 + 4;
 
                     if (temp > 12 && temp <= 23) {
-                        stateOfTheDay.setText("بعد از ظهر");
+                        stateOfTheDay.setText(getString(R.string.afternoon));
                     }
                     if (temp < 12 && temp >= 5)
-                        stateOfTheDay.setText("صبح");
+                        stateOfTheDay.setText(getString(R.string.morning));
                     if (temp == 12)
-                        stateOfTheDay.setText("ظهر");
-
+                        stateOfTheDay.setText(getString(R.string.noon));
                     hourPicker.setValue(val - 1);
                 }
                 return true;
@@ -1152,7 +1148,8 @@ public class MainActivity extends BootstrapActivity {
         });
 
 
-        String[] hourValues = new String[]{"5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"};
+        //String[] hourValues = new String[]{"5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"};
+        String[] hourValues = new String[]{"23","22","21","20","19","18","17","16", "15", "14", "13", "12", "11", "10", "9", "8", "7", "6", "5"};
 
 
         String[] hourValues2 = new String[19];
@@ -1168,15 +1165,40 @@ public class MainActivity extends BootstrapActivity {
 
         hourPicker.setWrapSelectorWheel(true);
 
-
+        int hour = selectedRouteTrip.TimingHour;
+        int minute = selectedRouteTrip.TimingMin;
+        if(hour<5){hour=5;}
+        if(hour>23){hour=23;}
+        //int hourIndex=hour - 5;
+        int hourIndex = 28 - hour;
+        if (hourIndex == 24) {
+            hourIndex = (hour + 1) % 23 + 4;
+        }
+        if (hour > 12 && hour <= 23) {
+            stateOfTheDay.setText(getString(R.string.afternoon));
+        }
+        if (hour < 12 && hour >= 5)
+            stateOfTheDay.setText(getString(R.string.morning));
+        if (hour == 12)
+            stateOfTheDay.setText(getString(R.string.noon));
+        hourPicker.setValue(hourIndex);
+        int minIndex=4;
+        if(minute>=45){
+            minIndex=1;
+        }else if(minute>=30){
+            minIndex=2;
+        }else if(minute>=15){
+            minIndex=3;
+        }
         minutePicker.setMinValue(1);
         minutePicker.setMaxValue(4);
 
         minutePicker.setDisplayedValues(minuteValues);
-        minutePicker.setValue(1);
+        //minutePicker.setValue(1);
+        minutePicker.setValue(minIndex);
         minutePicker.setWrapSelectorWheel(true);
 
-        hourPicker.setValue(1);
+        //hourPicker.setValue(1);
         hourPicker.setDisplayedValues(hourValues2);
         int currentHourValue = 28 - hourPicker.getValue();
         if (currentHourValue == 12)
@@ -1758,16 +1780,11 @@ public class MainActivity extends BootstrapActivity {
                 webViewRespone = userInfoService.checkWebviewContent(authToken);
                 //Gson gson = new Gson();
 
-                webViewModelList = new ArrayList<PresentViewModel>();
                 Gson gson = new GsonBuilder().create();
                 for (String json : webViewRespone.Messages) {
-                    webViewModelList.add(gson.fromJson(json, PresentViewModel.class));
+                    webViewModel=gson.fromJson(json, PresentViewModel.class);
                 }
-
-
                 return true;
-
-
             }
 
             @Override
@@ -1782,7 +1799,7 @@ public class MainActivity extends BootstrapActivity {
             protected void onSuccess(final Boolean res) throws Exception {
                 super.onSuccess(res);
 
-                if(webViewModelList.get(0).getPresentUrl() != null){
+                if(webViewModel.getPresentUrl() != null){
                     addWebviewFragment();
                     moreInteractionWebviewLayout.setVisibility(View.VISIBLE);
                 }
@@ -1794,12 +1811,12 @@ public class MainActivity extends BootstrapActivity {
     }
 
     public String getPresentWebview(){
-        String url = webViewModelList.get(0).getPresentUrl();
+        String url = webViewModel.getPresentUrl();
         return url;
     }
 
     public String getWebviewPageURL(){
-        String url = webViewModelList.get(0).getWebViewPageUrl();
+        String url = webViewModel.getWebViewPageUrl();
         return url;
     }
 

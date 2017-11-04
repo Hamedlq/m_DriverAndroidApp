@@ -104,7 +104,7 @@ public class WithdrawListFragment extends ItemListFragment<WithdrawRequestModel>
     }
 
     public void onListItemClick(final ListView l, final View v, final int position, final long id) {
-        final DiscountModel response = ((DiscountModel) l.getItemAtPosition(position));
+        //final DiscountModel response = ((DiscountModel) l.getItemAtPosition(position));
         //((LocationSearchActivity) getActivity()).setSearchResult(response.place_id);
 //        Intent intent = new Intent(getActivity(), RouteActivity.class);
 //        intent.putExtra("EventResponse", latest.get(position - 1));

@@ -12,6 +12,7 @@ public class DriverRouteModel implements Serializable {
     public int  TimingMin;
     public String  PricingString;
     public String  CarString;
+    public String SrcMainAddress;
     public String SrcAddress;
     public String SrcLink;
     public String SrcLat;
