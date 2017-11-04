@@ -91,6 +91,7 @@ import com.mibarim.driver.ui.fragments.DriverFragments.FabFragment;
 import com.mibarim.driver.ui.fragments.MoreInteractionWebviewFragment;
 import com.mibarim.driver.util.SafeAsyncTask;
 import com.squareup.otto.Subscribe;
+import com.uxcam.UXCam;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -197,6 +198,8 @@ public class MainActivity extends BootstrapActivity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         super.onCreate(savedInstanceState);
+
+//        UXCam.startWithKey("7a29a554532712e");
   /*      if (getCacheDir() != null) {
             OpenStreetMapTileProviderConstants.setCachePath(getCacheDir().getAbsolutePath());
         }*/
@@ -1200,6 +1203,7 @@ public class MainActivity extends BootstrapActivity {
 
         //hourPicker.setValue(1);
         hourPicker.setDisplayedValues(hourValues2);
+        hourPicker.setValue(0);
         int currentHourValue = 28 - hourPicker.getValue();
         if (currentHourValue == 12)
             stateOfTheDay.setText("ظهر");

@@ -1,11 +1,16 @@
 package com.mibarim.driver.ui.fragments;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -14,6 +19,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -60,6 +70,16 @@ public class StationsOnMapFragment extends Fragment implements OnMapReadyCallbac
     long selectedId;
 
     int stat;
+
+    GoogleApiClient mGoogleApiClient;
+
+//    LatLng latLng;
+
+//    Marker currLocationMarker;
+
+//    LocationRequest mLocationRequest;
+
+    int LOCATION_PERMISSION_REQUEST = 23423;
 
 
     public StationsOnMapFragment() {
@@ -195,11 +215,9 @@ public class StationsOnMapFragment extends Fragment implements OnMapReadyCallbac
         mClusterManager = new ClusterManager<MyItem>(getActivity(), myGoogleMap);
         myGoogleMap.setOnCameraIdleListener(mClusterManager);
 
-        mClusterManager.setRenderer(new OwnIconRendered(getActivity(),myGoogleMap, mClusterManager));
+        mClusterManager.setRenderer(new OwnIconRendered(getActivity(), myGoogleMap, mClusterManager));
 
         mClusterManager.addItems(items);
-
-
 
 
         LatLng sydney = new LatLng(-34, 151);
@@ -232,7 +250,6 @@ public class StationsOnMapFragment extends Fragment implements OnMapReadyCallbac
         });
 
 
-
         myGoogleMap.setOnMarkerClickListener(mClusterManager);
 
 
@@ -254,13 +271,13 @@ public class StationsOnMapFragment extends Fragment implements OnMapReadyCallbac
 
 //                String snippet = myItem.getSnippet();
 
-                if (stat == 0){
+                if (stat == 0) {
                     selectedId = myItem.getOrigSubStationId();
                     ((StationsOnMapActivity) getActivity()).setOriginMainStationId(myItem.getOrigMainSationId());
 
                 }
 
-                if (stat == 1){
+                if (stat == 1) {
                     selectedId = myItem.getDestMainStationId();
                 }
 
@@ -270,6 +287,27 @@ public class StationsOnMapFragment extends Fragment implements OnMapReadyCallbac
                 return false;
             }
         });
+
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+//            myGoogleMap.setMyLocationEnabled(true);
+
+            ActivityCompat.requestPermissions(getActivity(), new String[]{
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST);
+
+        } else {
+
+            myGoogleMap.setMyLocationEnabled(true);
+        }
 
 
     }
@@ -284,7 +322,7 @@ public class StationsOnMapFragment extends Fragment implements OnMapReadyCallbac
 
         @Override
         protected void onBeforeClusterItemRendered(MyItem item, MarkerOptions markerOptions) {
-            BitmapDescriptor iconBitmap = bitmapDescriptorFromVector(getActivity(),R.drawable.ic_custom_marker);
+            BitmapDescriptor iconBitmap = bitmapDescriptorFromVector(getActivity(), R.drawable.ic_custom_marker);
             BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.custom_marker);
 //            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
             markerOptions.icon(iconBitmap);
@@ -301,5 +339,30 @@ public class StationsOnMapFragment extends Fragment implements OnMapReadyCallbac
         Canvas canvas = new Canvas(bitmap);
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_REQUEST) {
+
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                }
+                myGoogleMap.setMyLocationEnabled(true);
+            }
+
+        }
     }
 }

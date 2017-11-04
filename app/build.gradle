@@ -18,10 +18,15 @@ apply plugin: 'io.fabric'
 apply plugin: 'com.neenbedankt.android-apt'
 
 repositories {
-    maven { url 'https://github.com/donnfelker/mvn-repo/raw/master/' }
+    maven {
+        url 'https://github.com/donnfelker/mvn-repo/raw/master/'    }
     mavenLocal()
     jcenter()
     maven { url 'https://maven.fabric.io/public' }
+
+    maven{
+        url 'http://sdk.uxcam.com/android/'
+    }
 }
 
 //def computeVersionCode() {
@@ -131,10 +136,10 @@ android {
         avvalmarket {
             resValue "string", "update_link", "http://mibarim.ir/androidapp/download/"
         }
-        parshub{
+        parshub {
             resValue "string", "update_link", "http://mibarim.ir/androidapp/download/"
         }
-        cando{
+        cando {
             resValue "string", "update_link", "http://mibarim.ir/androidapp/download/"
         }
     }
@@ -225,6 +230,7 @@ dependencies {
 
     compile 'com.google.maps.android:android-maps-utils:0.5'
 
+    compile 'com.uxcam:uxcam:2.6.2@aar'
 
     //androidTestCompile 'junit:junit:4.12'
     //androidTestCompile 'com.android.support.test:runner:0.4'

@@ -200,6 +200,7 @@
 
         <activity
             android:name=".ui.activities.SearchStationActivity"
+            android:screenOrientation="portrait"
             android:label="">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -209,6 +210,7 @@
 
         <activity
             android:name=".ui.activities.StationsOnMapActivity"
+            android:screenOrientation="portrait"
             android:label="">
 
 
