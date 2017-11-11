@@ -9,6 +9,7 @@ import com.beardedhen.androidbootstrap.TypefaceProvider;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.mibarim.driver.util.FontsOverride;
+import com.onesignal.OneSignal;
 
 /**
  * Mibarim application
@@ -47,6 +48,10 @@ public abstract class BootstrapApplication extends Application {
         FontsOverride.setDefaultFont(this, "SANS_SERIF", "fonts/IRANSans(FaNum)_Light.ttf");
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
+        OneSignal.startInit(this)
+                .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+                .unsubscribeWhenNotificationsAreDisabled(true)
+                .init();
     }
     public static com.mibarim.driver.BootstrapComponent component() {
         return instance.component;

@@ -50,10 +50,11 @@
     </RelativeLayout>
 
 
-    <Button
+    <!--<Button
         android:id="@+id/confirm_button"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:visibility="gone"
         android:layout_margin="5dp"
         android:background="@drawable/button_background_states_second"
         android:elevation="5dp"
@@ -61,7 +62,7 @@
         android:text="@string/confirm"
         android:textAlignment="center"
         android:textColor="@color/text"
-        android:textStyle="bold" />
+        android:textStyle="bold" />-->
 
 
 </android.support.design.widget.CoordinatorLayout>

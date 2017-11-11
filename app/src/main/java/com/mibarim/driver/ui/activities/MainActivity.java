@@ -46,7 +46,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.server.converter.StringToIntConverter;
+//import com.google.android.gms.common.server.converter.StringToIntConverter;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 import com.google.gson.Gson;
@@ -91,7 +91,7 @@ import com.mibarim.driver.ui.fragments.DriverFragments.FabFragment;
 import com.mibarim.driver.ui.fragments.MoreInteractionWebviewFragment;
 import com.mibarim.driver.util.SafeAsyncTask;
 import com.squareup.otto.Subscribe;
-import com.uxcam.UXCam;
+//import com.uxcam.UXCam;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -1603,6 +1603,8 @@ public class MainActivity extends BootstrapActivity {
         startActivity(i);
 
     }
+
+
 
     public void getInviteFromServer() {
         new SafeAsyncTask<Boolean>() {

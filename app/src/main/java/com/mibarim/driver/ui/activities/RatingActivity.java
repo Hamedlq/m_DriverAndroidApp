@@ -35,8 +35,6 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
-
 import static com.mibarim.driver.core.Constants.GlobalConstants.RAINTG_LIST_TAG;
 
 /**
@@ -63,12 +61,14 @@ public class RatingActivity extends BootstrapActivity {
 
     private ProgressDialog progressDialog;
 
-    @Bind(R.id.confirm_button)
-    Button confirmButton;
+    /*@Bind(R.id.confirm_button)
+    Button confirmButton;*/
 
     FrameLayout footerLayout;
 
-    Button confirmButton2;
+    Button confirmButton;
+    int counter;
+    int numberOfNonNullImages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +87,8 @@ public class RatingActivity extends BootstrapActivity {
             getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
 
+        counter = 0;
+
 
         if (getIntent() != null && getIntent().getExtras() != null) {
             authToken = getIntent().getExtras().getString(Constants.Auth.AUTH_TOKEN);
@@ -99,13 +101,26 @@ public class RatingActivity extends BootstrapActivity {
                 ratingModelList.add(gson.fromJson(json, RatingModel.class));
             }
 
-            int numberOfNonNullImages = 0;
+
+            numberOfNonNullImages = 0;
 
             for (int i = 0; i < ratingModelList.size(); i++) {
                 String id = ratingModelList.get(i).getImageId();
-                if (id != null)
-                    getImageById(id, i);
+                if (id != null) {
                     numberOfNonNullImages++;
+                }
+            }
+
+            for (int i = 0; i < ratingModelList.size(); i++) {
+                String id = ratingModelList.get(i).getImageId();
+                if (id != null) {
+                    getImageById(id, i);
+//                    numberOfNonNullImages++;
+                } else {
+                    Bitmap icon = BitmapFactory.decodeResource(getResources(),
+                            R.drawable.ic_blank_profile_photo);
+                    ratingModelList.get(i).setImageBitmap(icon);
+                }
             }
 
             if (numberOfNonNullImages == 0) {
@@ -119,6 +134,8 @@ public class RatingActivity extends BootstrapActivity {
 
 
         listView = (ListView) findViewById(R.id.list);
+        adapter = new RatingAdapter(ratingModelList, RatingActivity.this);
+        listView.setAdapter(adapter);
 
 
 //        getTheRatingsFromServer();
@@ -149,13 +166,13 @@ public class RatingActivity extends BootstrapActivity {
 
         footerLayout = (FrameLayout) getLayoutInflater().inflate(R.layout.button_under_rating_layout, null);
 
-        confirmButton2 = (Button) footerLayout.findViewById(R.id.confirm_button1);
+        confirmButton = (Button) footerLayout.findViewById(R.id.confirm_button1);
 
 
         listView.addFooterView(footerLayout);
 
 
-        confirmButton2.setOnClickListener(new View.OnClickListener() {
+        confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -204,6 +221,7 @@ public class RatingActivity extends BootstrapActivity {
         });
 
 
+/*
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -232,14 +250,14 @@ public class RatingActivity extends BootstrapActivity {
 
                 }
 
-                int atLeastOneIsNotEated = 0;
+                int atLeastOneIsNotRated = 0;
 
                 for (int i = 0; i < ratingModelList.size(); i++) {
                     if (ratingModelList.get(i).getPresence() == 1 && ratingModelList.get(i).getRate() == 0)
-                        atLeastOneIsNotEated++;
+                        atLeastOneIsNotRated++;
                 }
 
-                if (atLeastOneIsNotEated == 0) {
+                if (atLeastOneIsNotRated == 0) {
 
                     String ratingListString = jsonArray.toString();
                     sendTheListToServer(ratingListString);
@@ -254,6 +272,7 @@ public class RatingActivity extends BootstrapActivity {
 
             }
         });
+*/
 
 
     }
@@ -379,6 +398,7 @@ public class RatingActivity extends BootstrapActivity {
         Bitmap icon = BitmapFactory.decodeResource(getResources(),
                 R.mipmap.ic_camera);
         if (imageId == null || imageId.equals("") || imageId.equals("00000000-0000-0000-0000-000000000000")) {
+            ratingModelList.get(i).setImageBitmap(icon);
             return icon;
         }
         ImageResponse imageResponse = userData.imageQuery(imageId);
@@ -442,10 +462,15 @@ public class RatingActivity extends BootstrapActivity {
 
 
 //                    Toast.makeText(getBaseContext(), "عکس دریافت شد از سرور!", Toast.LENGTH_LONG).show();
-                    listView = (ListView) findViewById(R.id.list);
-                    adapter = new RatingAdapter(ratingModelList, RatingActivity.this);
 
+//                    if (i == ratingModelList.size() - 1) {
+                    counter++;
+
+                    if (counter == numberOfNonNullImages)
+                        adapter = new RatingAdapter(ratingModelList, RatingActivity.this);
                     listView.setAdapter(adapter);
+//                    }
+//                    listView = (ListView) findViewById(R.id.list);
 
                     progressDialog.hide();
 //                    Toast.makeText(RatingActivity.this, "لیست با موفقیت از سرور دریافت شد!", Toast.LENGTH_LONG).show();
