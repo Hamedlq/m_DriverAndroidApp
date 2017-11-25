@@ -3,6 +3,7 @@ package com.mibarim.driver.ui.fragments.DriverFragments;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -12,10 +13,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
+import com.getkeepsafe.taptargetview.TapTargetView;
 import com.github.brnunes.swipeablerecyclerview.SwipeableRecyclerViewTouchListener;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -24,6 +27,7 @@ import com.mibarim.driver.BootstrapApplication;
 import com.mibarim.driver.BootstrapServiceProvider;
 import com.mibarim.driver.R;
 import com.mibarim.driver.adapters.DriverRouteRecyclerAdapter;
+import com.mibarim.driver.adapters.SuggestRouteRecyclerAdapter;
 import com.mibarim.driver.authenticator.LogoutService;
 import com.mibarim.driver.data.UserData;
 import com.mibarim.driver.models.ApiResponse;
@@ -50,6 +54,8 @@ public class DriverCardFragment extends Fragment
     protected RouteResponseService routeResponseService;
     @Inject
     protected LogoutService logoutService;
+
+    protected FloatingActionButton fab;
 
     private int RELOAD_REQUEST = 1234;
     List<DriverRouteModel> items;
@@ -192,6 +198,15 @@ public class DriverCardFragment extends Fragment
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
         mTracker.send(new HitBuilders.EventBuilder().setCategory("Fragment").setAction("SuggestRouteCardFragment").build());
         getLoaderManager().initLoader(0, null, this);
+        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((MainActivity) getActivity()).gotoRouteLists();
+            }
+        });
+
+        displayUserGuide();
         //setEmptyText(R.string.no_routes);
 
     }
@@ -419,6 +434,52 @@ public class DriverCardFragment extends Fragment
 
             prefs.edit().putInt("ShowDriverCardGuide",1).apply();
         }
+    }
+    public void hideTheFab() {
+//        fab.hide();
+        LinearInterpolator linearInterpolator = new LinearInterpolator();
+//        fab.animate().translationY(0).setInterpolator(new LinearInterpolator()).start();
+//        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+//        int fab_bottomMargin = layoutParams.bottomMargin;
+        fab.animate().setDuration(200).translationY(fab.getHeight() + 100).setInterpolator(new LinearInterpolator()).start();
+
+
+    }
+
+    public void showTheFab() {
+//        fab.show();
+        fab.animate().translationY(0).setInterpolator(new LinearInterpolator()).start();
+    }
+
+
+    public void displayUserGuide() {
+        SharedPreferences prefs = getActivity().getSharedPreferences(
+                "com.mibarim.driver", Context.MODE_PRIVATE);
+        if (prefs.getInt("ShowTheMainGuide", 0) == 0) {
+
+            TapTargetView.showFor(getActivity(), TapTarget.forView(fab, "انتخاب مسیر", "پیش از هر کار ایستگاه مورد نظر خود را انتخاب کنید.")
+                    .cancelable(false)
+                    .textColor(android.R.color.white)
+                    .targetCircleColor(android.R.color.white)
+                    .outerCircleColor(R.color.google_blue)
+                    .transparentTarget(false)
+                    .tintTarget(false)
+                    .drawShadow(true), new TapTargetView.Listener() {
+                @Override
+                public void onTargetClick(TapTargetView view) {
+                    super.onTargetClick(view);
+                    // .. which evidently starts the sequence we defined earlier
+                    ((MainActivity) getActivity()).showUserGuide();
+                }
+
+            });
+
+        }
+
+        /*else {
+            ((MainActivity) getActivity()).showUserGuide();
+        }*/
+
     }
 
 
