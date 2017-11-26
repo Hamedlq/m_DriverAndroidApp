@@ -6,97 +6,157 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.brnunes.swipeablerecyclerview.SwipeableRecyclerViewTouchListener;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+import com.google.gson.Gson;
+import com.mibarim.driver.BootstrapApplication;
 import com.mibarim.driver.R;
 import com.mibarim.driver.adapters.SuggestRecyclerAdapter;
+import com.mibarim.driver.data.UserData;
+import com.mibarim.driver.models.ApiResponse;
+import com.mibarim.driver.models.Plus.SuggestModel;
+import com.mibarim.driver.services.SuggestResponseService;
+import com.mibarim.driver.ui.ThrowableLoader;
 import com.mibarim.driver.ui.activities.MainActivity;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * Created by Arya on 11/25/2017.
  */
 
 
-public class SuggestCardFragment extends Fragment implements LoaderManager.LoaderCallbacks<Object> {
+public class SuggestCardFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<SuggestModel>> {
+
+
+    @Inject
+    protected SuggestResponseService service;
 
     private View mRecycler;
     private RecyclerView mRecyclerView;
     SwipeRefreshLayout mSwipeRefreshLayout;
     private SuggestRecyclerAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    List<SuggestModel> items;
+    List<SuggestModel> latest;
+    ItemTouchListener itemTouchListener;
+    private ApiResponse response;
+    private Tracker mTracker;
 
-    @Nullable
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        service = new SuggestResponseService();
+        BootstrapApplication application = (BootstrapApplication) getActivity().getApplication();
+        mTracker = application.getDefaultTracker();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         mRecycler = inflater.inflate(R.layout.reload_suggest_card_list, null);
 
-        mRecyclerView = (RecyclerView) mRecycler.findViewById(android.R.id.list);
+        mRecyclerView = (RecyclerView) mRecycler.findViewById(R.id.suggest_list);
         mSwipeRefreshLayout = (SwipeRefreshLayout) mRecycler.findViewById(R.id.swipe_refresh_layout_tab);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refresh();
-                ((MainActivity) getActivity()).getUserScore();
             }
         });
+
+        mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        return super.onCreateView(inflater, container, savedInstanceState);
+
+        itemTouchListener = new ItemTouchListener() {
+
+            @Override
+            public void onSrcLinkClick(View view, int position) {
+                if (getActivity() instanceof MainActivity) {
+                    SuggestModel selectedItem = items.get(position);
+                    ((MainActivity) getActivity()).gotoWebView(selectedItem.SrcLink);
+                }
+            }
+
+            @Override
+            public void onDstLinkClick(View view, int position) {
+                if (getActivity() instanceof MainActivity) {
+                    SuggestModel selectedItem = items.get(position);
+                    ((MainActivity) getActivity()).gotoWebView(selectedItem.DstLink);
+                }
+            }
+
+        };
+
+        return mRecycler;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mTracker.setScreenName("SuggestRouteCardFragment");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+        mTracker.send(new HitBuilders.EventBuilder().setCategory("Fragment").setAction("SuggestRouteCardFragment").build());
+        getLoaderManager().initLoader(0, null, this);
     }
 
     public void refresh() {
 
-        ((MainActivity) getActivity()).getRoutesListFromServer();
-
         getLoaderManager().restartLoader(0, null, this);
         //showState(1);
-        mAdapter = new SuggestRecyclerAdapter();
+        mAdapter = new SuggestRecyclerAdapter(getActivity(), items, itemTouchListener);
         mRecyclerView.setAdapter(mAdapter);
 
 
     }
 
     @Override
-    public Loader<Object> onCreateLoader(int i, Bundle bundle) {
-        return null;
+    public Loader<List<SuggestModel>> onCreateLoader(int id, Bundle bundle) {
+
+        mSwipeRefreshLayout.setRefreshing(true);
+        items = new ArrayList<>();
+        return new ThrowableLoader<List<SuggestModel>>(getActivity(), items) {
+            @Override
+            public List<SuggestModel> loadData() throws Exception {
+                latest = new ArrayList<>();
+                if (getActivity() instanceof MainActivity) {
+                    Gson gson = new Gson();
+                    if (getActivity() != null) {
+                        response = service.getSuggestRoutes();
+                        if (response != null) {
+                            for (String routeJson : response.Messages) {
+                                SuggestModel route = gson.fromJson(routeJson, SuggestModel.class);
+                                latest.add(route);
+                            }
+                        }
+                    }
+                }
+                if (latest != null) {
+                    return latest;
+                } else {
+                    return Collections.emptyList();
+                }
+            }
+        };
     }
 
     @Override
-    public void onLoadFinished(Loader<Object> loader, Object o) {
-
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            int c = 0;
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (dy > 0 && c == 0) {
-                    ((MainActivity) getActivity()).hidefab();
-                    c = 1;
-                }
-
-                if (dy < 0 && c == 1) {
-                    ((MainActivity) getActivity()).showFab();
-                    c = 0;
-                }
-
-
-            }
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-//                    ((MainActivity)getActivity()).hidefab();
-                }
-            }
-
-
-        });
+    public void onLoadFinished(Loader<List<SuggestModel>> loader, List<SuggestModel> data) {
+        items = data;
+        mAdapter = new SuggestRecyclerAdapter(getActivity(), items, itemTouchListener);
+        mRecyclerView.setAdapter(mAdapter);
 
         mRecyclerView.addOnItemTouchListener(new SwipeableRecyclerViewTouchListener(mRecyclerView,
                 new SwipeableRecyclerViewTouchListener.SwipeListener() {
@@ -120,12 +180,19 @@ public class SuggestCardFragment extends Fragment implements LoaderManager.Loade
                 }));
         mSwipeRefreshLayout.setRefreshing(false);
 
-        ((MainActivity) getActivity()).showSecondGuideTest();
     }
 
     @Override
-    public void onLoaderReset(Loader<Object> loader) {
+    public void onLoaderReset(Loader<List<SuggestModel>> loader) {
 
     }
 
+    public interface ItemTouchListener {
+
+        public void onSrcLinkClick(View view, int position);
+
+        public void onDstLinkClick(View view, int position);
+
+    }
+    
 }

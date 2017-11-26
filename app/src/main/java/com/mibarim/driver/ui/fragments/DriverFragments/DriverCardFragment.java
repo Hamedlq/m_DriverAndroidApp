@@ -27,7 +27,6 @@ import com.mibarim.driver.BootstrapApplication;
 import com.mibarim.driver.BootstrapServiceProvider;
 import com.mibarim.driver.R;
 import com.mibarim.driver.adapters.DriverRouteRecyclerAdapter;
-import com.mibarim.driver.adapters.SuggestRouteRecyclerAdapter;
 import com.mibarim.driver.authenticator.LogoutService;
 import com.mibarim.driver.data.UserData;
 import com.mibarim.driver.models.ApiResponse;
@@ -267,18 +266,6 @@ public class DriverCardFragment extends Fragment
         };
     }
 
-
-
-
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-
-    }
-
     @Override
     public void onLoadFinished(Loader<List<DriverRouteModel>> loader, List<DriverRouteModel> data) {
         items = data;
@@ -344,9 +331,6 @@ public class DriverCardFragment extends Fragment
                     }
                 }));
         mSwipeRefreshLayout.setRefreshing(false);
-
-        ((MainActivity)getActivity()).showSecondGuideTest();
-
     }
 
     @Override

@@ -72,6 +72,7 @@ import com.mibarim.driver.models.Plus.DriverRouteModel;
 import com.mibarim.driver.models.Plus.DriverTripModel;
 import com.mibarim.driver.models.Plus.PaymentDetailModel;
 import com.mibarim.driver.models.Plus.StationRouteModel;
+import com.mibarim.driver.models.Plus.SuggestModel;
 import com.mibarim.driver.models.Plus.TripTimeModel;
 import com.mibarim.driver.models.PresentViewModel;
 import com.mibarim.driver.models.RatingModel;
@@ -883,6 +884,16 @@ public class MainActivity extends BootstrapActivity {
         Intent intent = new Intent(this, RidingActivity.class);
         intent.putExtra(Constants.GlobalConstants.DRIVER_TRIP_MODEL, dm);
         intent.putExtra(Constants.Auth.AUTH_TOKEN, authToken);
+        this.startActivity(intent);
+    }
+
+    public void gotoRidingActivitySuggest(SuggestModel dr) {
+        SuggestModel sm = new SuggestModel();
+        sm.DstStLat = dr.DstStLat;
+        sm.SrcStLat = dr.SrcStLat;
+        sm.SrcStLng = dr.SrcStLng;
+        sm.DstStLng = dr.DstStLng;
+        Intent intent = new Intent(this, RidingActivity.class);
         this.startActivity(intent);
     }
 
