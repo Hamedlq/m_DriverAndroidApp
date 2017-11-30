@@ -1,5 +1,7 @@
 package com.mibarim.driver.ui.fragments.DriverFragments;
 
+import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.github.brnunes.swipeablerecyclerview.SwipeableRecyclerViewTouchListener;
 import com.google.android.gms.analytics.HitBuilders;
@@ -20,11 +23,13 @@ import com.mibarim.driver.BootstrapApplication;
 import com.mibarim.driver.R;
 import com.mibarim.driver.adapters.SuggestRecyclerAdapter;
 import com.mibarim.driver.data.UserData;
+import com.mibarim.driver.google.mapDetails;
 import com.mibarim.driver.models.ApiResponse;
 import com.mibarim.driver.models.Plus.SuggestModel;
 import com.mibarim.driver.services.SuggestResponseService;
 import com.mibarim.driver.ui.ThrowableLoader;
 import com.mibarim.driver.ui.activities.MainActivity;
+import com.mibarim.driver.util.SafeAsyncTask;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,6 +58,7 @@ public class SuggestCardFragment extends Fragment implements LoaderManager.Loade
     ItemTouchListener itemTouchListener;
     private ApiResponse response;
     private Tracker mTracker;
+    private Typeface customFont;
 
 
     @Override
@@ -61,6 +67,7 @@ public class SuggestCardFragment extends Fragment implements LoaderManager.Loade
         service = new SuggestResponseService();
         BootstrapApplication application = (BootstrapApplication) getActivity().getApplication();
         mTracker = application.getDefaultTracker();
+        customFont = Typeface.createFromAsset(getActivity().getAssets(), "fonts/IRANSans(FaNum)_Light.ttf");
     }
 
     @Override
@@ -83,18 +90,25 @@ public class SuggestCardFragment extends Fragment implements LoaderManager.Loade
         itemTouchListener = new ItemTouchListener() {
 
             @Override
-            public void onSrcLinkClick(View view, int position) {
+            public void onButtonClick(View view, int position) {
                 if (getActivity() instanceof MainActivity) {
                     SuggestModel selectedItem = items.get(position);
-                    ((MainActivity) getActivity()).gotoWebView(selectedItem.SrcLink);
+                    ((MainActivity) getActivity()).acceptSuggestRouteFirst(selectedItem.FilterId);
                 }
             }
 
             @Override
-            public void onDstLinkClick(View view, int position) {
+            public void onMapClick(View view, int position) {
                 if (getActivity() instanceof MainActivity) {
                     SuggestModel selectedItem = items.get(position);
-                    ((MainActivity) getActivity()).gotoWebView(selectedItem.DstLink);
+                    Intent intent = new Intent(view.getContext(), mapDetails.class);
+                    Bundle params = new Bundle();
+                    params.putDouble("SRC_LAT", Double.parseDouble(selectedItem.SrcStLat));
+                    params.putDouble("SRC_LNG", Double.parseDouble(selectedItem.SrcStLng));
+                    params.putDouble("DST_LAT", Double.parseDouble(selectedItem.DstStLat));
+                    params.putDouble("DST_LNG", Double.parseDouble(selectedItem.DstStLng));
+                    intent.putExtras(params);
+                    view.getContext().startActivity(intent);
                 }
             }
 
@@ -116,7 +130,7 @@ public class SuggestCardFragment extends Fragment implements LoaderManager.Loade
 
         getLoaderManager().restartLoader(0, null, this);
         //showState(1);
-        mAdapter = new SuggestRecyclerAdapter(getActivity(), items, itemTouchListener);
+        mAdapter = new SuggestRecyclerAdapter(customFont, getActivity(), items, itemTouchListener);
         mRecyclerView.setAdapter(mAdapter);
 
 
@@ -155,7 +169,7 @@ public class SuggestCardFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onLoadFinished(Loader<List<SuggestModel>> loader, List<SuggestModel> data) {
         items = data;
-        mAdapter = new SuggestRecyclerAdapter(getActivity(), items, itemTouchListener);
+        mAdapter = new SuggestRecyclerAdapter(customFont, getActivity(), items, itemTouchListener);
         mRecyclerView.setAdapter(mAdapter);
 
         mRecyclerView.addOnItemTouchListener(new SwipeableRecyclerViewTouchListener(mRecyclerView,
@@ -189,10 +203,10 @@ public class SuggestCardFragment extends Fragment implements LoaderManager.Loade
 
     public interface ItemTouchListener {
 
-        public void onSrcLinkClick(View view, int position);
+        public void onButtonClick(View view, int position);
 
-        public void onDstLinkClick(View view, int position);
+        public void onMapClick(View view, int position);
 
     }
-    
+
 }

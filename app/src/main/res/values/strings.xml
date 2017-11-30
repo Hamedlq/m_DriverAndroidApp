@@ -426,6 +426,8 @@
     <string name="view_trip">مشاهده مسیر </string>
     <string name="active_trip">فعال کردن سفر</string>
 
-    <string name="wanna_reserve">می‌خواهم رزرو کنم</string>
+    <string name="wanna_reserve">درخواست را قبول میکنم</string>
+    <string name="successfully_submitted">مسیر ثبت شد</string>
+    <string name="unsuccessfully_submitted">مسیر ثبت نشد</string>
 
 </resources>

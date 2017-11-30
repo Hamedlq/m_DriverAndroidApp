@@ -33,6 +33,11 @@ public class SuggestResponseService {
         return response;
     }
 
+    public ApiResponse sendFilterId(String authToken, long filterId, int seates){
+        ApiResponse response = getService().sendFilterId("Bearer " + authToken, filterId, seates);
+        return response;
+    }
+
     public class FakeBody {
 
         FakeBody(){

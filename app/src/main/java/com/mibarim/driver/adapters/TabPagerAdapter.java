@@ -16,6 +16,7 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
     private final List<Fragment> mFragmentList = new ArrayList<>();
     private final List<String> mFragmentTitleList = new ArrayList<>();
 
+
     public TabPagerAdapter(FragmentManager manager) {
         super(manager);
     }
@@ -39,4 +40,5 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         return mFragmentTitleList.get(position);
     }
+
 }
