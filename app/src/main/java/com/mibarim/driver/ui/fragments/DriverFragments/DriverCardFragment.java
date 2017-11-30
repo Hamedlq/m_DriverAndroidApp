@@ -1,6 +1,7 @@
 package com.mibarim.driver.ui.fragments.DriverFragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,10 +10,12 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
@@ -26,6 +29,7 @@ import com.mibarim.driver.R;
 import com.mibarim.driver.adapters.DriverRouteRecyclerAdapter;
 import com.mibarim.driver.authenticator.LogoutService;
 import com.mibarim.driver.data.UserData;
+import com.mibarim.driver.google.mapDetails;
 import com.mibarim.driver.models.ApiResponse;
 import com.mibarim.driver.models.Plus.DriverRouteModel;
 import com.mibarim.driver.models.Route.RouteResponse;
@@ -134,7 +138,14 @@ public class DriverCardFragment extends Fragment
             public void onSrcLinkClick(View view, int position) {
                 if (getActivity() instanceof MainActivity) {
                     DriverRouteModel selectedItem = ((DriverRouteModel) items.get(position));
-                    ((MainActivity) getActivity()).gotoWebView(selectedItem.SrcLink);
+                    Intent intent = new Intent(view.getContext(), mapDetails.class);
+                    Bundle params = new Bundle();
+                    params.putDouble("SRC_LAT", Double.parseDouble(selectedItem.SrcLat));
+                    params.putDouble("SRC_LNG", Double.parseDouble(selectedItem.SrcLng));
+                    params.putDouble("DST_LAT", Double.parseDouble(selectedItem.DstLat));
+                    params.putDouble("DST_LNG", Double.parseDouble(selectedItem.DstLng));
+                    intent.putExtras(params);
+                    view.getContext().startActivity(intent);
                 }
             }
 

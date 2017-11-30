@@ -26,6 +26,7 @@ import android.support.v4.os.OperationCanceledException;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -1600,7 +1601,7 @@ public class MainActivity extends BootstrapActivity {
     public void gotoWebView(String link) {
         Intent i = new Intent(MainActivity.this, WebViewActivity.class);
         i.putExtra("URL", link);
-        startActivity(i);
+//        startActivity(i);
 
     }
 

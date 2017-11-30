@@ -1,29 +1,52 @@
 package com.mibarim.driver.adapters;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.beardedhen.androidbootstrap.AwesomeTextView;
+import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.mibarim.driver.R;
+import com.mibarim.driver.google.mapDetails;
 import com.mibarim.driver.models.Plus.DriverRouteModel;
 import com.mibarim.driver.models.enums.TripStates;
 import com.mibarim.driver.ui.fragments.DriverFragments.DriverCardFragment;
+import com.mibarim.driver.ui.fragments.messagingFragments.ToggleContactTripFragment;
+import com.mibarim.driver.ui.fragments.userInfoFragments.InviteFragment;
 
 import java.util.Calendar;
 import java.util.List;
+
+import retrofit.RestAdapter;
 
 /**
  * Created by Hamed on 10/16/2016.
  */
 public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRouteRecyclerAdapter.ViewHolder> {
+    private static final int ERROR_DIALOG_REQUEST = 9001;
     private List<DriverRouteModel> items;
     private Activity _activity;
     private DriverCardFragment.ItemTouchListener onItemTouchListener;
@@ -46,16 +69,17 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
         //public TextView username;
         public TextView timing;
         //public TextView seats;
-        public Button src_station;
         public TextView src_address;
-        public Button st_destination;
         public TextView dst_address;
         public TextView carString;
         public TextView seats;
-        public android.support.v7.widget.SwitchCompat switch_trip;
-        public LinearLayout delete_btn;
-        public AwesomeTextView fa_trash;
+        public ToggleButton switch_trip;
+        public RelativeLayout fa_trash;
         public AppCompatButton show_trip;
+        public ImageView go_to_map;
+        public ImageView  src_station;
+        public ImageView  st_destination;
+        public ImageView dots;
         /*public TextView src_distance;
         public TextView dst_distance;*/
         //public BootstrapCircleThumbnail userimage;
@@ -69,15 +93,16 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
             timing = (TextView) v.findViewById(R.id.timing);
             //seats = (TextView) v.findViewById(R.id.seats);
             src_address = (TextView) v.findViewById(R.id.src_address);
-            src_station = (Button) v.findViewById(R.id.src_station);
             dst_address = (TextView) v.findViewById(R.id.dst_address);
-            st_destination= (Button) v.findViewById(R.id.st_destination);
             carString = (TextView) v.findViewById(R.id.carString);
             seats = (TextView) v.findViewById(R.id.seats);
-            switch_trip = (android.support.v7.widget.SwitchCompat) v.findViewById(R.id.switch_trip);
-            delete_btn = (LinearLayout) v.findViewById(R.id.delete_btn);
-            fa_trash = (AwesomeTextView) v.findViewById(R.id.fa_trash);
+            switch_trip = (ToggleButton) v.findViewById(R.id.switch_trip);
+            fa_trash = (RelativeLayout) v.findViewById(R.id.deleteCard);
             show_trip = (AppCompatButton) v.findViewById(R.id.show_trip);
+            go_to_map = (ImageView) v.findViewById(R.id.goToMap);
+            src_station = (ImageView)v.findViewById(R.id.src_station);
+            st_destination = (ImageView)v.findViewById(R.id.st_destination);
+            dots = (ImageView)v.findViewById(R.id.dots);
             /*src_distance = (TextView) v.findViewById(R.id.src_distance);
             dst_distance = (TextView) v.findViewById(R.id.dst_distance);*/
 //            userimage = (BootstrapCircleThumbnail) v.findViewById(R.id.userimage);
@@ -112,6 +137,7 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
                 }
             });
 
+
             switch_trip.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -122,16 +148,7 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
                     return false;
                 }
             });
-            delete_btn.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        onItemTouchListener.onDeleteCard(v, getPosition());
-                        return true;
-                    }
-                    return false;
-                }
-            });
+
 
             fa_trash.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -144,7 +161,7 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
                 }
             });
 
-            src_station.setOnTouchListener(new View.OnTouchListener() {
+            go_to_map.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     switch (event.getAction()) {
@@ -173,6 +190,7 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
                     return false;
                 }*/
             });
+
             /*src_address.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -290,8 +308,23 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
                     || items.get(position).TripState== TripStates.InRiding.toInt()){
                 holder.show_trip.setVisibility(View.VISIBLE);
             }
+
+
+            holder.src_address.setTextColor(ContextCompat.getColor(holder.itemView.getContext(),R.color.actionbar_background_end));
+            holder.src_address.setTypeface(holder.src_address.getTypeface(), Typeface.BOLD);
+            holder.dst_address.setTextColor(ContextCompat.getColor(holder.itemView.getContext(),R.color.actionbar_background_end));
+            holder.dst_address.setTypeface(holder.dst_address.getTypeface(),Typeface.BOLD);
+
+            holder.src_station.setImageResource(R.drawable.radiobox);
+            holder.st_destination.setImageResource(R.drawable.destination);
+            holder.dots.setImageResource(R.drawable.dots);
+
         }
 
+        if (!items.get(position).HasTrip) {
+
+            holder.timing.setTextColor(ContextCompat.getColor(holder.itemView.getContext(),R.color.table_text_light));
+        }
 
     }
 
@@ -300,6 +333,26 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
     public int getItemCount() {
         return items.size();
     }
+    public boolean servicesOK() {
+
+        GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
+        int result = googleAPI.isGooglePlayServicesAvailable(_activity);
+
+        int isAvailable = GooglePlayServicesUtil.isGooglePlayServicesAvailable(_activity);
+
+        if (isAvailable == ConnectionResult.SUCCESS)
+            return true;
+        else if (GooglePlayServicesUtil.isUserRecoverableError(isAvailable)) {
+            Dialog dialog = GooglePlayServicesUtil.getErrorDialog(isAvailable, _activity, ERROR_DIALOG_REQUEST);
+            dialog.show();
+        } else {
+            Toast.makeText(_activity , "با عرض پوزش سرویس گوگل در دسترس نمی باشد.", Toast.LENGTH_SHORT).show();
+        }
+
+        return false;
+    }
+
+
 
 
 }

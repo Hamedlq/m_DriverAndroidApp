@@ -422,5 +422,7 @@
     <string name="destination_selected">مقصد انتخاب شد</string>
     <string name="afternoon">بعدازظهر</string>
     <string name="noon">ظهر</string>
+    <string name="view_trip">مشاهده مسیر </string>
+    <string name="active_trip">فعال کردن سفر</string>
 
 </resources>
