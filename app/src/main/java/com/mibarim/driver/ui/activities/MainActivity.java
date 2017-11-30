@@ -20,9 +20,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.os.OperationCanceledException;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
@@ -55,6 +57,7 @@ import com.google.gson.GsonBuilder;
 import com.mibarim.driver.BootstrapApplication;
 import com.mibarim.driver.BootstrapServiceProvider;
 import com.mibarim.driver.R;
+import com.mibarim.driver.adapters.TabPagerAdapter;
 import com.mibarim.driver.authenticator.LogoutService;
 import com.mibarim.driver.authenticator.TokenRefreshActivity;
 import com.mibarim.driver.core.Constants;
@@ -70,6 +73,7 @@ import com.mibarim.driver.models.Plus.DriverRouteModel;
 import com.mibarim.driver.models.Plus.DriverTripModel;
 import com.mibarim.driver.models.Plus.PaymentDetailModel;
 import com.mibarim.driver.models.Plus.StationRouteModel;
+import com.mibarim.driver.models.Plus.SuggestModel;
 import com.mibarim.driver.models.Plus.TripTimeModel;
 import com.mibarim.driver.models.PresentViewModel;
 import com.mibarim.driver.models.RatingModel;
@@ -88,7 +92,7 @@ import com.mibarim.driver.services.UserInfoService;
 import com.mibarim.driver.ui.BootstrapActivity;
 import com.mibarim.driver.ui.HandleApiMessagesBySnackbar;
 import com.mibarim.driver.ui.fragments.DriverFragments.DriverCardFragment;
-import com.mibarim.driver.ui.fragments.DriverFragments.FabFragment;
+import com.mibarim.driver.ui.fragments.DriverFragments.SuggestCardFragment;
 import com.mibarim.driver.ui.fragments.MoreInteractionWebviewFragment;
 import com.mibarim.driver.util.SafeAsyncTask;
 import com.squareup.otto.Subscribe;
@@ -151,7 +155,7 @@ public class MainActivity extends BootstrapActivity {
     private int FINISH_USER_INFO = 5649;
     private int CREDIT_RETURN = 9999;
     private int ROUTESELECTED = 2456;
-    private int SEARCH_STATION_REQUEST_CODE =7464;
+    private int SEARCH_STATION_REQUEST_CODE = 7464;
     private View parentLayout;
     private boolean netErrorMsg = false;
     boolean doubleBackToExitPressedOnce = false;
@@ -176,12 +180,15 @@ public class MainActivity extends BootstrapActivity {
     NumberPicker minutePicker;
 
 
-    private static final String DRIVE_FRAGMENT_TAG = "driveFragment";
+//    private static final String DRIVE_FRAGMENT_TAG = "driveFragment";
 
 
     private ApiResponse stationRouteResponse;
     private List<StationRouteModel> routeDetails;
 
+    private ViewPager tabViewPager;
+    private TabLayout tabLayout;
+    private TabPagerAdapter adapter;
 
     ArrayList<RatingModel> ratingModelList = new ArrayList<>();
     ApiResponse apiResponse;
@@ -189,7 +196,6 @@ public class MainActivity extends BootstrapActivity {
 
 
     String MORE_INTERACTION_WEBVIEW_FRAG = "MoreInteractionWebviewFragment";
-
 
 
     @Override
@@ -235,6 +241,20 @@ public class MainActivity extends BootstrapActivity {
         uploadButton = (ImageView) toolbar.findViewById(R.id.upload_button);
         checkAuth();
         //initScreen();
+
+        tabViewPager = (ViewPager) findViewById(R.id.tab_view_pager);
+        setupViewPager(tabViewPager);
+
+
+        tabLayout = (TabLayout) findViewById(R.id.reload_tab);
+        tabLayout.setupWithViewPager(tabViewPager);
+    }
+
+    private void setupViewPager(ViewPager viewPager) {
+        adapter = new TabPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new DriverCardFragment(), getString(R.string.my_route));
+        adapter.addFragment(new SuggestCardFragment(), getString(R.string.suggest_route));
+        viewPager.setAdapter(adapter);
     }
 
     private void initScreen() {
@@ -253,15 +273,15 @@ public class MainActivity extends BootstrapActivity {
         getUserScore();
         getTripState();
         getInviteFromServer();
-        final FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .add(R.id.main_container, new DriverCardFragment(), DRIVE_FRAGMENT_TAG)
-                .commit();
-
-
-        fragmentManager.beginTransaction()
-                .add(R.id.main_container, new FabFragment(), "FabFragment")
-                .commit();
+//        final FragmentManager fragmentManager = getSupportFragmentManager();
+//        fragmentManager.beginTransaction()
+//                .add(R.id.main_container, new DriverCardFragment(), DRIVE_FRAGMENT_TAG)
+//                .commit();
+//
+//
+//        fragmentManager.beginTransaction()
+//                .add(R.id.main_container, new FabFragment(), "FabFragment")
+//                .commit();
 
 
 //        showUserGuide();
@@ -314,7 +334,6 @@ public class MainActivity extends BootstrapActivity {
     }
 
 
-
     public void showUserGuide() {
 
 
@@ -361,8 +380,8 @@ public class MainActivity extends BootstrapActivity {
                         @Override
                         public void onSequenceFinish() {
 
-                            FragmentManager fragmentManager = getSupportFragmentManager();
-                            Fragment fragment = fragmentManager.findFragmentByTag(DRIVE_FRAGMENT_TAG);
+//                            FragmentManager fragmentManager = getSupportFragmentManager();
+                            Fragment fragment = adapter.getItem(0);/*fragmentManager.findFragmentByTag(DRIVE_FRAGMENT_TAG);*/
 
                             ((DriverCardFragment) fragment).showUserGuideForDriverCardFragment();
 
@@ -384,7 +403,7 @@ public class MainActivity extends BootstrapActivity {
 
         } else {
             final FragmentManager fragmentManager = getSupportFragmentManager();
-            final Fragment fragment = fragmentManager.findFragmentByTag(DRIVE_FRAGMENT_TAG);
+            final Fragment fragment = adapter.getItem(0);/*fragmentManager.findFragmentByTag(DRIVE_FRAGMENT_TAG);*/
             ((DriverCardFragment) fragment).showUserGuideForDriverCardFragment();
 
         }
@@ -869,6 +888,16 @@ public class MainActivity extends BootstrapActivity {
         this.startActivity(intent);
     }
 
+    public void gotoRidingActivitySuggest(SuggestModel dr) {
+        SuggestModel sm = new SuggestModel();
+        sm.DstStLat = dr.DstStLat;
+        sm.SrcStLat = dr.SrcStLat;
+        sm.SrcStLng = dr.SrcStLng;
+        sm.DstStLng = dr.DstStLng;
+        Intent intent = new Intent(this, RidingActivity.class);
+        this.startActivity(intent);
+    }
+
     public int getVersion() {
         int v = 1000;
         try {
@@ -911,8 +940,8 @@ public class MainActivity extends BootstrapActivity {
     }
 
     private void refreshList() {
-        final FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = fragmentManager.findFragmentByTag(DRIVE_FRAGMENT_TAG);
+//        final FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = adapter.getItem(0);/*fragmentManager.findFragmentByTag(DRIVE_FRAGMENT_TAG);*/
         ((DriverCardFragment) fragment).refresh();
         showFab();
 
@@ -925,9 +954,9 @@ public class MainActivity extends BootstrapActivity {
 
         if (prefs.getInt("ShowTheMainGuide", 0) == 1 && prefs.getInt("ShowDriverCardGuide", 0) == 0) {
 
-            FragmentManager fragmentmanager = getSupportFragmentManager();
+//            FragmentManager fragmentmanager = getSupportFragmentManager();
 
-            Fragment driveFragment = fragmentManager.findFragmentByTag(DRIVE_FRAGMENT_TAG);
+            Fragment driveFragment = adapter.getItem(0);/*fragmentManager.findFragmentByTag(DRIVE_FRAGMENT_TAG);*/
             ((DriverCardFragment) driveFragment).showUserGuideForDriverCardFragment();
         }
     }
@@ -1045,15 +1074,11 @@ public class MainActivity extends BootstrapActivity {
     };
 
 
-
-
-
-
     private void showSetTime() {
         LayoutInflater inflater = getLayoutInflater();
         View alertLayout = inflater.inflate(R.layout.time_picker_dialog, null);
 
-        View titleLayout = inflater.inflate(R.layout.timepicker_dialog_custom_title,null);
+        View titleLayout = inflater.inflate(R.layout.timepicker_dialog_custom_title, null);
 
         hourPicker = (NumberPicker) alertLayout.findViewById(R.id.hour);
         minutePicker = (NumberPicker) alertLayout.findViewById(R.id.minute);
@@ -1072,7 +1097,7 @@ public class MainActivity extends BootstrapActivity {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     int val = hourPicker.getValue();
                     int temp = 28 - val;
-                    temp = temp -1;
+                    temp = temp - 1;
                     if (temp == 24) {
                         temp = (val + 1) % 23 + 4;
                     }
@@ -1122,7 +1147,7 @@ public class MainActivity extends BootstrapActivity {
                 int current = 28 - i1;
                 if (current == 12)
                     stateOfTheDay.setText("ظهر");
-                if (current < 12 && current>= 5)
+                if (current < 12 && current >= 5)
                     stateOfTheDay.setText("صبح");
                 if (current > 12 && current <= 23)
                     stateOfTheDay.setText("بعد از ظهر");
@@ -1153,14 +1178,14 @@ public class MainActivity extends BootstrapActivity {
 
 
         //String[] hourValues = new String[]{"5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"};
-        String[] hourValues = new String[]{"23","22","21","20","19","18","17","16", "15", "14", "13", "12", "11", "10", "9", "8", "7", "6", "5"};
+        String[] hourValues = new String[]{"23", "22", "21", "20", "19", "18", "17", "16", "15", "14", "13", "12", "11", "10", "9", "8", "7", "6", "5"};
 
 
         String[] hourValues2 = new String[19];
 
-        for (int i = 23; i >=5  ; i--) {
+        for (int i = 23; i >= 5; i--) {
 //            hourValues2[23-i] = String.valueOf(i);
-            hourValues2[23-i] = String.format("%02d", i);
+            hourValues2[23 - i] = String.format("%02d", i);
         }
 
         String[] minuteValues = new String[]{"45", "30", "15", "00"};
@@ -1171,8 +1196,12 @@ public class MainActivity extends BootstrapActivity {
 
         int hour = selectedRouteTrip.TimingHour;
         int minute = selectedRouteTrip.TimingMin;
-        if(hour<5){hour=5;}
-        if(hour>23){hour=23;}
+        if (hour < 5) {
+            hour = 5;
+        }
+        if (hour > 23) {
+            hour = 23;
+        }
         //int hourIndex=hour - 5;
         int hourIndex = 28 - hour;
         if (hourIndex == 24) {
@@ -1186,13 +1215,13 @@ public class MainActivity extends BootstrapActivity {
         if (hour == 12)
             stateOfTheDay.setText(getString(R.string.noon));
         hourPicker.setValue(hourIndex);
-        int minIndex=4;
-        if(minute>=45){
-            minIndex=1;
-        }else if(minute>=30){
-            minIndex=2;
-        }else if(minute>=15){
-            minIndex=3;
+        int minIndex = 4;
+        if (minute >= 45) {
+            minIndex = 1;
+        } else if (minute >= 30) {
+            minIndex = 2;
+        } else if (minute >= 15) {
+            minIndex = 3;
         }
         minutePicker.setMinValue(1);
         minutePicker.setMaxValue(4);
@@ -1208,7 +1237,7 @@ public class MainActivity extends BootstrapActivity {
         int currentHourValue = 28 - hourPicker.getValue();
         if (currentHourValue == 12)
             stateOfTheDay.setText("ظهر");
-        if (currentHourValue < 12 && currentHourValue>= 5)
+        if (currentHourValue < 12 && currentHourValue >= 5)
             stateOfTheDay.setText("صبح");
         if (currentHourValue > 12 && currentHourValue <= 23)
             stateOfTheDay.setText("بعدازظهر");
@@ -1240,7 +1269,7 @@ public class MainActivity extends BootstrapActivity {
 //                    int seatPickerVal = hourPicker.getValue();
                     selectedRouteHour = 28 - hourPicker.getValue();
                     int minValue = minutePicker.getValue();
-                    switch (minValue){
+                    switch (minValue) {
                         case 0:
                             selectedRouteMin = 0;
                             break;
@@ -1341,62 +1370,6 @@ public class MainActivity extends BootstrapActivity {
             }
         }
     };*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     private void setEmptySeats() {
@@ -1606,7 +1579,6 @@ public class MainActivity extends BootstrapActivity {
     }
 
 
-
     public void getInviteFromServer() {
         new SafeAsyncTask<Boolean>() {
             @Override
@@ -1634,15 +1606,15 @@ public class MainActivity extends BootstrapActivity {
 
     public void hidefab() {
 //        FabFragment fabFragment =
-        final FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = fragmentManager.findFragmentByTag("FabFragment");
-        ((FabFragment) fragment).hideTheFab();
+//        final FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = adapter.getItem(0);/*fragmentManager.findFragmentByTag("FabFragment");*/
+        ((DriverCardFragment) fragment).hideTheFab();
     }
 
     public void showFab() {
-        final FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = fragmentManager.findFragmentByTag("FabFragment");
-        ((FabFragment) fragment).showTheFab();
+//        final FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = adapter.getItem(0);/*fragmentManager.findFragmentByTag("FabFragment");*/
+        ((DriverCardFragment) fragment).showTheFab();
 
     }
 
@@ -1732,9 +1704,9 @@ public class MainActivity extends BootstrapActivity {
 
         SharedPreferences prefs = getSharedPreferences("com.mibarim.driver", Context.MODE_PRIVATE);
 
-        if (prefs.getInt("ShowTheMainGuide", 0) == 1 && prefs.getInt("ShowDriverCardGuide",0) == 0) {
-            final FragmentManager fragmentManager = getSupportFragmentManager();
-            final Fragment fragment = fragmentManager.findFragmentByTag(DRIVE_FRAGMENT_TAG);
+        if (prefs.getInt("ShowTheMainGuide", 0) == 1 && prefs.getInt("ShowDriverCardGuide", 0) == 0) {
+//            final FragmentManager fragmentManager = getSupportFragmentManager();
+            final Fragment fragment = adapter.getItem(0); /*fragmentManager.findFragmentByTag(DRIVE_FRAGMENT_TAG);*/
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -1754,8 +1726,7 @@ public class MainActivity extends BootstrapActivity {
     }
 
 
-
-    public void addWebviewFragment(){
+    public void addWebviewFragment() {
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
@@ -1777,7 +1748,6 @@ public class MainActivity extends BootstrapActivity {
     }
 
 
-
     public void checkWebviewContentFromServer() {
 
         new SafeAsyncTask<Boolean>() {
@@ -1789,7 +1759,7 @@ public class MainActivity extends BootstrapActivity {
 
                 Gson gson = new GsonBuilder().create();
                 for (String json : webViewRespone.Messages) {
-                    webViewModel=gson.fromJson(json, PresentViewModel.class);
+                    webViewModel = gson.fromJson(json, PresentViewModel.class);
                 }
                 return true;
             }
@@ -1806,7 +1776,7 @@ public class MainActivity extends BootstrapActivity {
             protected void onSuccess(final Boolean res) throws Exception {
                 super.onSuccess(res);
 
-                if(webViewModel.getPresentUrl() != null){
+                if (webViewModel.getPresentUrl() != null) {
                     addWebviewFragment();
                     moreInteractionWebviewLayout.setVisibility(View.VISIBLE);
                 }
@@ -1817,12 +1787,12 @@ public class MainActivity extends BootstrapActivity {
 
     }
 
-    public String getPresentWebview(){
+    public String getPresentWebview() {
         String url = webViewModel.getPresentUrl();
         return url;
     }
 
-    public String getWebviewPageURL(){
+    public String getWebviewPageURL() {
         String url = webViewModel.getWebViewPageUrl();
         return url;
     }

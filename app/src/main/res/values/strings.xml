@@ -163,6 +163,7 @@
     <string name="car_info">اطلاعات خودرو</string>
     <string name="check_suggest">ارزیابی پیشنهادهای ارایه شده</string>
     <string name="suggest_route">هم مسیر پیشنهادی</string>
+    <string name="my_route">مسیرهای من</string>
     <string name="car_type">نوع خودرو</string>
     <string name="car_no">پلاک خودرو</string>
     <string name="car_color">رنگ خودرو</string>
@@ -424,5 +425,7 @@
     <string name="noon">ظهر</string>
     <string name="view_trip">مشاهده مسیر </string>
     <string name="active_trip">فعال کردن سفر</string>
+
+    <string name="wanna_reserve">می‌خواهم رزرو کنم</string>
 
 </resources>

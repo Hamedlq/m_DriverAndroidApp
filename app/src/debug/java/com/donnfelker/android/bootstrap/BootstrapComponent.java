@@ -45,6 +45,7 @@ import com.mibarim.driver.ui.fragments.DriverFragments.DriverCardFragment;
 import com.mibarim.driver.ui.fragments.DriverFragments.FabFragment;
 import com.mibarim.driver.ui.fragments.DriverFragments.RoutesCardFragment;
 import com.mibarim.driver.ui.fragments.DriverFragments.StationCardFragment;
+import com.mibarim.driver.ui.fragments.DriverFragments.SuggestCardFragment;
 import com.mibarim.driver.ui.fragments.HelpFragment;
 import com.mibarim.driver.ui.fragments.SubstationListFragment;
 import com.mibarim.driver.ui.fragments.TripProfileFragments.ProfileRouteInfoFragment;
