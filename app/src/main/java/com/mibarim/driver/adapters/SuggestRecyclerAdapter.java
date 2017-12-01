@@ -1,12 +1,14 @@
 package com.mibarim.driver.adapters;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mibarim.driver.R;
@@ -29,32 +31,33 @@ public class SuggestRecyclerAdapter extends RecyclerView.Adapter<SuggestRecycler
     private SuggestCardFragment.ItemTouchListener onItemTouchListener;
     private long startClickTime;
     private static final int MAX_CLICK_DURATION = 200;
+    private Typeface customFont;
 
-    public SuggestRecyclerAdapter(Activity activity, List<SuggestModel> list, SuggestCardFragment.ItemTouchListener onItemTouchListener) {
+    public SuggestRecyclerAdapter(Typeface customFont, Activity activity, List<SuggestModel> list, SuggestCardFragment.ItemTouchListener onItemTouchListener) {
         _activity = activity;
         items = list;
         this.onItemTouchListener = onItemTouchListener;
+        this.customFont = customFont;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
+        public Button acceptSuggestRoute;
         public TextView srcAddress;
         public TextView dstAddress;
         public TextView time;
-        public Button srcStation;
-        public Button dstStation;
+        public ImageView gotoMap;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
             srcAddress = (TextView) itemView.findViewById(R.id.src_suggest_address);
             dstAddress = (TextView) itemView.findViewById(R.id.dst_suggest_address);
-            srcStation = (Button) itemView.findViewById(R.id.src_suggest_station);
-            dstStation = (Button) itemView.findViewById(R.id.dst_suggest_station);
+            acceptSuggestRoute = (Button) itemView.findViewById(R.id.accept_suggest_route);
             time = (TextView) itemView.findViewById(R.id.suggest_time);
+            gotoMap = (ImageView) itemView.findViewById(R.id.goToMap_suggest);
 
-
-            srcStation.setOnTouchListener(new View.OnTouchListener() {
+            acceptSuggestRoute.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     switch (event.getAction()) {
@@ -65,7 +68,7 @@ public class SuggestRecyclerAdapter extends RecyclerView.Adapter<SuggestRecycler
                         case MotionEvent.ACTION_UP: {
                             long clickDuration = Calendar.getInstance().getTimeInMillis() - startClickTime;
                             if (clickDuration < MAX_CLICK_DURATION) {
-                                onItemTouchListener.onSrcLinkClick(v, getPosition());
+                                onItemTouchListener.onButtonClick(v, getPosition());
                             }
                             break;
                         }
@@ -76,7 +79,7 @@ public class SuggestRecyclerAdapter extends RecyclerView.Adapter<SuggestRecycler
                 }
             });
 
-            dstStation.setOnTouchListener(new View.OnTouchListener() {
+            gotoMap.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     switch (event.getAction()) {
@@ -87,7 +90,7 @@ public class SuggestRecyclerAdapter extends RecyclerView.Adapter<SuggestRecycler
                         case MotionEvent.ACTION_UP: {
                             long clickDuration = Calendar.getInstance().getTimeInMillis() - startClickTime;
                             if (clickDuration < MAX_CLICK_DURATION) {
-                                onItemTouchListener.onDstLinkClick(v, getPosition());
+                                onItemTouchListener.onMapClick(v, getPosition());
                             }
                             break;
                         }
@@ -95,7 +98,6 @@ public class SuggestRecyclerAdapter extends RecyclerView.Adapter<SuggestRecycler
                             break;
                     }
                     return true;
-
                 }
             });
         }
@@ -118,7 +120,9 @@ public class SuggestRecyclerAdapter extends RecyclerView.Adapter<SuggestRecycler
 
         viewHolder.srcAddress.setText(items.get(i).SrcStation);
         viewHolder.dstAddress.setText(items.get(i).DstStation);
-        String textViewTime = String.valueOf(items.get(i).TimeHour) + " : " + String.valueOf(items.get(i).TimeMinute);
+
+        String textViewTime = String.valueOf(items.get(i).TimeMinute) + " : " + String.valueOf(items.get(i).TimeHour);
+        viewHolder.time.setTypeface(customFont);
         viewHolder.time.setText(textViewTime);
 
     }

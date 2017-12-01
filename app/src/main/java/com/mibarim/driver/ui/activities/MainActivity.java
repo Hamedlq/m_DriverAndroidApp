@@ -15,6 +15,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -86,6 +87,7 @@ import com.mibarim.driver.services.AuthenticateService;
 import com.mibarim.driver.services.HelloService;
 import com.mibarim.driver.services.RouteRequestService;
 import com.mibarim.driver.services.RouteResponseService;
+import com.mibarim.driver.services.SuggestResponseService;
 import com.mibarim.driver.services.TripService;
 import com.mibarim.driver.services.UserInfoService;
 import com.mibarim.driver.ui.BootstrapActivity;
@@ -138,6 +140,7 @@ public class MainActivity extends BootstrapActivity {
     private String authToken;
     private String url;
     private ApiResponse response;
+    private ApiResponse suggestResponse;
     private int appVersion = 0;
     private ApiResponse theSuggestRoute;
     //private RouteResponse selfRoute;
@@ -164,6 +167,7 @@ public class MainActivity extends BootstrapActivity {
     DriverRouteModel selectedRouteTrip;
     int selectedRouteHour;
     int seatPickerVal;
+    int suggestSeat;
     int selectedRouteMin;
     private ScoreModel scoreModel;
     TextView user_credit;
@@ -191,6 +195,8 @@ public class MainActivity extends BootstrapActivity {
     ArrayList<RatingModel> ratingModelList = new ArrayList<>();
     ApiResponse apiResponse;
     PresentViewModel webViewModel;
+
+    private long filterId;
 
 
     String MORE_INTERACTION_WEBVIEW_FRAG = "MoreInteractionWebviewFragment";
@@ -1041,6 +1047,107 @@ public class MainActivity extends BootstrapActivity {
         }
     }
 
+    public void acceptSuggestRouteFirst(long filterId) {
+        this.filterId = filterId;
+        LayoutInflater inflater = getLayoutInflater();
+        View alertLayout = inflater.inflate(R.layout.seats_dialog, null);
+        seat_picker = (NumberPicker) alertLayout.findViewById(R.id.seat_picker);
+        LinearLayout seat_up = (LinearLayout) alertLayout.findViewById(R.id.seat_up);
+        LinearLayout seat_down = (LinearLayout) alertLayout.findViewById(R.id.seat_down);
+        seat_down.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    int val = seat_picker.getValue();
+                    seat_picker.setValue(val - 1);
+                }
+                return true;
+            }
+        });
+        seat_up.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    int val = seat_picker.getValue();
+                    seat_picker.setValue(val + 1);
+                }
+                return true;
+            }
+        });
+        String[] seats = new String[]{"1", "2", "3", "4"};
+        seat_picker.setMinValue(1);
+        seat_picker.setMaxValue(4);
+        seat_picker.setValue(4);
+        seat_picker.setDisplayedValues(seats);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.empty_seats);
+        builder.setView(alertLayout);
+        builder.setCancelable(false);
+        builder.setPositiveButton("تایید", suggestSeats)
+                .setNegativeButton("بیخیال", suggestSeats).show();
+    }
+
+    DialogInterface.OnClickListener suggestSeats = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    suggestSeat = seat_picker.getValue();
+                    acceptSuggestRouteLast();
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
+                    break;
+            }
+        }
+    };
+    
+    public void acceptSuggestRouteLast(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.confirm_Msg)).setPositiveButton("تعهد می‌دهم", SuggestConfirm)
+                .setNegativeButton("بیخیال", SuggestConfirm).show();
+    }
+
+    DialogInterface.OnClickListener SuggestConfirm = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    final SuggestResponseService suggestService = new SuggestResponseService();
+                    new SafeAsyncTask<Boolean>() {
+                        @Override
+                        public Boolean call() throws Exception {
+                            suggestResponse = suggestService.sendFilterId(authToken, filterId, suggestSeat);
+                            return true;
+                        }
+
+                        @Override
+                        protected void onSuccess(Boolean aBoolean) throws Exception {
+                            super.onSuccess(aBoolean);
+                            Gson gson = new Gson();
+                            for (String tripTimeModel : suggestResponse.Messages) {
+                                TripTimeModel tt = gson.fromJson(tripTimeModel, TripTimeModel.class);
+                                if (tt.IsSubmited) {
+                                    setNotificationAlamManager(tt, (int) filterId);
+                                    tabViewPager.setCurrentItem(0);
+                                    refreshList();
+                                }
+                            }
+                            new HandleApiMessagesBySnackbar(parentLayout, suggestResponse).showMessages();
+                        }
+
+                        @Override
+                        protected void onException(Exception e) throws RuntimeException {
+                            super.onException(e);
+                            Toast.makeText(MainActivity.this, getString(R.string.unsuccessfully_submitted), Toast.LENGTH_SHORT).show();
+                        }
+                    }.execute();
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
+                    break;
+            }
+        }
+    };
+
     private void showConfirmDisableDialog(String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(msg).setPositiveButton("بله", ConfirmDisableDialogClickListener)
@@ -1053,12 +1160,10 @@ public class MainActivity extends BootstrapActivity {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:
                     seatPickerVal = 0;
-                    //setTripTime();
                     disableTrip();
                     break;
                 case DialogInterface.BUTTON_NEGATIVE:
                     dialog.dismiss();
-                    refreshList();
                     break;
             }
         }
