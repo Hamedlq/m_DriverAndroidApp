@@ -7,7 +7,6 @@ import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -40,7 +39,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.getkeepsafe.taptargetview.TapTarget;
@@ -85,6 +83,7 @@ import com.mibarim.driver.models.UserInfoModel;
 import com.mibarim.driver.models.enums.TripStates;
 import com.mibarim.driver.receiver.NotificationReceiver;
 import com.mibarim.driver.services.AuthenticateService;
+import com.mibarim.driver.services.HelloService;
 import com.mibarim.driver.services.RouteRequestService;
 import com.mibarim.driver.services.RouteResponseService;
 import com.mibarim.driver.services.TripService;
@@ -104,7 +103,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 
 //import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
@@ -248,7 +246,25 @@ public class MainActivity extends BootstrapActivity {
 
         tabLayout = (TabLayout) findViewById(R.id.reload_tab);
         tabLayout.setupWithViewPager(tabViewPager);
+
+        runningService();
     }
+
+    public void runningService(){
+
+        Calendar cur_cal = Calendar.getInstance();
+        cur_cal.setTimeInMillis(System.currentTimeMillis());
+        cur_cal.add(Calendar.SECOND, 90);
+        Intent intent = new Intent(MainActivity.this, HelloService.class);
+        PendingIntent pi = PendingIntent.getService(MainActivity.this, 0, intent, 0);
+        AlarmManager alarm_manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarm_manager.set(AlarmManager.RTC, cur_cal.getTimeInMillis(), pi);
+        alarm_manager.setRepeating(AlarmManager.RTC, cur_cal.getTimeInMillis(), 30*60*1000,  pi);
+
+//        Intent intent = new Intent(this,HelloService.class);
+//        startService(intent);
+    }
+
 
     private void setupViewPager(ViewPager viewPager) {
         adapter = new TabPagerAdapter(getSupportFragmentManager());

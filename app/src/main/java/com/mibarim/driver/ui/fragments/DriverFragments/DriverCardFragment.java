@@ -384,16 +384,16 @@ public class DriverCardFragment extends Fragment
                             // This tap target will target the back button, we just need to pass its containing toolbar
 
                             // Likewise, this tap target will target the search button
-                            TapTarget
-                                    .forView(mRecyclerView.getChildAt(0).findViewById(R.id.switch_trip), "روشن کردن مسیر", "بعد از انتخاب مسیر لازم است هر روز ساعت حضور در ایستگاه را تعیین کنید.")
-                                    .cancelable(false)
-                                    .targetCircleColor(android.R.color.white)
-                                    .transparentTarget(false)
-                                    .outerCircleColor(R.color.google_blue)
-                                    .textColor(android.R.color.white)
-                                    .id(2),
+//                            TapTarget
+//                                    .forView(mRecyclerView.getChildAt(0).findViewById(R.id.switch_trip), "روشن کردن مسیر", "بعد از انتخاب مسیر لازم است هر روز ساعت حضور در ایستگاه را تعیین کنید.")
+//                                    .cancelable(false)
+//                                    .targetCircleColor(android.R.color.white)
+//                                    .transparentTarget(false)
+//                                    .outerCircleColor(R.color.google_blue)
+//                                    .textColor(android.R.color.white)
+//                                    .id(2),
                             // You can also target the overflow button in your toolbar
-                            TapTarget.forView(mRecyclerView.getChildAt(0).findViewById(R.id.src_station), "مشاهده ایستگاه مبدا", "مکان ایستگاه مبدا را با لمس دکمه مبدا مشاهده کنید.").id(3)
+                            TapTarget.forView(mRecyclerView.getChildAt(0).findViewById(R.id.goToMap), "مشاهده ایستگاه مبدا و مقصد", "مکان ایستگاه مبدا و مقصد را با لمس دکمه مشاهده کنید.").id(3)
                                     .cancelable(false)
                                     .tintTarget(false)
                                     .targetCircleColor(android.R.color.white)
@@ -405,15 +405,15 @@ public class DriverCardFragment extends Fragment
 //                                .cancelable(false)
 //                                .icon(droid)
 //                                .id(4)
-                            TapTarget.forView(mRecyclerView.getChildAt(0).findViewById(R.id.st_destination), "مشاهده ایستگاه مقصد", "مکان ایستگاه مقصد را با لمس دکمه مقصد مشاهده کنید.").id(1)
-                                    .cancelable(false)
-                                    .tintTarget(false)
-                                    .textColor(android.R.color.white)
-                                    .outerCircleColor(R.color.goole_yellow)
-                                    .targetCircleColor(android.R.color.white)
-                                    .transparentTarget(false),
+//                            TapTarget.forView(mRecyclerView.getChildAt(0).findViewById(R.id.st_destination), "مشاهده ایستگاه مقصد", "مکان ایستگاه مقصد را با لمس دکمه مقصد مشاهده کنید.").id(1)
+//                                    .cancelable(false)
+//                                    .tintTarget(false)
+//                                    .textColor(android.R.color.white)
+//                                    .outerCircleColor(R.color.goole_yellow)
+//                                    .targetCircleColor(android.R.color.white)
+//                                    .transparentTarget(false),
 
-                            TapTarget.forView(mRecyclerView.getChildAt(0).findViewById(R.id.fa_trash), "حذف مسیر", "مسیر هایی که در آن رفت و آمد نمی کنید را حذف کنید.").id(1)
+                            TapTarget.forView(mRecyclerView.getChildAt(0).findViewById(R.id.deleteCard), "حذف مسیر", "مسیر هایی که در آن رفت و آمد نمی کنید را حذف کنید.").id(1)
                                     .cancelable(false)
                                     .textColor(android.R.color.white)
                                     .targetCircleColor(android.R.color.white)

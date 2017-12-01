@@ -357,8 +357,8 @@
     <string name="verify">افزایش اعتماد</string>
     <string name="next">بعدی</string>
     <string name="user">کاربر</string>
-    <string name="trip_off">غیرفعال</string>
-    <string name="trip_on">فعال</string>
+    <string name="trip_off">فعال کردن مسیر</string>
+    <string name="trip_on">غیر فعال کردن مسیر</string>
     <string name="trip_state">حالت سفر</string>
     <string name="trip_help_1">با فعال کردن حالت سفر، در زمان سفر به صورت خودکار اعتبار از حساب شما کم شده و به حساب راننده منتقل می‌شود.</string>
     <string name="trip_help_2">چرا حالت سفر را فعال کنم؟\r\nحالت سفر امنیت سفر را بالاتر می‌برد. این دکمه به ما اجازه می‌دهد فرآیند سفر را بررسی کنیم و در صورت بروز مشکل همکاری‌ها و پیگیری‌های لازم را انجام دهیم. علاوه بر اینها در صورتی که جی‌پی‌اس هم‌سفر شما روشن باشد می‌توانید مکان و زمان رسیدن او را مشاهده کنید.</string>
