@@ -315,9 +315,9 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
             holder.dst_address.setTextColor(ContextCompat.getColor(holder.itemView.getContext(),R.color.actionbar_background_end));
             holder.dst_address.setTypeface(holder.dst_address.getTypeface(),Typeface.BOLD);
 
-            holder.src_station.setImageResource(R.drawable.radiobox);
-            holder.st_destination.setImageResource(R.drawable.destination);
-            holder.dots.setImageResource(R.drawable.dots);
+            holder.src_station.setImageResource(R.drawable.src_icon);
+            holder.st_destination.setImageResource(R.drawable.dst_icon);
+            holder.dots.setImageResource(R.drawable.three_dots);
 
         }
 

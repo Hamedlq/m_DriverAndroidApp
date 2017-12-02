@@ -1127,6 +1127,7 @@ public class MainActivity extends BootstrapActivity {
                             for (String tripTimeModel : suggestResponse.Messages) {
                                 TripTimeModel tt = gson.fromJson(tripTimeModel, TripTimeModel.class);
                                 if (tt.IsSubmited) {
+                                    Toast.makeText(MainActivity.this, "سفر با موفقیت اضافه شد", Toast.LENGTH_LONG).show();
                                     setNotificationAlamManager(tt, (int) filterId);
                                     tabViewPager.setCurrentItem(0);
                                     refreshList();
