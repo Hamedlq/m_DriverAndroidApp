@@ -47,6 +47,8 @@ public class SuggestRecyclerAdapter extends RecyclerView.Adapter<SuggestRecycler
         public TextView dstAddress;
         public TextView time;
         public ImageView gotoMap;
+        private TextView suggestPrice;
+        private TextView requests;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -56,6 +58,8 @@ public class SuggestRecyclerAdapter extends RecyclerView.Adapter<SuggestRecycler
             acceptSuggestRoute = (Button) itemView.findViewById(R.id.accept_suggest_route);
             time = (TextView) itemView.findViewById(R.id.suggest_time);
             gotoMap = (ImageView) itemView.findViewById(R.id.goToMap_suggest);
+            suggestPrice = (TextView) itemView.findViewById(R.id.suggest_price);
+            requests = (TextView) itemView.findViewById(R.id.requests);
 
             acceptSuggestRoute.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -120,6 +124,8 @@ public class SuggestRecyclerAdapter extends RecyclerView.Adapter<SuggestRecycler
 
         viewHolder.srcAddress.setText(items.get(i).SrcStation);
         viewHolder.dstAddress.setText(items.get(i).DstStation);
+        viewHolder.suggestPrice.setText(items.get(i).PriceString + " " + "تومان");
+        viewHolder.requests.setText("درخواست‌ها" + " : " + String.valueOf(items.get(i).PairPassengers) + " نفر");
 
         String textViewTime = String.valueOf(items.get(i).TimeMinute) + " : " + String.valueOf(items.get(i).TimeHour);
         viewHolder.time.setTypeface(customFont);

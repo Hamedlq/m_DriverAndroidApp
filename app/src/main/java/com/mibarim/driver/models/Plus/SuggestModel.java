@@ -9,6 +9,8 @@ import java.io.Serializable;
 public class SuggestModel implements Serializable {
 
     public long FilterId ;
+    public long SrcStationId;
+    public long DstStationId;
     public String SrcStation ;
     public String SrcStLat ;
     public String SrcStLng ;
@@ -17,5 +19,7 @@ public class SuggestModel implements Serializable {
     public String DstStLng ;
     public int TimeHour ;
     public int TimeMinute ;
-
+    public long Price;
+    public String PriceString;
+    public int PairPassengers;
 }
