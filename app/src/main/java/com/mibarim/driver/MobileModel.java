@@ -7,13 +7,39 @@ import java.io.Serializable;
  */
 
 public class MobileModel implements Serializable {
-    String mobile;
+    public enum NotificationType
+    {
+        NotifForFilter(20),
+        NotifForDriver(21);
+
+        private int value;
+
+        NotificationType(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+
+    private String mobile;
+    private int NotifType;
+
+    public int getNotifType() {
+        return NotifType;
+    }
+
+    public void setNotifType(int notifType) {
+        NotifType = notifType;
+    }
 
     public String getMobile() {
         return mobile;
     }
 
-    public void setMobile(String mobile) {
+    public void setMobile(String mobile,NotificationType status) {
         this.mobile = mobile;
+        setNotifType(status.getValue());
     }
 }
