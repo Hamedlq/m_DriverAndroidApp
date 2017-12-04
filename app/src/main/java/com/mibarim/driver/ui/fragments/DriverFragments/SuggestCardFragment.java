@@ -107,6 +107,8 @@ public class SuggestCardFragment extends Fragment implements LoaderManager.Loade
                     params.putDouble("SRC_LNG", Double.parseDouble(selectedItem.SrcStLng));
                     params.putDouble("DST_LAT", Double.parseDouble(selectedItem.DstStLat));
                     params.putDouble("DST_LNG", Double.parseDouble(selectedItem.DstStLng));
+                    params.putString("SRC_ADDRESS", selectedItem.SrcStation);
+                    params.putString("DST_ADDRESS", selectedItem.DstStation);
                     intent.putExtras(params);
                     view.getContext().startActivity(intent);
                 }

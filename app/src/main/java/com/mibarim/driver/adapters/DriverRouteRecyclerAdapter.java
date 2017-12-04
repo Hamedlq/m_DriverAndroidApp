@@ -71,6 +71,7 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
         //public TextView seats;
         public TextView src_address;
         public TextView dst_address;
+        public TextView driverCardPrice;
         public TextView carString;
         public TextView seats;
         public ToggleButton switch_trip;
@@ -91,6 +92,7 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
             //row_layout = (RelativeLayout) v.findViewById(R.id.row_layout);
             //username = (TextView) v.findViewById(R.id.username);
             timing = (TextView) v.findViewById(R.id.timing);
+            driverCardPrice = (TextView) v.findViewById(R.id.driver_card_price);
             //seats = (TextView) v.findViewById(R.id.seats);
             src_address = (TextView) v.findViewById(R.id.src_address);
             dst_address = (TextView) v.findViewById(R.id.dst_address);
@@ -172,7 +174,7 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
                         case MotionEvent.ACTION_UP: {
                             long clickDuration = Calendar.getInstance().getTimeInMillis() - startClickTime;
                             if(clickDuration < MAX_CLICK_DURATION) {
-                                onItemTouchListener.onSrcLinkClick(v, getPosition());
+                                onItemTouchListener.onSrcLinkClick(v, getPosition(), src_address.getText().toString(), dst_address.getText().toString());
                             }
                             break;
                         }
@@ -299,6 +301,7 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
         holder.src_address.setText(items.get(position).SrcMainAddress +"، "+ items.get(position).SrcAddress);
         holder.dst_address.setText(items.get(position).DstAddress);
         holder.carString.setText(items.get(position).CarString);
+        holder.driverCardPrice.append(items.get(position).PricingString + " ");
         holder.switch_trip.setChecked(items.get(position).HasTrip);
         holder.show_trip.setVisibility(View.GONE);
         if (items.get(position).HasTrip) {

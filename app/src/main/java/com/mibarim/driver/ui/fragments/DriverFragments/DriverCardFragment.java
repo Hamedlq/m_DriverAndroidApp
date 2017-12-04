@@ -140,7 +140,7 @@ public class DriverCardFragment extends Fragment
             }
 
             @Override
-            public void onSrcLinkClick(View view, int position) {
+            public void onSrcLinkClick(View view, int position, String srcName, String dstName) {
                 if (getActivity() instanceof MainActivity) {
                     DriverRouteModel selectedItem = ((DriverRouteModel) items.get(position));
                     Intent intent = new Intent(view.getContext(), mapDetails.class);
@@ -149,6 +149,8 @@ public class DriverCardFragment extends Fragment
                     params.putDouble("SRC_LNG", Double.parseDouble(selectedItem.SrcLng));
                     params.putDouble("DST_LAT", Double.parseDouble(selectedItem.DstLat));
                     params.putDouble("DST_LNG", Double.parseDouble(selectedItem.DstLng));
+                    params.putString("SRC_ADDRESS", selectedItem.SrcAddress);
+                    params.putString("DST_ADDRESS", selectedItem.DstAddress);
                     intent.putExtras(params);
                     view.getContext().startActivity(intent);
                 }
@@ -356,7 +358,7 @@ public class DriverCardFragment extends Fragment
 
         public void onDeleteCard(View view, int position);
 
-        public void onSrcLinkClick(View view, int position);
+        public void onSrcLinkClick(View view, int position, String srcName, String dstName);
 
         public void onDstLinkClick(View view, int position);
 

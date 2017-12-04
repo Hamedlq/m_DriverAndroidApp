@@ -14,7 +14,8 @@
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
-        card_view:cardCornerRadius="10dp">
+        card_view:cardCornerRadius="10dp"
+        card_view:cardPreventCornerOverlap="false">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -114,8 +115,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@id/src_station"
-                        android:textColor="#848484"
-                        android:textAppearance="?android:textAppearanceSmall" />
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textAppearance="?android:textAppearanceSmall"
+                        android:textColor="#848484" />
 
 
                 </RelativeLayout>
@@ -162,20 +165,20 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_toEndOf="@id/st_destination"
-                        android:textColor="#848484"
-                        android:textAppearance="?android:textAppearanceSmall" />
+                        android:textAppearance="?android:textAppearanceSmall"
+                        android:textColor="#848484" />
 
                 </RelativeLayout>
 
 
-                <LinearLayout
+                <RelativeLayout
                     android:id="@+id/car_info"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
-                    android:layout_marginStart="20dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="25dp"
+                    android:layoutDirection="rtl">
 
                     <TextView
                         android:id="@+id/carString"
@@ -183,7 +186,24 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/table_text_selector" />
 
-                </LinearLayout>
+                    <TextView
+                        android:id="@+id/toman"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:textColor="@android:color/black"
+                        android:text="@string/toman" />
+
+                    <TextView
+                        android:id="@+id/driver_card_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toStartOf="@+id/toman"
+                        android:gravity="end"
+                        android:textAppearance="?android:textAppearanceSmall"
+                        android:textColor="@android:color/black" />
+
+                </RelativeLayout>
             </LinearLayout>
 
 
@@ -201,10 +221,10 @@
                     android:layout_weight="3"
                     android:background="@drawable/check"
                     android:checked="false"
+                    android:textAppearance="?android:textAppearanceMedium"
                     android:textColor="@color/white"
                     android:textOff="@string/trip_off"
-                    android:textOn="@string/trip_on"
-                    android:textAppearance="?android:textAppearanceMedium" />
+                    android:textOn="@string/trip_on" />
 
 
                 <View

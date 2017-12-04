@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -40,7 +41,26 @@ public class mapDetails extends AppCompatActivity implements OnMapReadyCallback,
     private static final int ERROR_DIALOG_REQUEST = 9001;
     GoogleMap mMap;
     private double srcLat,srcLng,dstLat,dstLng;
+    private TextView src, dst;
+    private String srcAddress, dstAddress;
     ImageView backInMap;
+
+    public String getSrcAddress() {
+        return srcAddress;
+    }
+
+    public void setSrcAddress(String srcAddress) {
+        this.srcAddress = srcAddress;
+    }
+
+    public String getDstAddress() {
+        return dstAddress;
+    }
+
+    public void setDstAddress(String dstAddress) {
+        this.dstAddress = dstAddress;
+    }
+
 
     public double getSrcLat() {
         return srcLat;
@@ -97,12 +117,25 @@ public class mapDetails extends AppCompatActivity implements OnMapReadyCallback,
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        src = (TextView) findViewById(R.id.src_address_map);
+        dst = (TextView) findViewById(R.id.dst_address_map);
+        String srcAddressCom = " : " + srcAddress;
+        String dstAddressCom = " : " + dstAddress;
+        src.setText(srcAddressCom);
+        dst.setText(dstAddressCom);
+    }
+
     public void setParams(){
         Bundle bundle = getIntent().getExtras();
         setSrcLat(bundle.getDouble("SRC_LAT"));
         setSrcLng(bundle.getDouble("SRC_LNG"));
         setDstLat(bundle.getDouble("DST_LAT"));
         setDstLng(bundle.getDouble("DST_LNG"));
+        setSrcAddress(bundle.getString("SRC_ADDRESS"));
+        setDstAddress(bundle.getString("DST_ADDRESS"));
 
     }
 
@@ -137,6 +170,7 @@ public class mapDetails extends AppCompatActivity implements OnMapReadyCallback,
 //                    return null;
 //                }
 //            });
+            mMap.getUiSettings().setRotateGesturesEnabled(false);
 
             MarkerOptions options = new MarkerOptions()
                     .position(new LatLng(getSrcLat(), getSrcLng()))
@@ -152,7 +186,7 @@ public class mapDetails extends AppCompatActivity implements OnMapReadyCallback,
             calculateBound();
 
         } else {
-            Toast.makeText(getApplicationContext(), "mmap is null", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(), "mmap is null", Toast.LENGTH_SHORT).show();
         }
 
     }
