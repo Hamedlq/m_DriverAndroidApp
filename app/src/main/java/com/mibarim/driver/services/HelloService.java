@@ -7,13 +7,19 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.os.PowerManager;
+import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -52,6 +58,7 @@ public class HelloService extends Service {
         }
 
         public void sendRequest() {
+
             new SafeAsyncTask<Boolean>() {
 
                 @Override
@@ -60,7 +67,7 @@ public class HelloService extends Service {
                     SharedPreferences sharedPreferences = getSharedPreferences("com.mibarim.driver", Context.MODE_PRIVATE);
                     final String number = sharedPreferences.getString("UserMobile", "");
                     MobileModel testing = new MobileModel();
-                    testing.setMobile(number);
+                    testing.setMobile(number, MobileModel.NotificationType.NotifForDriver);
 
                     NotifModel notifModel = new NotifModel();
                     notifModel.getNotif(testing);
@@ -94,16 +101,35 @@ public class HelloService extends Service {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 PendingIntent pIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+                Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(getApplicationContext())
                                 .setSmallIcon(R.mipmap.ic_launcher)
                                 .setContentTitle(title)
                                 .setContentText(body)
                                 .setAutoCancel(true)
-                                .setContentIntent(pIntent);
+                                .setContentIntent(pIntent)
+                                .setSound(soundUri);
 
                 NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 mNotificationManager.notify(0, mBuilder.build());
+
+                boolean isScreenOn;
+
+                PowerManager pm = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT_WATCH)
+                    isScreenOn = pm.isScreenOn();
+                else
+                    isScreenOn = pm.isInteractive();
+
+                if (!isScreenOn) {
+                    PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.ON_AFTER_RELEASE, "MyLock");
+                    wl.acquire(2000);
+
+                    wl.release();
+                }
+
             }
 
 
