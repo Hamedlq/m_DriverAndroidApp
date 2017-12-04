@@ -295,6 +295,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.getUiSettings().setRotateGesturesEnabled(false);
         mMap.getUiSettings().setZoomGesturesEnabled(true);
+        LatLng latLng = new LatLng(35.725559, 51.381311);
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latLng, 14);
+        mMap.moveCamera(update);
 
         if (getActivity() instanceof SuggestRouteActivity) {
             setSourceFlag();
