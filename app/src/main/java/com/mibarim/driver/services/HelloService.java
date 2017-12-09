@@ -110,12 +110,14 @@ public class HelloService extends Service {
                                 .setContentText(body)
                                 .setAutoCancel(true)
                                 .setContentIntent(pIntent)
+                                .setStyle(new NotificationCompat.BigTextStyle()
+                                        .bigText(body))
                                 .setSound(soundUri);
 
                 NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 mNotificationManager.notify(0, mBuilder.build());
 
-                boolean isScreenOn;
+                /*boolean isScreenOn;
 
                 PowerManager pm = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT_WATCH)
@@ -128,7 +130,7 @@ public class HelloService extends Service {
                     wl.acquire(2000);
 
                     wl.release();
-                }
+                }*/
 
             }
 
