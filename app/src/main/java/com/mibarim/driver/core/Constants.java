@@ -49,9 +49,9 @@ public final class Constants {
         /**
          * Base URL for all requests
          */
-//        public static final String URL_BASE = "http://localhost:50226";
+        public static final String URL_BASE = "http://localhost:50226";
 //        public static final String URL_BASE = "http://mibarim.ir/CoreApi";
-        public static final String URL_BASE = "http://mibarimapp.com/testapp";
+//        public static final String URL_BASE = "http://mibarimapp.com/testapp";
 //        public static final String URL_BASE = "http://mibarimapp.com/CoreApi";
 //          public static final String URL_BASE = "http://CoreApi.mibarim.ir/";
 //        public static final String URL_BASE = "http://mibarim.ir/testApp/CoreApi";
@@ -180,7 +180,7 @@ public final class Constants {
         public static final String ROUTE_IMAGE_URL = "/GetRouteUserImage";
         public static final String SUGGEST_ROUTE_URL = "/GetSuggestWeekRoute";
         public static final String GET_PASSENGER_ROUTE_URL = "/GetPassengerRoutes";
-        public static final String GET_DRIVER_ROUTE_URL = "/GetDriverRoutes";
+        public static final String GET_DRIVER_ROUTE_URL = "/GetDriverNewRoutes";
         public static final String GET_STATION_ROUTE_URL = "/GetStationRoutes";
         public static final String SIMILAR_SUGGEST_ROUTE_URL = "/GetSimilarSuggestRoute";
         public static final String TRIP_PROFILE_URL = "/GetTripProfile";

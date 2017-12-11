@@ -243,18 +243,12 @@ public class MainActivity extends BootstrapActivity {
         user_credit = (TextView) toolbar.findViewById(R.id.user_credit);
         invite_btn = (ImageView) toolbar.findViewById(R.id.invite_button);
         uploadButton = (ImageView) toolbar.findViewById(R.id.upload_button);
+        tabViewPager = (ViewPager) findViewById(R.id.tab_view_pager);
+        tabLayout = (TabLayout) findViewById(R.id.reload_tab);
         checkAuth();
         //initScreen();
 
-        tabViewPager = (ViewPager) findViewById(R.id.tab_view_pager);
-        setupViewPager(tabViewPager);
-
-
-        tabLayout = (TabLayout) findViewById(R.id.reload_tab);
-        tabLayout.setupWithViewPager(tabViewPager);
-
-        runningService();
-    }
+   }
 
     public void runningService(){
 
@@ -284,7 +278,8 @@ public class MainActivity extends BootstrapActivity {
     private void initScreen() {
         checkVersion();
         getUserInfoFromServer();
-
+        //notifService
+        runningService();
 
         checkWebviewContentFromServer();
 //        addWebviewFragment();
@@ -297,6 +292,11 @@ public class MainActivity extends BootstrapActivity {
         getUserScore();
         getTripState();
         getInviteFromServer();
+
+        setupViewPager(tabViewPager);
+
+        tabLayout.setupWithViewPager(tabViewPager);
+
 //        final FragmentManager fragmentManager = getSupportFragmentManager();
 //        fragmentManager.beginTransaction()
 //                .add(R.id.main_container, new DriverCardFragment(), DRIVE_FRAGMENT_TAG)
@@ -355,6 +355,8 @@ public class MainActivity extends BootstrapActivity {
         if (url != null) {
             gotoWebView(url);
         }
+
+
     }
 
 
