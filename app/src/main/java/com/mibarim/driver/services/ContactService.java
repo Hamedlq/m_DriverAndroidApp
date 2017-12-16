@@ -28,4 +28,9 @@ public class ContactService {
         ApiResponse res = getService().GetContacts("Bearer " + authToken, "7");
         return res;
     }
+
+    public ApiResponse GetContactPassengers(String authToken, String tripId) {
+        ApiResponse res = getService().GetContactPassengers("Bearer " + authToken, tripId);
+        return res;
+    }
 }

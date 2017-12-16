@@ -85,6 +85,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 
+import static com.mibarim.driver.core.Constants.Auth.AUTH_TOKEN;
+import static com.mibarim.driver.core.Constants.GlobalConstants.TRIP_ID_INTENT_TAG;
+
 //import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
 
 
@@ -113,6 +116,8 @@ public class RidingActivity extends BootstrapActivity {
     protected FrameLayout map_container;
     @Bind(R.id.map_container_web)
     protected WebView map_container_web;
+    @Bind(R.id.contact_passengers_button)
+    protected AppCompatButton contactPassengersButton;
 
 
     Intent googleServiceIntent;
@@ -155,7 +160,7 @@ public class RidingActivity extends BootstrapActivity {
         BootstrapApplication.component().inject(this);
 
         if (getIntent() != null && getIntent().getExtras() != null) {
-            authToken = getIntent().getExtras().getString(Constants.Auth.AUTH_TOKEN);
+            authToken = getIntent().getExtras().getString(AUTH_TOKEN);
             driverTripModel = (DriverTripModel) getIntent().getExtras().getSerializable(Constants.GlobalConstants.DRIVER_TRIP_MODEL);
         }
 
@@ -235,6 +240,18 @@ public class RidingActivity extends BootstrapActivity {
                 return false;
             }
         });
+
+        contactPassengersButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RidingActivity.this,ContactPassengersActivity.class);
+                intent.putExtra(AUTH_TOKEN,authToken);
+                intent.putExtra(TRIP_ID_INTENT_TAG, driverTripModel.TripId);
+                startActivity(intent);
+
+            }
+        });
+
         support.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

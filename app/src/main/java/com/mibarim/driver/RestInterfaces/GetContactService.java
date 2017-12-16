@@ -16,4 +16,9 @@ public interface GetContactService {
     @FormUrlEncoded
     ApiResponse GetContacts(@Header(Constants.Http.PARAM_AUTHORIZATION) String authToken,
                             @Field("UserId") String s);
+
+    @POST(Constants.Http.URL_GET_CONTACT_PASSENGERS)
+    @FormUrlEncoded
+    ApiResponse GetContactPassengers(@Header(Constants.Http.PARAM_AUTHORIZATION) String authToken,
+                            @Field("TripId") String tripId);
 }
