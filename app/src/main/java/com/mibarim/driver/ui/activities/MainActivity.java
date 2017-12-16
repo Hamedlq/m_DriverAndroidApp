@@ -252,14 +252,16 @@ public class MainActivity extends BootstrapActivity {
 
     public void runningService(){
 
-        Calendar cur_cal = Calendar.getInstance();
-        cur_cal.setTimeInMillis(System.currentTimeMillis());
-        cur_cal.add(Calendar.SECOND, 90);
-        Intent intent = new Intent(MainActivity.this, HelloService.class);
-        PendingIntent pi = PendingIntent.getService(MainActivity.this, 0, intent, 0);
-        AlarmManager alarm_manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarm_manager.set(AlarmManager.RTC, cur_cal.getTimeInMillis(), pi);
-        alarm_manager.setRepeating(AlarmManager.RTC, cur_cal.getTimeInMillis(), 30*60*1000,  pi);
+
+            Calendar cur_cal = Calendar.getInstance();
+            cur_cal.setTimeInMillis(System.currentTimeMillis());
+            cur_cal.add(Calendar.SECOND, 10);
+            Intent intent = new Intent(MainActivity.this, HelloService.class);
+            PendingIntent pi = PendingIntent.getService(MainActivity.this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            AlarmManager alarm_manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            alarm_manager.set(AlarmManager.RTC, cur_cal.getTimeInMillis(), pi);
+            alarm_manager.setRepeating(AlarmManager.RTC, cur_cal.getTimeInMillis(), 60 * 1000, pi);
+
 
 //        Intent intent = new Intent(this,HelloService.class);
 //        startService(intent);
