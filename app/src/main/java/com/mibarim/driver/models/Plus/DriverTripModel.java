@@ -16,4 +16,5 @@ public class DriverTripModel implements Serializable {
     public String StLng;
     public int FilledSeats;
     public int TripState;
+    public int ServicePeriod;
 }

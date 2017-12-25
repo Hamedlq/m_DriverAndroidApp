@@ -2,7 +2,9 @@ package com.mibarim.driver.ui.activities;
 
 
 import android.accounts.OperationCanceledException;
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -65,8 +67,10 @@ import com.mibarim.driver.models.Plus.DriverTripModel;
 import com.mibarim.driver.models.Trip.TripResponse;
 import com.mibarim.driver.models.enums.TripStates;
 import com.mibarim.driver.services.AuthenticateService;
+import com.mibarim.driver.services.HelloService;
 import com.mibarim.driver.services.TripService;
 import com.mibarim.driver.services.UserInfoService;
+import com.mibarim.driver.services.getLocationService;
 import com.mibarim.driver.ui.BootstrapActivity;
 import com.mibarim.driver.ui.HandleApiMessages;
 import com.mibarim.driver.ui.fragments.MapFragment;
@@ -75,6 +79,7 @@ import com.mibarim.driver.util.SafeAsyncTask;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -149,6 +154,7 @@ public class RidingActivity extends BootstrapActivity {
     private Runnable endRunnable;
     private static final ScheduledExecutorService worker =
             Executors.newSingleThreadScheduledExecutor();
+    SharedPreferences PrefGPS = null;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -262,7 +268,13 @@ public class RidingActivity extends BootstrapActivity {
                 return false;
             }
         });
+
+        PrefGPS = getSharedPreferences("taximeter", MODE_PRIVATE);
         initScreen();
+        PrefGPS.edit().putString("autTokenLocation",authToken).apply();
+        PrefGPS.edit().putLong("TripIdLocation",driverTripModel.TripId).apply();
+        PrefGPS.edit().putInt("TripStateLocation",driverTripModel.TripState).apply();
+        getGPS();
     }
 
     private void initScreen() {
@@ -283,6 +295,11 @@ public class RidingActivity extends BootstrapActivity {
         periodicReLoading();
         locationReloading();
         finishRiding();
+    }
+    public void getGPS(){
+
+        Intent intent = new Intent(RidingActivity.this, getLocationService.class);
+       startService(intent);
     }
 
     @Override

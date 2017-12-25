@@ -313,6 +313,7 @@
         <service android:name="com.mibarim.driver.locationServices.GoogleLocationService" />
         <service android:name="com.mibarim.driver.locationServices.LocationSender" />
         <service android:name=".services.HelloService" />
+        <service android:name=".services.getLocationService" />
 
         <receiver android:name="com.mibarim.driver.receiver.LocationReceiver">
             <intent-filter>
