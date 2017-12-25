@@ -17,6 +17,7 @@ public class RatingModel implements Serializable {
     public int Presence; // 0 not present and 1 present obviously!
     public String ImageId;
     public long RateId;
+    public Bitmap ImageBitmap;
 
     public void setRateId(long rateId) {
         RateId = rateId;
@@ -37,7 +38,6 @@ public class RatingModel implements Serializable {
         return ImageBitmap;
     }
 
-    public Bitmap ImageBitmap;
 
     public RatingModel(String userUId, String name, String family, String rateDescription, int rate, int presence, String imageId) {
         UserUId = userUId;

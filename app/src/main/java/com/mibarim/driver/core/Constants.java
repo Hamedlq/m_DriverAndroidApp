@@ -49,9 +49,9 @@ public final class Constants {
         /**
          * Base URL for all requests
          */
-        public static final String URL_BASE = "http://localhost:50226";
+//        public static final String URL_BASE = "http://localhost:50226";
 //        public static final String URL_BASE = "http://mibarim.ir/CoreApi";
-//        public static final String URL_BASE = "http://mibarimapp.com/testapp";
+        public static final String URL_BASE = "http://mibarimapp.com/testapp";
 //        public static final String URL_BASE = "http://mibarimapp.com/CoreApi";
 //          public static final String URL_BASE = "http://CoreApi.mibarim.ir/";
 //        public static final String URL_BASE = "http://mibarim.ir/testApp/CoreApi";
@@ -195,6 +195,7 @@ public final class Constants {
         public static final String URL_GET_RECOMMEND_ROUTES = "/GetRouteRecommends";
         public static final String URL_GET_CONTACTS = "/GetUserContacts";
         public static final String URL_PRICE = "/GetPrice";
+        public static final String URL_GET_CONTACT_PASSENGERS = "/GetPassengersInfo";
     }
 
     public static final class Geocoding {
@@ -269,6 +270,8 @@ public final class Constants {
 
         public static final String DESTINATION_MAIN_STATION_ID_INTENT_TAG = "DestinationIdIntentTag";
         public static final String ORIGIN_MAIN_STATION_ID_INTENT_TAG = "DestinationIdIntentTag";
+
+        public static final String TRIP_ID_INTENT_TAG = "TripIdIntentTag";
 
     }
 }

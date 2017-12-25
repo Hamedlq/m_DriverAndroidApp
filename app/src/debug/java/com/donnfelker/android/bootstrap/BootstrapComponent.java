@@ -1,5 +1,6 @@
 package com.mibarim.driver;
 
+import com.mibarim.driver.ui.activities.ContactPassengersActivity;
 import com.mibarim.driver.ui.activities.CreditActivity;
 import com.mibarim.driver.ui.activities.EventMapActivity;
 import com.mibarim.driver.ui.activities.HelpingActivity;
@@ -377,5 +378,7 @@ public interface BootstrapComponent {
     void inject(SearchStationActivity target);
 
     void inject(SubstationListFragment target);
+
+    void inject(ContactPassengersActivity target);
 
 }

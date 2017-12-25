@@ -429,5 +429,10 @@
     <string name="wanna_reserve">درخواست را قبول میکنم</string>
     <string name="successfully_submitted">مسیر ثبت شد</string>
     <string name="unsuccessfully_submitted">مسیر ثبت نشد</string>
+    <string name="contact_passengers">تماس با مسافران</string>
+    <string name="in_cash">پرداخت به صورت نقدی</string>
+    <string name="on_line_payed">به صورت آنلاین پرداخت شده</string>
+    <string name="nobody_reserved">کسی سفر مورد نظر را رزرو نکرده است.</string>
+
 
 </resources>
