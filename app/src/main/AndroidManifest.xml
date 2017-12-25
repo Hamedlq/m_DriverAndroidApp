@@ -20,11 +20,15 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
     <!--<uses-permission android:name="android.permission.CAMERA" />-->
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="driverer.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.SEND" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
 
     <application
@@ -179,33 +183,33 @@
             android:label="@string/location_search"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".ui.activities.UserImageUploadActivity"
-            android:screenOrientation="portrait"
+        <activity
+            android:name=".ui.activities.UserImageUploadActivity"
             android:configChanges="orientation|screenSize"
-            />
-
-        <activity android:name=".google.mapDetails"
             android:screenOrientation="portrait" />
-        
+
+        <activity
+            android:name=".google.mapDetails"
+            android:screenOrientation="portrait" />
+
         <!--<activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat"/> &lt;!&ndash; optional (needed if default theme has no action bar) &ndash;&gt;-->
 
         <activity
             android:name=".ui.activities.UserDocumentsUploadActivity"
             android:label=""
-            android:screenOrientation="portrait"
-            />
-
-        <activity
-            android:windowSoftInputMode="adjustPan"
-            android:name=".ui.activities.RatingActivity"
-            android:label=""
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".ui.activities.SearchStationActivity"
+            android:name=".ui.activities.RatingActivity"
+            android:label=""
             android:screenOrientation="portrait"
-            android:label="">
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".ui.activities.SearchStationActivity"
+            android:label=""
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.MainActivity" />
@@ -214,13 +218,11 @@
 
         <activity
             android:name=".ui.activities.StationsOnMapActivity"
-            android:screenOrientation="portrait"
-            android:label="">
+            android:label=""
+            android:screenOrientation="portrait">
 
 
         </activity>
-
-
 
 
         <!--
@@ -275,11 +277,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".BootCompletedIntentReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
+
 
         <service
             android:name="com.mibarim.driver.google.MyGcmListenerService"
@@ -295,6 +293,13 @@
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>-->
+
+        <receiver android:name=".BootCompletedIntentReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <service android:name="com.mibarim.driver.locationServices.LocationService" />
         <service android:name="com.mibarim.driver.locationServices.GoogleLocationService" />
         <service android:name="com.mibarim.driver.locationServices.LocationSender" />
