@@ -22,14 +22,12 @@ import com.google.gson.Gson;
 import com.mibarim.driver.BootstrapApplication;
 import com.mibarim.driver.R;
 import com.mibarim.driver.adapters.SuggestRecyclerAdapter;
-import com.mibarim.driver.data.UserData;
 import com.mibarim.driver.google.mapDetails;
 import com.mibarim.driver.models.ApiResponse;
 import com.mibarim.driver.models.Plus.SuggestModel;
 import com.mibarim.driver.services.SuggestResponseService;
 import com.mibarim.driver.ui.ThrowableLoader;
 import com.mibarim.driver.ui.activities.MainActivity;
-import com.mibarim.driver.util.SafeAsyncTask;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,15 +45,15 @@ public class SuggestCardFragment extends Fragment implements LoaderManager.Loade
 
     @Inject
     protected SuggestResponseService service;
-
-    private View mRecycler;
-    private RecyclerView mRecyclerView;
     SwipeRefreshLayout mSwipeRefreshLayout;
-    private SuggestRecyclerAdapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
     List<SuggestModel> items;
     List<SuggestModel> latest;
     ItemTouchListener itemTouchListener;
+    private View mRecycler;
+    private TextView emptySuggestion;
+    private RecyclerView mRecyclerView;
+    private SuggestRecyclerAdapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
     private ApiResponse response;
     private Tracker mTracker;
     private Typeface customFont;
@@ -86,6 +84,8 @@ public class SuggestCardFragment extends Fragment implements LoaderManager.Loade
 
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
+        emptySuggestion = (TextView) mRecycler.findViewById(R.id.no_suggest);
+        emptySuggestion.setVisibility(View.GONE);
 
         itemTouchListener = new ItemTouchListener() {
 
@@ -131,7 +131,6 @@ public class SuggestCardFragment extends Fragment implements LoaderManager.Loade
     public void refresh() {
 
         getLoaderManager().restartLoader(0, null, this);
-        //showState(1);
         mAdapter = new SuggestRecyclerAdapter(customFont, getActivity(), items, itemTouchListener);
         mRecyclerView.setAdapter(mAdapter);
 
@@ -140,7 +139,7 @@ public class SuggestCardFragment extends Fragment implements LoaderManager.Loade
 
     @Override
     public Loader<List<SuggestModel>> onCreateLoader(int id, Bundle bundle) {
-
+        emptySuggestion.setVisibility(View.GONE);
         mSwipeRefreshLayout.setRefreshing(true);
         items = new ArrayList<>();
         return new ThrowableLoader<List<SuggestModel>>(getActivity(), items) {
@@ -171,6 +170,9 @@ public class SuggestCardFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onLoadFinished(Loader<List<SuggestModel>> loader, List<SuggestModel> data) {
         items = data;
+        if (items.size() == 0) {
+            emptySuggestion.setVisibility(View.VISIBLE);
+        }
         mAdapter = new SuggestRecyclerAdapter(customFont, getActivity(), items, itemTouchListener);
         mRecyclerView.setAdapter(mAdapter);
 

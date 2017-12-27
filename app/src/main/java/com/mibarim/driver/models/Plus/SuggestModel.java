@@ -20,6 +20,7 @@ public class SuggestModel implements Serializable {
     public int TimeHour ;
     public int TimeMinute ;
     public long Price;
+    public String TimingString;
     public String PriceString;
     public int PairPassengers;
 }

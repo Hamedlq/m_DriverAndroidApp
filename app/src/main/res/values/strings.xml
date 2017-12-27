@@ -337,6 +337,7 @@
     <string name="zero">0</string>
     <string name="empty_list">موردی ثبت نشده است</string>
     <string name="no_trip">سفری ثبت نشده است.</string>
+    <string name="no_suggest_trip">سفری موجود نیست</string>
     <string name="invite_friends">دعوت از دوستان</string>
     <string name="about_me">درباره من</string>
     <string name="bank_info">اطلاعات حساب بانکی</string>
