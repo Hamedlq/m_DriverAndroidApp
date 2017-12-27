@@ -146,6 +146,7 @@ public class RidingActivity extends BootstrapActivity {
     private ImageResponse imageResponse;
     private AlertDialog gpsAlert;
     private int stationDistance = 500;
+    private boolean serviceRun= false;
 
 
     private Handler mHandler;
@@ -274,7 +275,6 @@ public class RidingActivity extends BootstrapActivity {
         PrefGPS.edit().putString("autTokenLocation",authToken).apply();
         PrefGPS.edit().putLong("TripIdLocation",driverTripModel.TripId).apply();
         PrefGPS.edit().putInt("TripStateLocation",driverTripModel.TripState).apply();
-        getGPS();
     }
 
     private void initScreen() {
@@ -296,10 +296,21 @@ public class RidingActivity extends BootstrapActivity {
         locationReloading();
         finishRiding();
     }
-    public void getGPS(){
+    public void getGPS(int servicePeriod,int tripId){
 
+       /* Intent intent = new Intent(RidingActivity.this, getLocationService.class);
+       startService(intent);*/
+        Calendar cur_cal = Calendar.getInstance();
+        cur_cal.setTimeInMillis(System.currentTimeMillis());
+        cur_cal.add(Calendar.SECOND, servicePeriod);
         Intent intent = new Intent(RidingActivity.this, getLocationService.class);
-       startService(intent);
+        intent.putExtra(Constants.Service.SERVICE_PERIOD, servicePeriod);
+        intent.putExtra(Constants.Service.TripId, tripId);
+        PendingIntent pi = PendingIntent.getService(RidingActivity.this, tripId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager alarm_manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarm_manager.set(AlarmManager.RTC, cur_cal.getTimeInMillis(), pi);
+        alarm_manager.setRepeating(AlarmManager.RTC, cur_cal.getTimeInMillis(), servicePeriod * 1000, pi);
+
     }
 
     @Override
@@ -348,6 +359,10 @@ public class RidingActivity extends BootstrapActivity {
             @Override
             protected void onSuccess(final Boolean state) throws Exception {
                 super.onSuccess(state);
+                if(!serviceRun) {
+                    getGPS(tripResponse.ServicePeriod, (int)driverTripModel.TripId);
+                    serviceRun=true;
+                }
                 //
                 if (driverTripModel.TripState == TripStates.InPreTripTime.toInt() &&
                         tripResponse.TripState == TripStates.InTripTime.toInt()) {

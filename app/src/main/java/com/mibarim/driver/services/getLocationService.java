@@ -1,5 +1,6 @@
 package com.mibarim.driver.services;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -22,6 +23,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.Vibrator;
+import android.provider.SyncStateContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -45,9 +47,11 @@ import com.mibarim.driver.models.ApiResponse;
 import com.mibarim.driver.models.NotifModel;
 import com.mibarim.driver.models.Plus.DriverTripModel;
 import com.mibarim.driver.ui.activities.MainActivity;
+import com.mibarim.driver.ui.activities.RidingActivity;
 import com.mibarim.driver.util.SafeAsyncTask;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -67,9 +71,10 @@ public class getLocationService extends Service{
     String authToken;
     private DriverTripModel driverTripModel;
     private DriverTripModel tripResponse;
-    private long TripId;
+    private int TripId;
     private int TripState;
     private Context context;
+    private int servicePeriod;
     Handler mHandler;
     Runnable mRunnable;
     private static final ScheduledExecutorService worker =
@@ -88,7 +93,7 @@ public class getLocationService extends Service{
         public void handleMessage(final Message msg) {
 
             PrefGPS = getSharedPreferences("taximeter", MODE_PRIVATE);
-            mHandler = new Handler();
+            /*mHandler = new Handler();
             mRunnable = new Runnable() {
                 @Override
                 public void run() {
@@ -100,29 +105,68 @@ public class getLocationService extends Service{
                 }
             };
             worker.schedule(mRunnable, 0, TimeUnit.SECONDS);
+*/
+            sendRequest();
 
-
+            stopSelf(msg.arg1);
         }
 
         public void sendRequest() {
+            int thePeriod=0;
+            Log.i("testGPS", "first");
+            RestAdapter adapter = new RestAdapter.Builder()
+                    .setEndpoint(Constants.Http.URL_BASE)
+                    .build();
+            tripService = new TripService(adapter);
+            Location point = new Location();
+            android.location.Location location = LocationService.getLocationManager(context).getLocation();
+            if(location != null) {
+                point.lat = String.valueOf(location.getLatitude());
+                point.lng = String.valueOf(location.getLongitude());
 
+                tripApiResponse = tripService.setTripPoint(PrefGPS.getString("autTokenLocation", ""), point.lat, point.lng, PrefGPS.getLong("TripIdLocation", 10), PrefGPS.getInt("TripStateLocation", 10));
+
+                Log.i("testGPS", "send");
+
+                if (tripApiResponse != null) {
+                    for (String tripJson : tripApiResponse.Messages) {
+                        tripResponse = new Gson().fromJson(tripJson, DriverTripModel.class);
+                        PrefGPS.edit().putInt("locationRepeat", tripResponse.ServicePeriod).apply();
+                        thePeriod=tripResponse.ServicePeriod;
+                        Log.i("testGPS", tripResponse.ServicePeriod + " ");
+                    }
+                }
+
+                if (servicePeriod != 0 && thePeriod != 0) {
+                    if (servicePeriod != thePeriod) {
+                        Calendar cur_cal = Calendar.getInstance();
+                        cur_cal.setTimeInMillis(System.currentTimeMillis());
+                        cur_cal.add(Calendar.SECOND, servicePeriod);
+                        AlarmManager alarm_manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                        Intent cancelServiceIntent = new Intent(context, getLocationService.class);
+                        PendingIntent cancelServicePendingIntent = PendingIntent.getBroadcast(
+                                context,
+                                TripId, // integer constant used to identify the service
+                                cancelServiceIntent,
+                                0 //no FLAG needed for a service cancel
+                        );
+                        alarm_manager.cancel(cancelServicePendingIntent);
+
+                        Intent intent = new Intent(context, getLocationService.class);
+                        intent.putExtra(Constants.Service.SERVICE_PERIOD, thePeriod);
+                        intent.putExtra(Constants.Service.TripId, TripId);
+                        PendingIntent pi = PendingIntent.getService(context, TripId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                        alarm_manager.set(AlarmManager.RTC, cur_cal.getTimeInMillis(), pi);
+                        alarm_manager.setRepeating(AlarmManager.RTC, cur_cal.getTimeInMillis(), servicePeriod * 1000, pi);
+                    }
+                }
+            }
+/*
             new SafeAsyncTask<Boolean>() {
 
                 @Override
                 public Boolean call() throws Exception {
-                    Log.i("testGPS", "first");
-                    RestAdapter adapter = new RestAdapter.Builder()
-                            .setEndpoint(Constants.Http.URL_BASE)
-                            .build();
-                    tripService = new TripService(adapter);
-                    Location point = new Location();
-                    android.location.Location location = LocationService.getLocationManager(context).getLocation();
-                    point.lat = String.valueOf(location.getLatitude());
-                    point.lng = String.valueOf(location.getLongitude());
 
-                    tripApiResponse = tripService.setTripPoint(PrefGPS.getString("autTokenLocation",""), point.lat, point.lng, PrefGPS.getLong("TripIdLocation",10), PrefGPS.getInt("TripStateLocation",10));
-
-                    Log.i("testGPS", "send");
                     return true;
                 }
 
@@ -140,15 +184,9 @@ public class getLocationService extends Service{
                 protected void onSuccess(Boolean aBoolean) throws Exception {
                     super.onSuccess(aBoolean);
 
-                    if (tripApiResponse != null) {
-                        for (String tripJson : tripApiResponse.Messages) {
-                            tripResponse = new Gson().fromJson(tripJson, DriverTripModel.class);
-                            PrefGPS.edit().putInt("locationRepeat", tripResponse.ServicePeriod).apply();
-                            Log.i("testGPS", tripResponse.ServicePeriod + " ");
-                        }
-                    }
+
                 }
-            }.execute();
+            }.execute();*/
         }
 
     }
@@ -166,6 +204,8 @@ public class getLocationService extends Service{
         // Get the HandlerThread's Looper and use it for our Handler
         mServiceLooper = thread.getLooper();
         mServiceHandler = new ServiceHandler(mServiceLooper);
+
+
     }
 
     @Override
@@ -179,6 +219,11 @@ public class getLocationService extends Service{
         msg.arg1 = startId;
         mServiceHandler.sendMessage(msg);
         context=this;
+
+        if (intent !=null && intent.getExtras()!=null){
+            servicePeriod = intent.getIntExtra(Constants.Service.SERVICE_PERIOD,0);
+            TripId = intent.getIntExtra(Constants.Service.TripId,0);
+        }
         // If we get killed, after returning from here, restart
         return START_STICKY;
     }

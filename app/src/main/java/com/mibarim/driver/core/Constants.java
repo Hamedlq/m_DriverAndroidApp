@@ -51,7 +51,7 @@ public final class Constants {
          */
 //        public static final String URL_BASE = "http://localhost:50226";
 //        public static final String URL_BASE = "http://mibarim.ir/CoreApi";
-        public static final String URL_BASE = "http://mibarimapp.com/testapp";
+        public static final String URL_BASE = "http://mibarimapp.com/newtestapp";
 //        public static final String URL_BASE = "http://mibarimapp.com/CoreApi";
 //          public static final String URL_BASE = "http://CoreApi.mibarim.ir/";
 //        public static final String URL_BASE = "http://mibarim.ir/testApp/CoreApi";
@@ -218,6 +218,11 @@ public final class Constants {
         public static final String GOOGLE_SERVICE_KEY = "key";
         public static final String GOOGLE_SERVICE_VALUE = "AIzaSyAbHHEaaGfcm2jtmfdbvu_qraFZAbr0QGM";
         public static final String PLACE_ID_KEY = "placeid";
+    }
+
+    public static final class Service {
+        public static final String SERVICE_PERIOD = "servicePeriod";
+        public static final String TripId = "theTripId";
     }
 
     public static final class MibarimServer {
