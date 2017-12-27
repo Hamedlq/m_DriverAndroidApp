@@ -272,9 +272,6 @@ public class RidingActivity extends BootstrapActivity {
 
         PrefGPS = getSharedPreferences("taximeter", MODE_PRIVATE);
         initScreen();
-        PrefGPS.edit().putString("autTokenLocation",authToken).apply();
-        PrefGPS.edit().putLong("TripIdLocation",driverTripModel.TripId).apply();
-        PrefGPS.edit().putInt("TripStateLocation",driverTripModel.TripState).apply();
     }
 
     private void initScreen() {
@@ -304,8 +301,14 @@ public class RidingActivity extends BootstrapActivity {
         cur_cal.setTimeInMillis(System.currentTimeMillis());
         cur_cal.add(Calendar.SECOND, servicePeriod);
         Intent intent = new Intent(RidingActivity.this, getLocationService.class);
+        PrefGPS.edit().putInt(Constants.Service.SERVICE_PERIOD,servicePeriod).apply();
+        PrefGPS.edit().putInt(Constants.Service.TripId,tripId).apply();
+        PrefGPS.edit().putString(Constants.Service.autTokenLocation,authToken).apply();
+        PrefGPS.edit().putInt(Constants.Service.TripStateLocation,driverTripModel.TripState).apply();
         intent.putExtra(Constants.Service.SERVICE_PERIOD, servicePeriod);
         intent.putExtra(Constants.Service.TripId, tripId);
+        intent.putExtra(Constants.Service.autTokenLocation,authToken);
+        intent.putExtra(Constants.Service.TripStateLocation,driverTripModel.TripState);
         PendingIntent pi = PendingIntent.getService(RidingActivity.this, tripId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         AlarmManager alarm_manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarm_manager.set(AlarmManager.RTC, cur_cal.getTimeInMillis(), pi);

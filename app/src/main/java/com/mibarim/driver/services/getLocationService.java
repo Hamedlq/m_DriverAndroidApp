@@ -63,7 +63,7 @@ import retrofit.RestAdapter;
  * Created by mohammad hossein on 30/11/2017.
  */
 
-public class getLocationService extends Service{
+public class getLocationService extends Service {
     private Looper mServiceLooper;
     private ServiceHandler mServiceHandler;
     private ApiResponse tripApiResponse;
@@ -73,6 +73,7 @@ public class getLocationService extends Service{
     private DriverTripModel tripResponse;
     private int TripId;
     private int TripState;
+    private String autToken;
     private Context context;
     private int servicePeriod;
     Handler mHandler;
@@ -80,7 +81,6 @@ public class getLocationService extends Service{
     private static final ScheduledExecutorService worker =
             Executors.newSingleThreadScheduledExecutor();
     SharedPreferences PrefGPS = null;
-
 
 
     // Handler that receives messages from the thread
@@ -106,13 +106,32 @@ public class getLocationService extends Service{
             };
             worker.schedule(mRunnable, 0, TimeUnit.SECONDS);
 */
-            sendRequest();
+
+
+
+            for (int i = 0; i <= 5; i++) {
+                try {
+                sendRequest();
+
+                }catch (Exception e){
+                    Log.i("Exeption" , e + "");
+                }
+
+                if (i != 5) {
+                    try {
+                        Thread.sleep(10000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
 
             stopSelf(msg.arg1);
         }
 
         public void sendRequest() {
-            int thePeriod=0;
+            int thePeriod = 0;
             Log.i("testGPS", "first");
             RestAdapter adapter = new RestAdapter.Builder()
                     .setEndpoint(Constants.Http.URL_BASE)
@@ -120,11 +139,11 @@ public class getLocationService extends Service{
             tripService = new TripService(adapter);
             Location point = new Location();
             android.location.Location location = LocationService.getLocationManager(context).getLocation();
-            if(location != null) {
+            if (location != null) {
                 point.lat = String.valueOf(location.getLatitude());
                 point.lng = String.valueOf(location.getLongitude());
-
-                tripApiResponse = tripService.setTripPoint(PrefGPS.getString("autTokenLocation", ""), point.lat, point.lng, PrefGPS.getLong("TripIdLocation", 10), PrefGPS.getInt("TripStateLocation", 10));
+                Log.i("testGPS", point.lat + " ," + point.lng);
+                tripApiResponse = tripService.setTripPoint(authToken, point.lat, point.lng, TripId, TripState);
 
                 Log.i("testGPS", "send");
 
@@ -132,7 +151,7 @@ public class getLocationService extends Service{
                     for (String tripJson : tripApiResponse.Messages) {
                         tripResponse = new Gson().fromJson(tripJson, DriverTripModel.class);
                         PrefGPS.edit().putInt("locationRepeat", tripResponse.ServicePeriod).apply();
-                        thePeriod=tripResponse.ServicePeriod;
+                        thePeriod = tripResponse.ServicePeriod;
                         Log.i("testGPS", tripResponse.ServicePeriod + " ");
                     }
                 }
@@ -155,10 +174,31 @@ public class getLocationService extends Service{
                         Intent intent = new Intent(context, getLocationService.class);
                         intent.putExtra(Constants.Service.SERVICE_PERIOD, thePeriod);
                         intent.putExtra(Constants.Service.TripId, TripId);
+                        PrefGPS.edit().putInt(Constants.Service.SERVICE_PERIOD,thePeriod).apply();
+                        PrefGPS.edit().putInt(Constants.Service.TripId,TripId).apply();
+                        intent.putExtra(Constants.Service.TripId, TripId);
+                        intent.putExtra(Constants.Service.AUTTOKENLOCATION,authToken);
+                        intent.putExtra(Constants.Service.TripSTATELOCATION,TripState);
+
                         PendingIntent pi = PendingIntent.getService(context, TripId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
                         alarm_manager.set(AlarmManager.RTC, cur_cal.getTimeInMillis(), pi);
                         alarm_manager.setRepeating(AlarmManager.RTC, cur_cal.getTimeInMillis(), servicePeriod * 1000, pi);
                     }
+                } else if (thePeriod == 0) {
+                    Log.i("testGPS","remove alarm manager");
+                    stopSelf();
+                    Calendar cur_cal = Calendar.getInstance();
+                    cur_cal.setTimeInMillis(System.currentTimeMillis());
+                    cur_cal.add(Calendar.SECOND, servicePeriod);
+                    AlarmManager alarm_manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                    Intent cancelServiceIntent = new Intent(context, getLocationService.class);
+                    PendingIntent cancelServicePendingIntent = PendingIntent.getBroadcast(
+                            context,
+                            TripId, // integer constant used to identify the service
+                            cancelServiceIntent,
+                            0 //no FLAG needed for a service cancel
+                    );
+                    alarm_manager.cancel(cancelServicePendingIntent);
                 }
             }
 /*
@@ -218,11 +258,13 @@ public class getLocationService extends Service{
         Message msg = mServiceHandler.obtainMessage();
         msg.arg1 = startId;
         mServiceHandler.sendMessage(msg);
-        context=this;
+        context = this;
 
-        if (intent !=null && intent.getExtras()!=null){
-            servicePeriod = intent.getIntExtra(Constants.Service.SERVICE_PERIOD,0);
-            TripId = intent.getIntExtra(Constants.Service.TripId,0);
+        if (intent != null && intent.getExtras() != null) {
+            servicePeriod = intent.getIntExtra(Constants.Service.SERVICE_PERIOD, 0);
+            TripId = intent.getIntExtra(Constants.Service.TripId, 0);
+            TripState = intent.getIntExtra(Constants.Service.TripSTATELOCATION, 0);
+            authToken = intent.getStringExtra(Constants.Service.AUTTOKENLOCATION);
         }
         // If we get killed, after returning from here, restart
         return START_STICKY;
