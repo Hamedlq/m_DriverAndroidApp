@@ -965,6 +965,11 @@ public class MainActivity extends BootstrapActivity {
         builder.setMessage(msg).setPositiveButton("باشه", dialogClickListener).setNegativeButton("بستن برنامه", dialogClickListener).show();
     }
 
+    private void refreshSuggestList(){
+        Fragment fragment = adapter.getItem(1);
+        ((SuggestCardFragment) fragment).refresh();
+    }
+
     private void refreshList() {
 //        final FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = adapter.getItem(0);/*fragmentManager.findFragmentByTag(DRIVE_FRAGMENT_TAG);*/
@@ -1035,6 +1040,7 @@ public class MainActivity extends BootstrapActivity {
                 super.onSuccess(state);
                 hideProgress();
                 new HandleApiMessagesBySnackbar(parentLayout, deleteRes).showMessages();
+                refreshSuggestList();
                 refreshList();
             }
         }.execute();
@@ -1134,6 +1140,7 @@ public class MainActivity extends BootstrapActivity {
                                     Toast.makeText(MainActivity.this, "سفر با موفقیت اضافه شد", Toast.LENGTH_LONG).show();
                                     setNotificationAlamManager(tt, (int) filterId);
                                     tabViewPager.setCurrentItem(0);
+                                    refreshSuggestList();
                                     refreshList();
                                 }
                             }
@@ -1577,6 +1584,7 @@ public class MainActivity extends BootstrapActivity {
             protected void onSuccess(final Boolean state) throws Exception {
                 super.onSuccess(state);
                 new HandleApiMessagesBySnackbar(parentLayout, tripRes).showMessages();
+                refreshSuggestList();
                 refreshList();
                 Gson gson = new Gson();
                 for (String tripTimeModel : tripRes.Messages) {
@@ -1641,6 +1649,8 @@ public class MainActivity extends BootstrapActivity {
                 if ((tripRes.Errors == null || tripRes.Errors.size() == 0) && tripRes.Status.equals("OK")) {
                     disableNotificationAlamManager((int) selectedRouteTrip.DriverRouteId);
                 }
+
+                refreshSuggestList();
                 refreshList();
             }
         }.execute();

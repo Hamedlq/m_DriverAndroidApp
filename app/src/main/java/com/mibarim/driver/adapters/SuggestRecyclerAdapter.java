@@ -126,10 +126,8 @@ public class SuggestRecyclerAdapter extends RecyclerView.Adapter<SuggestRecycler
         viewHolder.dstAddress.setText(items.get(i).DstStation);
         viewHolder.suggestPrice.setText(items.get(i).PriceString + " " + "تومان");
         viewHolder.requests.setText("درخواست‌ها" + " : " + String.valueOf(items.get(i).PairPassengers) + " نفر");
-
-        String textViewTime = String.valueOf(items.get(i).TimeMinute) + " : " + String.valueOf(items.get(i).TimeHour);
         viewHolder.time.setTypeface(customFont);
-        viewHolder.time.setText(textViewTime);
+        viewHolder.time.setText(items.get(i).TimingString);
 
     }
 

@@ -10,7 +10,6 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/appbar">
 
-        <!-- A RecyclerView with some commonly used attributes -->
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/suggest_list"
@@ -22,13 +21,13 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <!--<TextView
-        android:id="@android:id/empty"
-        style="@style/ListSubtitleText"
+    <TextView
+        android:id="@+id/no_suggest"
+        android:textAppearance="?android:textAppearanceSmall"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="@string/no_trip"
-        android:textColor="@color/primary_dark"
-        android:visibility="gone" />-->
+        android:text="@string/no_suggest_trip"
+        android:textColor="@android:color/black"
+        android:visibility="gone" />
 </RelativeLayout>
