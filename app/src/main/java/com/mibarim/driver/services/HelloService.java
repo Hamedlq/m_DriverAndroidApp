@@ -54,7 +54,7 @@ public class HelloService extends Service {
         public void handleMessage(Message msg) {
             sendRequest();
 
-            stopSelf(msg.arg1);
+           stopSelf(msg.arg1);
         }
 
         public void sendRequest() {
