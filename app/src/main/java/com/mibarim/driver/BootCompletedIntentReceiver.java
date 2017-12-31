@@ -41,7 +41,7 @@ public class BootCompletedIntentReceiver extends BroadcastReceiver {
         PendingIntent pi2 = PendingIntent.getService(context, PrefGPS.getInt(Constants.Service.TripId,0), intent2, PendingIntent.FLAG_CANCEL_CURRENT);
         AlarmManager alarm_manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarm_manager.set(AlarmManager.RTC, cur_cal.getTimeInMillis(), pi);
-        alarm_manager.setRepeating(AlarmManager.RTC, cur_cal.getTimeInMillis(), 60 * 1000, pi);
+        alarm_manager.setRepeating(AlarmManager.RTC, cur_cal.getTimeInMillis(), 30 * 60 * 1000, pi);
         alarm_manager.set(AlarmManager.RTC, cur_cal.getTimeInMillis(), pi2);
         alarm_manager.setRepeating(AlarmManager.RTC, cur_cal.getTimeInMillis(), 60 * 1000, pi2);
 
