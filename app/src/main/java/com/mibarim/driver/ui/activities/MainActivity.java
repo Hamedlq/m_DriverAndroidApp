@@ -96,6 +96,8 @@ import com.mibarim.driver.ui.fragments.DriverFragments.DriverCardFragment;
 import com.mibarim.driver.ui.fragments.DriverFragments.SuggestCardFragment;
 import com.mibarim.driver.ui.fragments.MoreInteractionWebviewFragment;
 import com.mibarim.driver.util.SafeAsyncTask;
+import com.onesignal.OSPermissionSubscriptionState;
+import com.onesignal.OneSignal;
 import com.squareup.otto.Subscribe;
 //import com.uxcam.UXCam;
 
@@ -152,6 +154,7 @@ public class MainActivity extends BootstrapActivity {
     private int USER_PIC_REQUEST = 4567;
     private boolean refreshingToken = false;
     String googletoken = "";
+    String oneSignaltoken = "";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private int FINISH_USER_INFO = 5649;
     private int CREDIT_RETURN = 9999;
@@ -260,7 +263,7 @@ public class MainActivity extends BootstrapActivity {
             PendingIntent pi = PendingIntent.getService(MainActivity.this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
             AlarmManager alarm_manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             alarm_manager.set(AlarmManager.RTC, cur_cal.getTimeInMillis(), pi);
-            alarm_manager.setRepeating(AlarmManager.RTC, cur_cal.getTimeInMillis(), 60 * 1000, pi);
+            alarm_manager.setRepeating(AlarmManager.RTC, cur_cal.getTimeInMillis(), 30 * 60 * 1000, pi);
 
 
 //        Intent intent = new Intent(this,HelloService.class);
@@ -791,8 +794,11 @@ public class MainActivity extends BootstrapActivity {
             new SafeAsyncTask<Boolean>() {
                 @Override
                 public Boolean call() throws Exception {
+
                     googletoken = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
                             GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
+                    OSPermissionSubscriptionState status = OneSignal.getPermissionSubscriptionState();
+                    oneSignaltoken=status.getSubscriptionStatus().getUserId();
                     return true;
                 }
 
@@ -834,7 +840,7 @@ public class MainActivity extends BootstrapActivity {
                     serviceProvider.invalidateAuthToken();
                     authToken = serviceProvider.getAuthToken(MainActivity.this);
                 }
-                userInfoService.SaveGoogleToken(authToken, googletoken);
+                userInfoService.SaveGoogleToken(authToken, googletoken,oneSignaltoken);
                 return true;
             }
 

@@ -177,8 +177,8 @@ public class getLocationService extends Service {
                         PrefGPS.edit().putInt(Constants.Service.SERVICE_PERIOD,thePeriod).apply();
                         PrefGPS.edit().putInt(Constants.Service.TripId,TripId).apply();
                         intent.putExtra(Constants.Service.TripId, TripId);
-                        intent.putExtra(Constants.Service.AUTTOKENLOCATION,authToken);
-                        intent.putExtra(Constants.Service.TripSTATELOCATION,TripState);
+                        intent.putExtra(Constants.Service.autTokenLocation,authToken);
+                        intent.putExtra(Constants.Service.TripStateLocation,TripState);
 
                         PendingIntent pi = PendingIntent.getService(context, TripId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
                         alarm_manager.set(AlarmManager.RTC, cur_cal.getTimeInMillis(), pi);
@@ -263,8 +263,8 @@ public class getLocationService extends Service {
         if (intent != null && intent.getExtras() != null) {
             servicePeriod = intent.getIntExtra(Constants.Service.SERVICE_PERIOD, 0);
             TripId = intent.getIntExtra(Constants.Service.TripId, 0);
-            TripState = intent.getIntExtra(Constants.Service.TripSTATELOCATION, 0);
-            authToken = intent.getStringExtra(Constants.Service.AUTTOKENLOCATION);
+            TripState = intent.getIntExtra(Constants.Service.TripStateLocation, 0);
+            authToken = intent.getStringExtra(Constants.Service.autTokenLocation);
         }
         // If we get killed, after returning from here, restart
         return START_STICKY;

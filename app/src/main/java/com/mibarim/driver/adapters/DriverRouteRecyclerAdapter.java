@@ -81,9 +81,7 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
         holder.show_trip.setVisibility(View.GONE);
         if (items.get(position).HasTrip) {
             holder.seats.setText("رزرو: " + items.get(position).FilledSeats + " از " + items.get(position).CarSeats);
-            if (items.get(position).TripState == TripStates.InPreTripTime.toInt()
-                    || items.get(position).TripState == TripStates.InTripTime.toInt()
-                    || items.get(position).TripState == TripStates.InRiding.toInt()) {
+            if (items.get(position).TripState != TripStates.Scheduled.toInt()) {
                 holder.show_trip.setVisibility(View.VISIBLE);
             }
 
@@ -92,7 +90,6 @@ public class DriverRouteRecyclerAdapter extends RecyclerView.Adapter<DriverRoute
             holder.src_address.setTypeface(holder.src_address.getTypeface(), Typeface.BOLD);
             holder.dst_address.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.actionbar_background_end));
             holder.dst_address.setTypeface(holder.dst_address.getTypeface(), Typeface.BOLD);
-
             holder.src_station.setImageResource(R.drawable.src_icon);
             holder.st_destination.setImageResource(R.drawable.dst_icon);
             holder.dots.setImageResource(R.drawable.three_dots);

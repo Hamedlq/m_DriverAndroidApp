@@ -211,7 +211,7 @@ public class RidingActivity extends BootstrapActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     if (driverTripModel.TripState == TripStates.InPreTripTime.toInt()) {
-                        if (stationDistance > 200) {
+                        /*if (stationDistance > 200) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(RidingActivity.this);
                             String msg = "فاصله شما از ایستگاه بسیار زیاد است. لطفا به ایستگاه نزدیک شوید";
                             builder.setMessage(msg).setPositiveButton("باشه", dialogClickListener);
@@ -223,23 +223,37 @@ public class RidingActivity extends BootstrapActivity {
                             builder.setMessage(msg).setPositiveButton("بله", tripdialogClickListener).setNegativeButton("خیر", tripdialogClickListener);
                             gpsAlert = builder.create();
                             gpsAlert.show();
-                        }
-                        sendTripPoint(driverTripModel.TripState);
+                        }*/
+                        AlertDialog.Builder builder = new AlertDialog.Builder(RidingActivity.this);
+                        String msg = "سفر شروع شد. مکان شما برای مسافران ارسال می شود";
+                        builder.setMessage(msg).setPositiveButton("باشه", dialogClickListener);
+                        gpsAlert = builder.create();
+                        gpsAlert.show();
+                        sendTripPoint(TripStates.DriverRiding.toInt());
+                        //sendTripPoint(driverTripModel.TripState);
                     } else if (driverTripModel.TripState == TripStates.InTripTime.toInt()) {
-                        if (stationDistance > 200) {
+                        /*if (stationDistance > 200) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(RidingActivity.this);
                             String msg = "فاصله شما از ایستگاه بسیار زیاد است. لطفا به ایستگاه نزدیک شوید";
                             builder.setMessage(msg).setPositiveButton("باشه", dialogClickListener);
                             gpsAlert = builder.create();
                             gpsAlert.show();
+
                         } else {
                             sendTripPoint(TripStates.InRiding.toInt());
                             //showTimer
-                        }
-                        sendTripPoint(driverTripModel.TripState);
+                        }*/
+                        AlertDialog.Builder builder = new AlertDialog.Builder(RidingActivity.this);
+                        String msg = "سفر شروع شد. مکان شما برای مسافران ارسال می شود";
+                        builder.setMessage(msg).setPositiveButton("باشه", dialogClickListener);
+                        gpsAlert = builder.create();
+                        gpsAlert.show();
+                        sendTripPoint(TripStates.InRiding.toInt());
+                        //sendTripPoint(driverTripModel.TripState);
                     } else if (driverTripModel.TripState == TripStates.InRiding.toInt()) {
                         sendTripPoint(TripStates.InDriving.toInt());
                     } else {
+                        sendTripPoint(TripStates.FinishedByTrip.toInt());
                         finishIt();
                     }
                     return true;
@@ -366,20 +380,22 @@ public class RidingActivity extends BootstrapActivity {
                     getGPS(tripResponse.ServicePeriod, (int)driverTripModel.TripId);
                     serviceRun=true;
                 }
+                wait_btn.setText("پایان سفر");
                 //
                 if (driverTripModel.TripState == TripStates.InPreTripTime.toInt() &&
                         tripResponse.TripState == TripStates.InTripTime.toInt()) {
                     driverTripModel.TripState = tripResponse.TripState;
                 } else if (driverTripModel.TripState == TripStates.InTripTime.toInt() &&
                         tripResponse.TripState == TripStates.InRiding.toInt()) {
-                    wait_btn.setEnabled(false);
-                    wait_btn.setText("شروع سفر");
+                    //wait_btn.setEnabled(true);
+                    //wait_btn.setText("پایان سفر");
                     driverTripModel.TripState = tripResponse.TripState;
-                    showTimer();
+                    //showTimer();
                 }
                 if (driverTripModel.TripState == TripStates.InRiding.toInt() &&
                         tripResponse.TripState == TripStates.InDriving.toInt()) {
-                    finishIt();
+                    wait_btn.setEnabled(true);
+//                    wait_btn.setText("پایان سفر");
                 }
                 //showTripInfo(tripResponse);
             }

@@ -12,7 +12,8 @@ public enum TripStates {
     InRiding("InRiding", 20),
     DriverRiding("DriverRiding", 27),
     InDriving("InDriving", 40),
-    InRanking("InRanking", 45);
+    InRanking("InRanking", 45),
+    FinishedByTrip("FinishedByTrip", 60);
 
     private String stringValue;
     private int intValue;
