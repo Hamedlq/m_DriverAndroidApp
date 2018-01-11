@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -766,7 +767,8 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
 
 
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                image.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+                Bitmap bitmap = Bitmap.createScaledBitmap(image,820,(int)(820 * ((double)image.getHeight() / (double)image.getWidth())), true);
+                bitmap.compress(Bitmap.CompressFormat.JPEG,100 , byteArrayOutputStream);
                 String encodedImage = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
 //                licenseCardPB.setProgress(60);
                 SharedPreferences sharedPreferences = UserDocumentsUploadActivity.this.getSharedPreferences("com.mibarim.driver", Context.MODE_PRIVATE);
@@ -922,6 +924,7 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
 //        });
         return dialog;
     }
+
 
 
 }
