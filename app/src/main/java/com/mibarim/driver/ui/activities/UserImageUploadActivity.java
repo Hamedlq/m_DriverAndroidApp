@@ -367,7 +367,13 @@ public class UserImageUploadActivity extends BootstrapActivity implements View.O
                 }*/
 
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                image.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+                Bitmap bitmap;
+                if (image.getWidth() > 820) {
+                    bitmap = Bitmap.createScaledBitmap(image, 820, (int) (820 * ((double) image.getHeight() / (double) image.getWidth())), true);
+                } else {
+                    bitmap = image;
+                }
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
                 encodedImage = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
 
                 response = userImageService.SaveImage(authToken, encodedImage, 1);

@@ -438,9 +438,9 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
                 /*Bundle extras = data.getExtras();
                 Bitmap bitmap= extras.getParcelable("data");*/
 
-                Bitmap bitmap = BitmapFactory.decodeFile(getExternalCacheDir() + "/temp1.jpg");
+            Bitmap bitmap = BitmapFactory.decodeFile(getExternalCacheDir() + "/temp1.jpg");
 
-                photo = bitmap;
+            photo = bitmap;
 //                progressBar.setVisibility(View.VISIBLE);
 
 
@@ -630,8 +630,7 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
                             Toast.makeText(getBaseContext(), "عکس بارگذاری شد.", Toast.LENGTH_LONG).show();
                         }
                     }, 5000);
-                }
-                else
+                } else
                     setTheStates();
 //                setTheStates();
             }
@@ -654,7 +653,7 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
                 break;
             case "Rejected":
                 userNationalCardDescriptionTv.setVisibility(View.VISIBLE);
-                userNationalCardDescriptionTv.setText( userInfoModel.NationalCardImage.getRejectionDescription());
+                userNationalCardDescriptionTv.setText(userInfoModel.NationalCardImage.getRejectionDescription());
                 userNationalCardTv.setText(R.string.state_rejected);
                 userNationalCardIv.setImageResource(R.drawable.ic_highlight_off_black_24dp);
                 break;
@@ -675,7 +674,7 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
                 break;
             case "Rejected":
                 licenseCardDescriptionTv.setVisibility(View.VISIBLE);
-                licenseCardDescriptionTv.setText( userInfoModel.LicenseImage.getRejectionDescription());
+                licenseCardDescriptionTv.setText(userInfoModel.LicenseImage.getRejectionDescription());
                 licenseCardTv.setText(R.string.state_rejected);
                 licenseCardIv.setImageResource(R.drawable.ic_highlight_off_black_24dp);
                 break;
@@ -767,8 +766,13 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
 
 
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                Bitmap bitmap = Bitmap.createScaledBitmap(image,820,(int)(820 * ((double)image.getHeight() / (double)image.getWidth())), true);
-                bitmap.compress(Bitmap.CompressFormat.JPEG,100 , byteArrayOutputStream);
+                Bitmap bitmap;
+                if (image.getWidth() > 820) {
+                    bitmap = Bitmap.createScaledBitmap(image, 820, (int) (820 * ((double) image.getHeight() / (double) image.getWidth())), true);
+                } else {
+                    bitmap = image;
+                }
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
                 String encodedImage = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
 //                licenseCardPB.setProgress(60);
                 SharedPreferences sharedPreferences = UserDocumentsUploadActivity.this.getSharedPreferences("com.mibarim.driver", Context.MODE_PRIVATE);
@@ -792,7 +796,7 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
             protected void onException(final Exception e) throws RuntimeException {
                 super.onException(e);
                 makeAllProgressBarsInvisible();
-                Toast.makeText(UserDocumentsUploadActivity.this,R.string.error_message,Toast.LENGTH_LONG).show();
+                Toast.makeText(UserDocumentsUploadActivity.this, R.string.error_message, Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -822,7 +826,7 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
             protected void onException(final Exception e) throws RuntimeException {
                 super.onException(e);
                 makeAllProgressBarsInvisible();
-                Toast.makeText(UserDocumentsUploadActivity.this,R.string.error_message,Toast.LENGTH_LONG).show();
+                Toast.makeText(UserDocumentsUploadActivity.this, R.string.error_message, Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -878,7 +882,7 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
             protected void onException(final Exception e) throws RuntimeException {
                 super.onException(e);
                 makeAllProgressBarsInvisible();
-                Toast.makeText(UserDocumentsUploadActivity.this,R.string.error_message,Toast.LENGTH_LONG).show();
+                Toast.makeText(UserDocumentsUploadActivity.this, R.string.error_message, Toast.LENGTH_LONG).show();
                 if (e instanceof android.os.OperationCanceledException) {
                     // User cancelled the authentication process (back button, etc).
                     // Since auth could not take place, lets finish this activity.
@@ -924,7 +928,6 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
 //        });
         return dialog;
     }
-
 
 
 }
