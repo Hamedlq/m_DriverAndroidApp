@@ -242,6 +242,8 @@ dependencies {
     //compile 'com.uxcam:uxcam:2.6.2@aar'
     compile 'com.onesignal:OneSignal:[3.6.0, 3.99.99]'
 
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+
     //androidTestCompile 'junit:junit:4.12'
     //androidTestCompile 'com.android.support.test:runner:0.4'
     // Set this dependency to use JUnit 4 rules

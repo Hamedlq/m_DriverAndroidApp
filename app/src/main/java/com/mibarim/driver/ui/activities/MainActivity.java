@@ -160,6 +160,7 @@ public class MainActivity extends BootstrapActivity {
     private int CREDIT_RETURN = 9999;
     private int ROUTESELECTED = 2456;
     private int SEARCH_STATION_REQUEST_CODE = 7464;
+    private int PROFILE_LOGOUT = 1254;
     private View parentLayout;
     private boolean netErrorMsg = false;
     boolean doubleBackToExitPressedOnce = false;
@@ -672,6 +673,10 @@ public class MainActivity extends BootstrapActivity {
 
         if (requestCode == SEARCH_STATION_REQUEST_CODE && resultCode == RESULT_OK) {
             refreshList();
+        }
+
+        if (requestCode == PROFILE_LOGOUT && resultCode == RESULT_OK) {
+            checkAuth();
         }
     }
 
@@ -1597,11 +1602,11 @@ public class MainActivity extends BootstrapActivity {
                     TripTimeModel tt = gson.fromJson(tripTimeModel, TripTimeModel.class);
                     if (tt.IsSubmited) {
                         setNotificationAlamManager(tt, (int) selectedRouteTrip.DriverRouteId);
-                        if (userInfoModel.UserImageId == null) {
+//                        if (userInfoModel.UserImageId == null) {
                             Intent intent = new Intent(MainActivity.this, UserImageUploadActivity.class);
                             intent.putExtra(Constants.Auth.AUTH_TOKEN, authToken);
                             startActivityForResult(intent, USER_PIC_REQUEST);
-                        }
+//                        }
                     }
                 }
             }
@@ -1677,11 +1682,11 @@ public class MainActivity extends BootstrapActivity {
     }
 
     private void goToUploadActivity() {
-        Intent intent = new Intent(this, UserDocumentsUploadActivity.class);
+        Intent intent = new Intent(this, UserProfileActivity.class);
 //        Intent intent = new Intent(this,UserImageUploadActivity.class);
         //Intent intent = new Intent(this, RatingActivity.class);
         intent.putExtra(Constants.Auth.AUTH_TOKEN, authToken);
-        startActivity(intent);
+        startActivityForResult(intent,PROFILE_LOGOUT);
     }
 
     public void getUserScore() {

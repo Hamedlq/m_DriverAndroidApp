@@ -381,4 +381,5 @@ public interface BootstrapComponent {
 
     void inject(ContactPassengersActivity target);
 
+    void inject(userProfileActivity target);
 }

@@ -40,6 +40,7 @@ import com.mibarim.driver.authenticator.TokenRefreshActivity;
 import com.mibarim.driver.ui.BootstrapActivity;
 import com.mibarim.driver.ui.BootstrapFragmentActivity;
 import com.mibarim.driver.ui.activities.UserInfoDetailActivity;
+import com.mibarim.driver.ui.activities.UserProfileActivity;
 import com.mibarim.driver.ui.activities.WeekTimeActivity;
 import com.mibarim.driver.ui.activities.WorkHomeActivity;
 import com.mibarim.driver.ui.fragments.DriverFragments.DriverCardFragment;
@@ -380,5 +381,7 @@ public interface BootstrapComponent {
     void inject(SubstationListFragment target);
 
     void inject(ContactPassengersActivity target);
+
+    void inject(UserProfileActivity target);
 
 }

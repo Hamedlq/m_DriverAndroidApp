@@ -166,6 +166,9 @@
         <activity
             android:name="com.mibarim.driver.ui.activities.MobileActivity"
             android:screenOrientation="portrait" />
+
+        <activity android:name=".ui.activities.UserProfileActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.mibarim.driver.ui.activities.EventMapActivity"
             android:label="@string/event"
