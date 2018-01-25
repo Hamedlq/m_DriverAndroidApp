@@ -175,8 +175,8 @@ public class MainActivity extends BootstrapActivity {
     int selectedRouteMin;
     private ScoreModel scoreModel;
     TextView user_credit;
-    ImageView invite_btn;
-    ImageView uploadButton;
+    /*    ImageView invite_btn;
+        ImageView uploadButton;*/
     private InviteModel inviteModel;
     NumberPicker seat_picker;
     ApiResponse routeListResponse;
@@ -245,8 +245,8 @@ public class MainActivity extends BootstrapActivity {
         toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         user_credit = (TextView) toolbar.findViewById(R.id.user_credit);
-        invite_btn = (ImageView) toolbar.findViewById(R.id.invite_button);
-        uploadButton = (ImageView) toolbar.findViewById(R.id.upload_button);
+/*        invite_btn = (ImageView) toolbar.findViewById(R.id.invite_button);
+        uploadButton = (ImageView) toolbar.findViewById(R.id.upload_button);*/
         tabViewPager = (ViewPager) findViewById(R.id.tab_view_pager);
         tabLayout = (TabLayout) findViewById(R.id.reload_tab);
         checkAuth();
@@ -326,7 +326,7 @@ public class MainActivity extends BootstrapActivity {
             }
         });
 
-        invite_btn.setOnTouchListener(new View.OnTouchListener() {
+        /*invite_btn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -335,7 +335,7 @@ public class MainActivity extends BootstrapActivity {
                 }
                 return false;
             }
-        });
+        });*/
 
         /*uploadButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -349,12 +349,12 @@ public class MainActivity extends BootstrapActivity {
         });*/
 
 
-        uploadButton.setOnClickListener(new View.OnClickListener() {
+        /*uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goToUploadActivity();
             }
-        });
+        });*/
 
         if (url != null) {
             gotoWebView(url);
@@ -800,8 +800,8 @@ public class MainActivity extends BootstrapActivity {
                 @Override
                 public Boolean call() throws Exception {
 
-                    googletoken = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
-                            GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
+                    /*googletoken = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
+                            GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);*/
                     OSPermissionSubscriptionState status = OneSignal.getPermissionSubscriptionState();
                     oneSignaltoken=status.getSubscriptionStatus().getUserId();
                     return true;

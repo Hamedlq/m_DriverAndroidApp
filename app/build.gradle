@@ -60,7 +60,7 @@ android {
     defaultConfig {
         minSdkVersion 17
         targetSdkVersion 25
-        versionName "4.0.0"
+        versionName "4.0.1"
 
 //        versionCode computeVersionCode()
 //        versionName computeVersionName()
