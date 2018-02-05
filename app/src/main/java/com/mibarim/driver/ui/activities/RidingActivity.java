@@ -1,20 +1,14 @@
 package com.mibarim.driver.ui.activities;
 
 
-import android.accounts.OperationCanceledException;
 import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
 import android.graphics.Color;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -24,62 +18,50 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.os.IBinder;
 import android.provider.Settings;
-import android.support.annotation.ArrayRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.gson.Gson;
 import com.mibarim.driver.BootstrapApplication;
 import com.mibarim.driver.BootstrapServiceProvider;
 import com.mibarim.driver.R;
-import com.mibarim.driver.authenticator.TokenRefreshActivity;
 import com.mibarim.driver.core.Constants;
 import com.mibarim.driver.core.LocationService;
-import com.mibarim.driver.events.UnAuthorizedErrorEvent;
+import com.mibarim.driver.dataBase.CurrentLocationDataBase;
 import com.mibarim.driver.locationServices.GoogleLocationService;
 import com.mibarim.driver.models.Address.Location;
 import com.mibarim.driver.models.ApiResponse;
 import com.mibarim.driver.models.ImageResponse;
 import com.mibarim.driver.models.Plus.DriverTripModel;
-import com.mibarim.driver.models.Trip.TripResponse;
+import com.mibarim.driver.models.Trip.LocationDataBaseModel;
 import com.mibarim.driver.models.enums.TripStates;
-import com.mibarim.driver.services.AuthenticateService;
-import com.mibarim.driver.services.HelloService;
+import com.mibarim.driver.services.SendLocationService;
 import com.mibarim.driver.services.TripService;
 import com.mibarim.driver.services.UserInfoService;
-import com.mibarim.driver.services.getLocationService;
 import com.mibarim.driver.ui.BootstrapActivity;
-import com.mibarim.driver.ui.HandleApiMessages;
 import com.mibarim.driver.ui.fragments.MapFragment;
-import com.mibarim.driver.ui.fragments.tripFragments.MainTripFragment;
 import com.mibarim.driver.util.SafeAsyncTask;
-import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -88,7 +70,6 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import io.fabric.sdk.android.Fabric;
 
 import static com.mibarim.driver.core.Constants.Auth.AUTH_TOKEN;
 import static com.mibarim.driver.core.Constants.GlobalConstants.TRIP_ID_INTENT_TAG;
@@ -103,14 +84,8 @@ import static com.mibarim.driver.core.Constants.GlobalConstants.TRIP_ID_INTENT_T
  */
 public class RidingActivity extends BootstrapActivity {
     static final String TAG = "RidingActivity";
-
-    @Inject
-    BootstrapServiceProvider serviceProvider;
-    @Inject
-    TripService tripService;
-    @Inject
-    UserInfoService userInfoService;
-
+    private static final ScheduledExecutorService worker =
+            Executors.newSingleThreadScheduledExecutor();
     @Bind(R.id.station_add)
     protected TextView station_add;
     @Bind(R.id.station_dis)
@@ -123,16 +98,76 @@ public class RidingActivity extends BootstrapActivity {
     protected WebView map_container_web;
     @Bind(R.id.contact_passengers_button)
     protected AppCompatButton contactPassengersButton;
-
-
+    @Inject
+    BootstrapServiceProvider serviceProvider;
+    @Inject
+    TripService tripService;
+    @Inject
+    UserInfoService userInfoService;
     Intent googleServiceIntent;
     Intent serviceIntent;
     GoogleLocationService mService;
     boolean mBound = false;
+    SharedPreferences preferences;
+    DialogInterface.OnClickListener gpsClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    turnOnGps();
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
+                    //finishAffinity();
+                    break;
+            }
+        }
+    };
+    DialogInterface.OnClickListener dataClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
+                    break;
+            }
+        }
+    };
+    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
+                    //finishAffinity();
+                    break;
+            }
+        }
+    };
+    /**
+     * Defines callbacks for service binding, passed to bindService()
+     */
+    /*private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            GoogleLocationService.LocalBinder binder = (GoogleLocationService.LocalBinder) service;
+            mService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };*/
+    private SendLocationService sendLocationService;
+    private boolean isBound = false;
     private Tracker mTracker;
     private ImageView support;
-
-
     private String authToken;
     private int RELOAD_REQUEST = 1234;
     private Toolbar toolbar;
@@ -146,16 +181,45 @@ public class RidingActivity extends BootstrapActivity {
     private ImageResponse imageResponse;
     private AlertDialog gpsAlert;
     private int stationDistance = 500;
-    private boolean serviceRun= false;
-
-
+    private boolean serviceRun = false;
+    private List<LocationDataBaseModel> locationList;
+    private CurrentLocationDataBase locationDB;
+    private boolean isDBOpen = false;
     private Handler mHandler;
     private Runnable mRunnable;
+    DialogInterface.OnClickListener tripdialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case DialogInterface.BUTTON_NEGATIVE:
+
+                    //finishAffinity();
+                    break;
+                case DialogInterface.BUTTON_POSITIVE:
+//                    sendTripPoint(TripStates.DriverRiding.toInt());
+                    driverTripModel.TripState = TripStates.DriverRiding.toInt();
+                    finishIt();
+                    break;
+            }
+        }
+    };
     private Handler endHandler;
     private Runnable endRunnable;
-    private static final ScheduledExecutorService worker =
-            Executors.newSingleThreadScheduledExecutor();
-    SharedPreferences PrefGPS = null;
+//    private ServiceConnection serviceConnection = new ServiceConnection() {
+//
+//        @Override
+//        public void onServiceConnected(ComponentName name, IBinder service) {
+//            SendLocationService.ServiceBinder binder = (SendLocationService.ServiceBinder) service;
+//            sendLocationService = binder.getService();
+//            sendLocationService.getLocation(sendLocationInterface);
+//            isBound = true;
+//        }
+//
+//        @Override
+//        public void onServiceDisconnected(ComponentName name) {
+//            isBound = false;
+//        }
+//    };
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -165,10 +229,14 @@ public class RidingActivity extends BootstrapActivity {
 
         super.onCreate(savedInstanceState);
         BootstrapApplication.component().inject(this);
-
+        preferences = getSharedPreferences("com.mibarim.driver", Context.MODE_PRIVATE);
         if (getIntent() != null && getIntent().getExtras() != null) {
             authToken = getIntent().getExtras().getString(AUTH_TOKEN);
             driverTripModel = (DriverTripModel) getIntent().getExtras().getSerializable(Constants.GlobalConstants.DRIVER_TRIP_MODEL);
+            preferences.edit()
+                    .putLong(Constants.Service.TripId, driverTripModel.TripId)
+                    .putInt(Constants.Service.TripStateLocation, driverTripModel.TripState)
+                    .apply();
         }
 
         BootstrapApplication application = (BootstrapApplication) getApplication();
@@ -180,8 +248,21 @@ public class RidingActivity extends BootstrapActivity {
 
         setContentView(R.layout.riding_activity);
 
+//        bindService(new Intent(this, SendLocationService.class), serviceConnection, BIND_AUTO_CREATE);
+
         // View injection with Butterknife
         ButterKnife.bind(this);
+        if (!preferences.getBoolean(Constants.Service.IS_SERVICE_RUNNING, false)) {
+            Intent intent = new Intent(this, SendLocationService.class);
+            preferences.edit().putString(AUTH_TOKEN, authToken).apply();
+            startService(intent);
+        }
+
+        if (driverTripModel != null && driverTripModel.TripState < 27)
+            wait_btn.setText(getString(R.string.waiting_state));
+        else
+            wait_btn.setText(getString(R.string.finishTrip));
+
 
         if (getWindow().getDecorView().getLayoutDirection() == View.LAYOUT_DIRECTION_LTR) {
             getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
@@ -209,6 +290,8 @@ public class RidingActivity extends BootstrapActivity {
         wait_btn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                if (driverTripModel != null && driverTripModel.TripState >= 27)
+                    wait_btn.setText(getString(R.string.finishTrip));
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     if (driverTripModel.TripState == TripStates.InPreTripTime.toInt()) {
                         /*if (stationDistance > 200) {
@@ -229,7 +312,11 @@ public class RidingActivity extends BootstrapActivity {
                         builder.setMessage(msg).setPositiveButton("باشه", dialogClickListener);
                         gpsAlert = builder.create();
                         gpsAlert.show();
-                        sendTripPoint(TripStates.DriverRiding.toInt());
+//                        sendTripPoint(TripStates.DriverRiding.toInt());
+                        driverTripModel.TripState = TripStates.DriverRiding.toInt();
+                        preferences.edit()
+                                .putInt(Constants.Service.TripStateLocation, TripStates.DriverRiding.toInt())
+                                .apply();
                         //sendTripPoint(driverTripModel.TripState);
                     } else if (driverTripModel.TripState == TripStates.InTripTime.toInt()) {
                         /*if (stationDistance > 200) {
@@ -248,12 +335,24 @@ public class RidingActivity extends BootstrapActivity {
                         builder.setMessage(msg).setPositiveButton("باشه", dialogClickListener);
                         gpsAlert = builder.create();
                         gpsAlert.show();
-                        sendTripPoint(TripStates.InRiding.toInt());
+//                        sendTripPoint(TripStates.InRiding.toInt());
+                        driverTripModel.TripState = TripStates.InRiding.toInt();
+                        preferences.edit()
+                                .putInt(Constants.Service.TripStateLocation, TripStates.InRiding.toInt())
+                                .apply();
                         //sendTripPoint(driverTripModel.TripState);
                     } else if (driverTripModel.TripState == TripStates.InRiding.toInt()) {
-                        sendTripPoint(TripStates.InDriving.toInt());
+//                        sendTripPoint(TripStates.InDriving.toInt());
+                        driverTripModel.TripState = TripStates.InDriving.toInt();
+                        preferences.edit()
+                                .putInt(Constants.Service.TripStateLocation, TripStates.InDriving.toInt())
+                                .apply();
                     } else {
-                        sendTripPoint(TripStates.FinishedByTrip.toInt());
+//                        sendTripPoint(TripStates.FinishedByTrip.toInt());
+                        driverTripModel.TripState = TripStates.FinishedByTrip.toInt();
+                        preferences.edit()
+                                .putInt(Constants.Service.TripStateLocation, TripStates.FinishedByTrip.toInt())
+                                .apply();
                         finishIt();
                     }
                     return true;
@@ -265,8 +364,8 @@ public class RidingActivity extends BootstrapActivity {
         contactPassengersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RidingActivity.this,ContactPassengersActivity.class);
-                intent.putExtra(AUTH_TOKEN,authToken);
+                Intent intent = new Intent(RidingActivity.this, ContactPassengersActivity.class);
+                intent.putExtra(AUTH_TOKEN, authToken);
                 intent.putExtra(TRIP_ID_INTENT_TAG, driverTripModel.TripId);
                 startActivity(intent);
 
@@ -283,9 +382,15 @@ public class RidingActivity extends BootstrapActivity {
                 return false;
             }
         });
-
-        PrefGPS = getSharedPreferences("taximeter", MODE_PRIVATE);
+        locationList = new ArrayList<>();
+        locationDB = new CurrentLocationDataBase(this);
         initScreen();
+    }
+
+    @Override
+    protected void onDestroy() {
+//        unbindService(serviceConnection);
+        super.onDestroy();
     }
 
     private void initScreen() {
@@ -303,37 +408,9 @@ public class RidingActivity extends BootstrapActivity {
             map_container_web.getSettings().setDomStorageEnabled(true);
             map_container_web.getSettings().setJavaScriptEnabled(true);
         }
-        periodicReLoading();
+        mHandler = new Handler();
         locationReloading();
         finishRiding();
-    }
-    public void getGPS(int servicePeriod,int tripId){
-
-       /* Intent intent = new Intent(RidingActivity.this, getLocationService.class);
-       startService(intent);*/
-        Calendar cur_cal = Calendar.getInstance();
-        cur_cal.setTimeInMillis(System.currentTimeMillis());
-        cur_cal.add(Calendar.SECOND, servicePeriod);
-        Intent intent = new Intent(RidingActivity.this, getLocationService.class);
-        PrefGPS.edit().putInt(Constants.Service.SERVICE_PERIOD,servicePeriod).apply();
-        PrefGPS.edit().putInt(Constants.Service.TripId,tripId).apply();
-        PrefGPS.edit().putString(Constants.Service.autTokenLocation,authToken).apply();
-        PrefGPS.edit().putInt(Constants.Service.TripStateLocation,driverTripModel.TripState).apply();
-        intent.putExtra(Constants.Service.SERVICE_PERIOD, servicePeriod);
-        intent.putExtra(Constants.Service.TripId, tripId);
-        intent.putExtra(Constants.Service.autTokenLocation,authToken);
-        intent.putExtra(Constants.Service.TripStateLocation,driverTripModel.TripState);
-        PendingIntent pi = PendingIntent.getService(RidingActivity.this, tripId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        AlarmManager alarm_manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarm_manager.set(AlarmManager.RTC, cur_cal.getTimeInMillis(), pi);
-        alarm_manager.setRepeating(AlarmManager.RTC, cur_cal.getTimeInMillis(), servicePeriod * 1000, pi);
-
-    }
-
-    @Override
-    public void onDestroy() {
-        mHandler.removeCallbacks(mRunnable);
-        super.onDestroy();
     }
 
     @Override
@@ -350,123 +427,6 @@ public class RidingActivity extends BootstrapActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-
-
-    private void sendTripPoint(final int tripState) {
-        new SafeAsyncTask<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                tripApiResponse = tripService.setTripPoint(authToken, getLocation().lat, getLocation().lng, driverTripModel.TripId, tripState);
-                if (tripApiResponse != null) {
-                    for (String tripJson : tripApiResponse.Messages) {
-                        tripResponse = new Gson().fromJson(tripJson, DriverTripModel.class);
-                    }
-                }
-                return true;
-            }
-
-            @Override
-            protected void onException(final Exception e) throws RuntimeException {
-                super.onException(e);
-                //hideProgress();
-            }
-
-            @Override
-            protected void onSuccess(final Boolean state) throws Exception {
-                super.onSuccess(state);
-                if(!serviceRun) {
-                    getGPS(tripResponse.ServicePeriod, (int)driverTripModel.TripId);
-                    serviceRun=true;
-                }
-                wait_btn.setText("پایان سفر");
-                //
-                if (driverTripModel.TripState == TripStates.InPreTripTime.toInt() &&
-                        tripResponse.TripState == TripStates.InTripTime.toInt()) {
-                    driverTripModel.TripState = tripResponse.TripState;
-                } else if (driverTripModel.TripState == TripStates.InTripTime.toInt() &&
-                        tripResponse.TripState == TripStates.InRiding.toInt()) {
-                    //wait_btn.setEnabled(true);
-                    //wait_btn.setText("پایان سفر");
-                    driverTripModel.TripState = tripResponse.TripState;
-                    //showTimer();
-                }
-                if (driverTripModel.TripState == TripStates.InRiding.toInt() &&
-                        tripResponse.TripState == TripStates.InDriving.toInt()) {
-                    wait_btn.setEnabled(true);
-//                    wait_btn.setText("پایان سفر");
-                }
-                //showTripInfo(tripResponse);
-            }
-        }.execute();
-    }
-
-    private void showTimer() {
-        new CountDownTimer(300000, 60000) {
-
-            public void onTick(long millisUntilFinished) {
-                wait_btn.setText(" لطفا " + millisUntilFinished / 60000 + " دقیقه منتظر " + driverTripModel.FilledSeats + " مسافر بمانید ");
-            }
-
-            public void onFinish() {
-                wait_btn.setEnabled(true);
-                wait_btn.setText("شروع سفر");
-            }
-        }.start();
-
-    }
-
-    public void call(String tel) {
-        if (tel != null) {
-            Intent intent = new Intent(Intent.ACTION_DIAL);
-            intent.setData(Uri.parse("tel:" + tel));
-            startActivity(intent);
-        }
-    }
-
-    private void periodicReLoading() {
-        mHandler = new Handler();
-        mRunnable = new Runnable() {
-            @Override
-            public void run() {
-                reloadThread();
-                mHandler.postDelayed(this, 20000);
-            }
-        };
-        worker.schedule(mRunnable, 10, TimeUnit.SECONDS);
-    }
-
-    private void finishRiding() {
-        endRunnable = new Runnable() {
-            @Override
-            public void run() {
-                finishIt();
-            }
-        };
-        worker.schedule(endRunnable, 10, TimeUnit.MINUTES);
-    }
-
-
-    public void reloadThread() {
-        new SafeAsyncTask<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                return true;
-            }
-
-            @Override
-            protected void onException(final Exception e) throws RuntimeException {
-                super.onException(e);
-            }
-
-            @Override
-            protected void onSuccess(final Boolean isMsgSubmitted) throws Exception {
-                super.onSuccess(isMsgSubmitted);
-                locationReloading();
-            }
-        }.execute();
-
     }
 
 /*
@@ -501,6 +461,129 @@ public class RidingActivity extends BootstrapActivity {
     }
 */
 
+    private void sendTripPoint(final int tripState) {
+//        RestAdapter adapter = new RestAdapter.Builder()
+//                .setEndpoint(Constants.Http.URL_BASE)
+//                .build();
+//        tripService = new TripService(adapter);
+        /*locationList.add(new LocationDataBaseModel(getLocation().lat, getLocation().lng, driverTripModel.TripId, tripState));
+        new SafeAsyncTask<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                tripApiResponse = tripService.setTripPoints(authToken, locationList);
+                return true;
+            }
+
+            @Override
+            protected void onSuccess(final Boolean state) throws Exception {
+                super.onSuccess(state);
+                for (String tripJson : tripApiResponse.Messages) {
+                    tripResponse = new Gson().fromJson(tripJson, DriverTripModel.class);
+                }
+                driverTripModel.TripState = tripResponse.TripState;
+                if (!serviceRun) {
+                    getGPS(tripResponse.ServicePeriod, (int) driverTripModel.TripId);
+                    serviceRun = true;
+                }
+                if (driverTripModel.TripState >= 27)
+                    wait_btn.setText(getString(R.string.finishTrip));
+                if (driverTripModel.TripState == TripStates.InPreTripTime.toInt() &&
+                        tripResponse.TripState == TripStates.InTripTime.toInt()) {
+                    driverTripModel.TripState = tripResponse.TripState;
+                } else if (driverTripModel.TripState == TripStates.InTripTime.toInt() && tripResponse.TripState == TripStates.InRiding.toInt()) {
+                    //wait_btn.setEnabled(true);
+                    //wait_btn.setText("پایان سفر");
+                    driverTripModel.TripState = tripResponse.TripState;
+                    //showTimer();
+                }
+                if (driverTripModel.TripState == TripStates.InRiding.toInt() &&
+                        tripResponse.TripState == TripStates.InDriving.toInt()) {
+                    wait_btn.setEnabled(true);
+//                    wait_btn.setText("پایان سفر");
+                }
+                //showTripInfo(tripResponse);
+            }
+
+            @Override
+            protected void onException(final Exception e) throws RuntimeException {
+                super.onException(e);
+                locationDB.inserting(getLocation().lat, getLocation().lng, driverTripModel.TripId, tripState);
+            }
+
+            @Override
+            protected void onFinally() throws RuntimeException {
+                super.onFinally();
+                locationList.clear();
+            }
+        }.execute();*/
+    }
+
+    private void showTimer() {
+        new CountDownTimer(300000, 60000) {
+
+            public void onTick(long millisUntilFinished) {
+                wait_btn.setText(" لطفا " + millisUntilFinished / 60000 + " دقیقه منتظر " + driverTripModel.FilledSeats + " مسافر بمانید ");
+            }
+
+            public void onFinish() {
+                wait_btn.setEnabled(true);
+                wait_btn.setText("شروع سفر");
+            }
+        }.start();
+
+    }
+
+    public void call(String tel) {
+        if (tel != null) {
+            Intent intent = new Intent(Intent.ACTION_DIAL);
+            intent.setData(Uri.parse("tel:" + tel));
+            startActivity(intent);
+        }
+    }
+
+    private void periodicReLoading() {
+        mHandler = new Handler();
+//        mRunnable = new Runnable() {
+//            @Override
+//            public void run() {
+//                reloadThread();
+//                mHandler.postDelayed(this, 20000);
+//            }
+//        };
+//        worker.schedule(mRunnable, 10, TimeUnit.SECONDS);
+    }
+
+    private void finishRiding() {
+        endRunnable = new Runnable() {
+            @Override
+            public void run() {
+                finishIt();
+            }
+        };
+        worker.schedule(endRunnable, 10, TimeUnit.MINUTES);
+    }
+
+    public void reloadThread() {
+        new SafeAsyncTask<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return true;
+            }
+
+            @Override
+            protected void onException(final Exception e) throws RuntimeException {
+                super.onException(e);
+            }
+
+            @Override
+            protected void onSuccess(final Boolean isMsgSubmitted) throws Exception {
+                super.onSuccess(isMsgSubmitted);
+                locationReloading();
+            }
+        }.execute();
+
+    }
+
     private void showTripInfo() {
         Location loc = getLocation();
         if (loc != null) {
@@ -521,7 +604,7 @@ public class RidingActivity extends BootstrapActivity {
             }
             station_dis.setText(String.valueOf(stationDistance));
             showOnMap(loc);
-            sendTripPoint(driverTripModel.TripState);
+//            sendTripPoint(driverTripModel.TripState);
         }
     }
 
@@ -578,62 +661,6 @@ public class RidingActivity extends BootstrapActivity {
         }
     }
 
-    DialogInterface.OnClickListener gpsClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            switch (which) {
-                case DialogInterface.BUTTON_POSITIVE:
-                    turnOnGps();
-                    break;
-                case DialogInterface.BUTTON_NEGATIVE:
-                    //finishAffinity();
-                    break;
-            }
-        }
-    };
-
-    DialogInterface.OnClickListener dataClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            switch (which) {
-                case DialogInterface.BUTTON_POSITIVE:
-                    break;
-                case DialogInterface.BUTTON_NEGATIVE:
-                    break;
-            }
-        }
-    };
-
-    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            switch (which) {
-                case DialogInterface.BUTTON_POSITIVE:
-                    break;
-                case DialogInterface.BUTTON_NEGATIVE:
-                    //finishAffinity();
-                    break;
-            }
-        }
-    };
-
-    DialogInterface.OnClickListener tripdialogClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            switch (which) {
-                case DialogInterface.BUTTON_POSITIVE:
-                    sendTripPoint(TripStates.DriverRiding.toInt());
-                    finishIt();
-                    break;
-                case DialogInterface.BUTTON_NEGATIVE:
-
-                    //finishAffinity();
-                    break;
-            }
-        }
-    };
-
-
     /**
      * Hide progress dialog
      */
@@ -677,7 +704,7 @@ public class RidingActivity extends BootstrapActivity {
             //bind to google location
             try {
                 startService(googleServiceIntent);
-                bindService(googleServiceIntent, mConnection, Context.BIND_AUTO_CREATE);
+//                bindService(googleServiceIntent, mConnection, Context.BIND_AUTO_CREATE);
                 IsGoogleServiceSupported = true;
                 LocationServiceInUse = 1;
             } catch (Exception e) {
@@ -689,39 +716,19 @@ public class RidingActivity extends BootstrapActivity {
         if (!IsGoogleServiceSupported) {
             //bind to manual location provider
             startService(serviceIntent);
-            bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
+//            bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
             LocationServiceInUse = 2;
         }
     }
 
     public void stopService() {
-        unbindService(mConnection);
+//        unbindService(mConnection);
         if (LocationServiceInUse == 1) {
             stopService(googleServiceIntent);
         } else if (LocationServiceInUse == 2) {
             stopService(serviceIntent);
         }
     }
-
-    /**
-     * Defines callbacks for service binding, passed to bindService()
-     */
-    private ServiceConnection mConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName className,
-                                       IBinder service) {
-            // We've bound to LocalService, cast the IBinder and get LocalService instance
-            GoogleLocationService.LocalBinder binder = (GoogleLocationService.LocalBinder) service;
-            mService = binder.getService();
-            mBound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            mBound = false;
-        }
-    };
 
     private boolean isPlayServicesConfigured() {
         int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this.getApplicationContext());
@@ -749,8 +756,8 @@ public class RidingActivity extends BootstrapActivity {
     private void finishIt() {
         mHandler.removeCallbacks(mRunnable);
         LocationService.destroy(RidingActivity.this);
-        Intent i= getIntent();
-        setResult(RESULT_OK,i);
+        Intent i = getIntent();
+        setResult(RESULT_OK, i);
         finish();
     }
 }

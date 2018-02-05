@@ -35,6 +35,7 @@ import com.squareup.otto.Bus;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -77,7 +78,7 @@ public class BootstrapModule {
     }
 
     @Provides
-    TripService provideTripService(RestAdapter restAdapter) {
+    TripService provideTripService(@Named("tripService") RestAdapter restAdapter) {
         return new TripService(restAdapter);
     }
 
@@ -183,5 +184,16 @@ public class BootstrapModule {
                 .build();
     }
 
+    @Provides
+    @Named("tripService")
+    RestAdapter provideTripServiceRestAdapter() {
+        final OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.setReadTimeout(30, TimeUnit.SECONDS);
+        okHttpClient.setConnectTimeout(30, TimeUnit.SECONDS);
 
+        return new RestAdapter.Builder()
+                .setEndpoint(Constants.Http.URL_BASE)
+                .setClient(new OkClient(okHttpClient))
+                .build();
+    }
 }

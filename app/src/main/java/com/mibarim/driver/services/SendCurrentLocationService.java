@@ -40,11 +40,10 @@ import java.util.List;
  * Created by mohammad hossein on 30/11/2017.
  */
 
-public class HelloService extends Service {
+public class SendCurrentLocationService extends Service {
     private Looper mServiceLooper;
     private ServiceHandler mServiceHandler;
 
-    // Handler that receives messages from the thread
     private final class ServiceHandler extends Handler {
         public ServiceHandler(Looper looper) {
             super(looper);

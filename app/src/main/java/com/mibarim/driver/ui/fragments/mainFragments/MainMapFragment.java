@@ -341,26 +341,26 @@ public class MainMapFragment extends Fragment implements OnMapReadyCallback {
 //        switch (((NewRouteDelActivity) getActivity()).getSrcDstStateSelector()) {
 //            case "SOURCE_SELECTED":
 //                mapView.getOverlays().remove(srcMarker);
-//                srcMarker.setPosition(new GeoPoint(geoPoint.getLatitude(), geoPoint.getLongitude()));
+//                srcMarker.setPosition(new GeoPoint(geoPoint.getStLat(), geoPoint.getStLng()));
 //                srcMarker.setIcon(ContextCompat.getDrawable(context, R.mipmap.ic_from));
 //                srcMarker.setAnchor(Marker.ANCHOR_CENTER, 1.0f);
 //                mapView.getOverlays().add(0, srcMarker);
 //                mapView.invalidate();
 //                isSrcMarkerSet = true;
-//                ((NewRouteDelActivity) getActivity()).routeRequest.SrcLatitude = String.valueOf(geoPoint.getLatitude());
-//                ((NewRouteDelActivity) getActivity()).routeRequest.SrcLongitude = String.valueOf(geoPoint.getLongitude());
-////                Toaster.showLong(getActivity(), "Longitude: " + geoPoint.getLongitude() + " Latitude: " + geoPoint.getLatitude());
+//                ((NewRouteDelActivity) getActivity()).routeRequest.SrcLatitude = String.valueOf(geoPoint.getStLat());
+//                ((NewRouteDelActivity) getActivity()).routeRequest.SrcLongitude = String.valueOf(geoPoint.getStLng());
+////                Toaster.showLong(getActivity(), "Longitude: " + geoPoint.getStLng() + " Latitude: " + geoPoint.getStLat());
 //                break;
 //            case "DESTINATION_SELECTED":
 //                mapView.getOverlays().remove(dstMarker);
-//                dstMarker.setPosition(new GeoPoint(geoPoint.getLatitude(), geoPoint.getLongitude()));
+//                dstMarker.setPosition(new GeoPoint(geoPoint.getStLat(), geoPoint.getStLng()));
 //                dstMarker.setIcon(ContextCompat.getDrawable(context, R.mipmap.ic_to));
 //                dstMarker.setAnchor(Marker.ANCHOR_CENTER, 1.0f);
 //                mapView.getOverlays().add(0, dstMarker);
 //                mapView.invalidate();
-//                ((NewRouteDelActivity) getActivity()).routeRequest.DstLatitude = String.valueOf(geoPoint.getLatitude());
-//                ((NewRouteDelActivity) getActivity()).routeRequest.DstLongitude = String.valueOf(geoPoint.getLongitude());
-////                Toaster.showLong(getActivity(), "Longitude: " + geoPoint.getLongitude() + " Latitude: " + geoPoint.getLatitude());
+//                ((NewRouteDelActivity) getActivity()).routeRequest.DstLatitude = String.valueOf(geoPoint.getStLat());
+//                ((NewRouteDelActivity) getActivity()).routeRequest.DstLongitude = String.valueOf(geoPoint.getStLng());
+////                Toaster.showLong(getActivity(), "Longitude: " + geoPoint.getStLng() + " Latitude: " + geoPoint.getStLat());
 //                break;
 //        }
 //
@@ -370,12 +370,12 @@ public class MainMapFragment extends Fragment implements OnMapReadyCallback {
     //    private void intelligentStateSelector(GeoPoint geoPoint) {
 //        if (isSrcMarkerSet) {
 //            Location loc1 = new Location("");
-//            loc1.setLatitude(geoPoint.getLatitude());
-//            loc1.setLongitude(geoPoint.getLongitude());
+//            loc1.setStLat(geoPoint.getStLat());
+//            loc1.setStLng(geoPoint.getStLng());
 //
 //            Location loc2 = new Location("");
-//            loc2.setLatitude(srcMarker.getPosition().getLatitude());
-//            loc2.setLongitude(srcMarker.getPosition().getLongitude());
+//            loc2.setStLat(srcMarker.getPosition().getStLat());
+//            loc2.setStLng(srcMarker.getPosition().getStLng());
 //
 //            float distanceInMeters = loc1.distanceTo(loc2);
 //            if (distanceInMeters > 1000) {

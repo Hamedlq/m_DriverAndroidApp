@@ -2,6 +2,11 @@ package com.mibarim.driver.services;
 
 import com.mibarim.driver.RestInterfaces.GetTripService;
 import com.mibarim.driver.models.ApiResponse;
+import com.mibarim.driver.models.Trip.LocationDataBaseModel;
+
+import java.util.List;
+
+import javax.inject.Named;
 
 import retrofit.RestAdapter;
 
@@ -10,6 +15,7 @@ import retrofit.RestAdapter;
  */
 public class TripService {
 
+    @Named("tripService")
     private RestAdapter restAdapter;
 
     public TripService(RestAdapter restAdapter) {
@@ -41,6 +47,11 @@ public class TripService {
 
     public ApiResponse setTripPoint(String authToken, String lat, String lng, long tripId, int tripState) {
         ApiResponse res = getService().SetTripPoint("Bearer " + authToken, lat, lng, tripId, tripState);
+        return res;
+    }
+
+    public ApiResponse setTripPoints(String authToken, List<LocationDataBaseModel> locations) {
+        ApiResponse res = getService().SetTripPoints("Bearer " + authToken, locations);
         return res;
     }
 

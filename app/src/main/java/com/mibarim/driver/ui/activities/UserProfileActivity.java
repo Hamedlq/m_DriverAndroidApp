@@ -1,6 +1,5 @@
 package com.mibarim.driver.ui.activities;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -40,19 +39,19 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class UserProfileActivity extends BootstrapActivity {
 
     @Inject
-    LogoutService getLogoutService;
-    @Inject
     protected BootstrapServiceProvider serviceProvider;
+    @Inject
+    LogoutService getLogoutService;
     @Inject
     UserInfoService userInfoService;
     @Inject
     UserData userData;
 
     CircleImageView image_profile;
-    TextView firstName_profile,lastName_profile,money_profile,mobile_profile,email_profile;
+    TextView firstName_profile, lastName_profile, money_profile, mobile_profile, email_profile;
     private String authToken;
     private UserInfoModel userInfoModel;
-    private Button license,logOut;
+    private Button license, logOut;
     private ScoreModel scoreModel;
 
     @Override
@@ -87,7 +86,7 @@ public class UserProfileActivity extends BootstrapActivity {
                         .setPositiveButton("بله",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                       logout();
+                                        logout();
                                     }
                                 })
 
@@ -104,23 +103,23 @@ public class UserProfileActivity extends BootstrapActivity {
 
     }
 
-   public void initialize(){
+    public void initialize() {
 
         image_profile = (CircleImageView) findViewById(R.id.image_profile);
-        firstName_profile = (TextView)findViewById(R.id.firstName_profile);
-        lastName_profile = (TextView)findViewById(R.id.lastName_profile);
-        money_profile = (TextView)findViewById(R.id.money_profile);
-        mobile_profile = (TextView)findViewById(R.id.phoneNumber_profile);
-        email_profile = (TextView)findViewById(R.id.email_profile);
+        firstName_profile = (TextView) findViewById(R.id.firstName_profile);
+        lastName_profile = (TextView) findViewById(R.id.lastName_profile);
+        money_profile = (TextView) findViewById(R.id.money_profile);
+        mobile_profile = (TextView) findViewById(R.id.phoneNumber_profile);
+        email_profile = (TextView) findViewById(R.id.email_profile);
         license = (Button) findViewById(R.id.license_profile);
-        logOut = (Button)findViewById(R.id.logout_profile);
+        logOut = (Button) findViewById(R.id.logout_profile);
 
 
     }
 
 
     private void logout() {
-      getLogoutService.logout(new Runnable() {
+        getLogoutService.logout(new Runnable() {
             @Override
             public void run() {
                 finishIt();
@@ -128,12 +127,14 @@ public class UserProfileActivity extends BootstrapActivity {
         });
 
     }
+
     protected void finishIt() {
         final Intent intent = new Intent();
         setResult(RESULT_OK, intent);
         finish();
     }
-    public void getUserInfo(){
+
+    public void getUserInfo() {
 
 
         new SafeAsyncTask<Boolean>() {
@@ -151,7 +152,7 @@ public class UserProfileActivity extends BootstrapActivity {
             @Override
             protected void onException(final Exception e) throws RuntimeException {
                 super.onException(e);
-                Toast.makeText(getApplicationContext(),"مشکلی در دریافت اطلاعات به وجود آمده است",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "مشکلی در دریافت اطلاعات به وجود آمده است", Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -162,7 +163,7 @@ public class UserProfileActivity extends BootstrapActivity {
         }.execute();
     }
 
-    public void setInfo(){
+    public void setInfo() {
         SharedPreferences sharedPreferences = getSharedPreferences("com.mibarim.driver", Context.MODE_PRIVATE);
         firstName_profile.setText(userInfoModel.Name);
         lastName_profile.setText(userInfoModel.Family);

@@ -50,7 +50,7 @@ public class LocationReceiver extends BroadcastReceiver {
             LocationSender.LocalBinder binder = (LocationSender.LocalBinder) service;
             mService = binder.getService();
             mBound = true;
-            mService.SendLocation(mobile, longitude, latitude);
+            mService.SendLocationInterface(mobile, longitude, latitude);
             unbind();
         }
 

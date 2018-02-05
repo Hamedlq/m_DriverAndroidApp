@@ -1,5 +1,3 @@
-
-
 package com.mibarim.driver.ui.activities;
 
 
@@ -15,7 +13,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,7 +25,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -48,7 +44,6 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-//import com.google.android.gms.common.server.converter.StringToIntConverter;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 import com.google.gson.Gson;
@@ -84,9 +79,9 @@ import com.mibarim.driver.models.UserInfoModel;
 import com.mibarim.driver.models.enums.TripStates;
 import com.mibarim.driver.receiver.NotificationReceiver;
 import com.mibarim.driver.services.AuthenticateService;
-import com.mibarim.driver.services.HelloService;
 import com.mibarim.driver.services.RouteRequestService;
 import com.mibarim.driver.services.RouteResponseService;
+import com.mibarim.driver.services.SendCurrentLocationService;
 import com.mibarim.driver.services.SuggestResponseService;
 import com.mibarim.driver.services.TripService;
 import com.mibarim.driver.services.UserInfoService;
@@ -99,7 +94,6 @@ import com.mibarim.driver.util.SafeAsyncTask;
 import com.onesignal.OSPermissionSubscriptionState;
 import com.onesignal.OneSignal;
 import com.squareup.otto.Subscribe;
-//import com.uxcam.UXCam;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -108,6 +102,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
+
+//import com.google.android.gms.common.server.converter.StringToIntConverter;
+//import com.uxcam.UXCam;
 
 //import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
 
@@ -119,8 +116,10 @@ import butterknife.ButterKnife;
  */
 public class MainActivity extends BootstrapActivity {
     private static final String TAG = "MainActivity";
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     @Inject
     protected BootstrapServiceProvider serviceProvider;
+    protected Bitmap result;//concurrency must be considered
     @Inject
     RouteRequestService routeRequestService;
     @Inject
@@ -133,7 +132,39 @@ public class MainActivity extends BootstrapActivity {
     UserInfoService userInfoService;
     @Inject
     UserData userData;
-
+    String googletoken = "";
+    String oneSignaltoken = "";
+    boolean doubleBackToExitPressedOnce = false;
+    DriverRouteModel selectedRouteTrip;
+    int selectedRouteHour;
+    int seatPickerVal;
+    int suggestSeat;
+    int selectedRouteMin;
+    ImageView invite_btn;
+    ImageView uploadButton;
+    NumberPicker seat_picker;
+    ApiResponse routeListResponse;
+    ApiResponse webViewRespone;
+    NumberPicker hourPicker;
+    NumberPicker minutePicker;
+    ArrayList<RatingModel> ratingModelList = new ArrayList<>();
+    ApiResponse apiResponse;
+    PresentViewModel webViewModel;
+    String MORE_INTERACTION_WEBVIEW_FRAG = "MoreInteractionWebviewFragment";
+    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.update_link)));
+                    startActivity(browserIntent);
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
+                    finishAffinity();
+                    break;
+            }
+        }
+    };
     private CharSequence title;
     private Toolbar toolbar;
     private ApiResponse deleteRes;
@@ -149,62 +180,165 @@ public class MainActivity extends BootstrapActivity {
     private BriefRouteModel selectedRoute;
     private PaymentDetailModel paymentDetailModel;
     private Tracker mTracker;
-    protected Bitmap result;//concurrency must be considered
     private int REFRESH_TOKEN_REQUEST = 3456;
     private int USER_PIC_REQUEST = 4567;
     private boolean refreshingToken = false;
-    String googletoken = "";
-    String oneSignaltoken = "";
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private int FINISH_USER_INFO = 5649;
     private int CREDIT_RETURN = 9999;
     private int ROUTESELECTED = 2456;
     private int SEARCH_STATION_REQUEST_CODE = 7464;
     private int PROFILE_LOGOUT = 1254;
     private View parentLayout;
+    //    private static final String DRIVE_FRAGMENT_TAG = "driveFragment";
     private boolean netErrorMsg = false;
-    boolean doubleBackToExitPressedOnce = false;
     private UserInfoModel userInfoModel;
     private FrameLayout moreInteractionWebviewLayout;
-
-
-    DriverRouteModel selectedRouteTrip;
-    int selectedRouteHour;
-    int seatPickerVal;
-    int suggestSeat;
-    int selectedRouteMin;
     private ScoreModel scoreModel;
     TextView user_credit;
     /*    ImageView invite_btn;
         ImageView uploadButton;*/
     private InviteModel inviteModel;
-    NumberPicker seat_picker;
-    ApiResponse routeListResponse;
-    ApiResponse webViewRespone;
-
-    NumberPicker hourPicker;
-    NumberPicker minutePicker;
-
-
-//    private static final String DRIVE_FRAGMENT_TAG = "driveFragment";
-
-
     private ApiResponse stationRouteResponse;
     private List<StationRouteModel> routeDetails;
-
     private ViewPager tabViewPager;
     private TabLayout tabLayout;
     private TabPagerAdapter adapter;
+    DialogInterface.OnClickListener ConfirmDisableDialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    seatPickerVal = 0;
+                    disableTrip();
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
+                    dialog.dismiss();
+                    break;
+            }
+        }
+    };
+    DialogInterface.OnClickListener ConfirmDialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    //showSetTime();
+//                    Intent userImageIntent = new Intent(getApplicationContext(),UserImageUploadActivity.class);
+//                    startActivity(userImageIntent);
+                    setTripTime();
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
+                    dialog.dismiss();
+                    refreshList();
+                    break;
+            }
+        }
+    };
+    DialogInterface.OnClickListener FinalDialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    seatPickerVal = seat_picker.getValue();
+                    String msg = getString(R.string.confirm_Msg);
+                    showConfirmDialog(msg);
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
+                    dialog.dismiss();
+                    refreshList();
+                    break;
+            }
+        }
+    };
+    DialogInterface.OnClickListener TimeDialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+//                    int seatPickerVal = hourPicker.getValue();
+                    selectedRouteHour = 28 - hourPicker.getValue();
+                    int minValue = minutePicker.getValue();
+                    switch (minValue) {
+                        case 0:
+                            selectedRouteMin = 0;
+                            break;
+                        case 1:
+                            selectedRouteMin = 45;
+                            break;
+                        case 2:
+                            selectedRouteMin = 30;
+                            break;
+                        case 3:
+                            selectedRouteMin = 15;
+                            break;
+                    }
 
-    ArrayList<RatingModel> ratingModelList = new ArrayList<>();
-    ApiResponse apiResponse;
-    PresentViewModel webViewModel;
+                    setEmptySeats();
 
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
+                    dialog.dismiss();
+//                    refreshList();
+                    break;
+            }
+        }
+    };
     private long filterId;
+    DialogInterface.OnClickListener SuggestConfirm = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    final SuggestResponseService suggestService = new SuggestResponseService();
+                    new SafeAsyncTask<Boolean>() {
+                        @Override
+                        public Boolean call() throws Exception {
+                            suggestResponse = suggestService.sendFilterId(authToken, filterId, suggestSeat);
+                            return true;
+                        }
 
+                        @Override
+                        protected void onSuccess(Boolean aBoolean) throws Exception {
+                            super.onSuccess(aBoolean);
+                            Gson gson = new Gson();
+                            for (String tripTimeModel : suggestResponse.Messages) {
+                                TripTimeModel tt = gson.fromJson(tripTimeModel, TripTimeModel.class);
+                                if (tt.IsSubmited) {
+                                    Toast.makeText(MainActivity.this, "سفر با موفقیت اضافه شد", Toast.LENGTH_LONG).show();
+                                    setNotificationAlamManager(tt, (int) filterId);
+                                    tabViewPager.setCurrentItem(0);
+                                    refreshSuggestList();
+                                    refreshList();
+                                }
+                            }
+                            new HandleApiMessagesBySnackbar(parentLayout, suggestResponse).showMessages();
+                        }
 
-    String MORE_INTERACTION_WEBVIEW_FRAG = "MoreInteractionWebviewFragment";
-
+                        @Override
+                        protected void onException(Exception e) throws RuntimeException {
+                            super.onException(e);
+                            Toast.makeText(MainActivity.this, getString(R.string.unsuccessfully_submitted), Toast.LENGTH_SHORT).show();
+                        }
+                    }.execute();
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
+                    break;
+            }
+        }
+    };
+    DialogInterface.OnClickListener suggestSeats = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    suggestSeat = seat_picker.getValue();
+                    acceptSuggestRouteLast();
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -252,25 +386,24 @@ public class MainActivity extends BootstrapActivity {
         checkAuth();
         //initScreen();
 
-   }
-
-    public void runningService(){
-
-
-            Calendar cur_cal = Calendar.getInstance();
-            cur_cal.setTimeInMillis(System.currentTimeMillis());
-            cur_cal.add(Calendar.SECOND, 10);
-            Intent intent = new Intent(MainActivity.this, HelloService.class);
-            PendingIntent pi = PendingIntent.getService(MainActivity.this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-            AlarmManager alarm_manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            alarm_manager.set(AlarmManager.RTC, cur_cal.getTimeInMillis(), pi);
-            alarm_manager.setRepeating(AlarmManager.RTC, cur_cal.getTimeInMillis(), 30 * 60 * 1000, pi);
-
-
-//        Intent intent = new Intent(this,HelloService.class);
-//        startService(intent);
     }
 
+    public void runningService() {
+
+
+        Calendar cur_cal = Calendar.getInstance();
+        cur_cal.setTimeInMillis(System.currentTimeMillis());
+        cur_cal.add(Calendar.SECOND, 10);
+        Intent intent = new Intent(MainActivity.this, SendCurrentLocationService.class);
+        PendingIntent pi = PendingIntent.getService(MainActivity.this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager alarm_manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarm_manager.set(AlarmManager.RTC, cur_cal.getTimeInMillis(), pi);
+        alarm_manager.setRepeating(AlarmManager.RTC, cur_cal.getTimeInMillis(), 30 * 60 * 1000, pi);
+
+
+//        Intent intent = new Intent(this,SendCurrentLocationService.class);
+//        startService(intent);
+    }
 
     private void setupViewPager(ViewPager viewPager) {
         adapter = new TabPagerAdapter(getSupportFragmentManager());
@@ -363,7 +496,6 @@ public class MainActivity extends BootstrapActivity {
 
     }
 
-
     public void showUserGuide() {
 
 
@@ -440,7 +572,6 @@ public class MainActivity extends BootstrapActivity {
 
     }
 
-
     public void getRoutesListFromServer() {
         routeDetails = new ArrayList<StationRouteModel>();
         new SafeAsyncTask<Boolean>() {
@@ -476,7 +607,6 @@ public class MainActivity extends BootstrapActivity {
         }.execute();
     }
 
-
     public ArrayList<StationRouteModel> getRoutesFromDatabase() {
 
         List<StationRouteModel> items;
@@ -497,13 +627,13 @@ public class MainActivity extends BootstrapActivity {
         return latest;
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
         if (authToken != null) {
             getTripState();
         }
+        refreshList();
     }
 
     private void checkAuth() {
@@ -538,6 +668,17 @@ public class MainActivity extends BootstrapActivity {
             }
         }.execute();
     }
+
+/*
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            finish();
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+*/
 
     private void getUserInfoFromServer() {
         new SafeAsyncTask<Boolean>() {
@@ -598,7 +739,6 @@ public class MainActivity extends BootstrapActivity {
         }
     }
 
-
     @Subscribe
     public void onUnAuthorizedErrorEvent(UnAuthorizedErrorEvent event) {
         refreshToken();
@@ -610,7 +750,6 @@ public class MainActivity extends BootstrapActivity {
         //Toaster.showLong(MainActivity.this, getString(R.string.network_error), R.drawable.toast_warn);
     }
 
-
     private void refreshToken() {
         if (!refreshingToken) {
             refreshingToken = true;
@@ -618,18 +757,6 @@ public class MainActivity extends BootstrapActivity {
             startActivityForResult(i, REFRESH_TOKEN_REQUEST);
         }
     }
-
-/*
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            finish();
-            return true;
-        }
-        return super.onKeyUp(keyCode, event);
-    }
-*/
-
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
@@ -647,7 +774,6 @@ public class MainActivity extends BootstrapActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -726,7 +852,6 @@ public class MainActivity extends BootstrapActivity {
         return dialog;
     }
 
-
     public Bitmap getImageById(String imageId, int defaultDrawableId) {
         Bitmap icon = BitmapFactory.decodeResource(getResources(), defaultDrawableId);
         if (imageId == null || imageId.equals("") || imageId.equals("00000000-0000-0000-0000-000000000000")) {
@@ -792,7 +917,6 @@ public class MainActivity extends BootstrapActivity {
         return selfRoute;
     }
 
-
     private void sendRegistrationToServer() {
         if (checkPlayServices()) {
             final InstanceID instanceID = InstanceID.getInstance(this);
@@ -803,7 +927,7 @@ public class MainActivity extends BootstrapActivity {
                     /*googletoken = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
                             GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);*/
                     OSPermissionSubscriptionState status = OneSignal.getPermissionSubscriptionState();
-                    oneSignaltoken=status.getSubscriptionStatus().getUserId();
+                    oneSignaltoken = status.getSubscriptionStatus().getUserId();
                     return true;
                 }
 
@@ -845,7 +969,7 @@ public class MainActivity extends BootstrapActivity {
                     serviceProvider.invalidateAuthToken();
                     authToken = serviceProvider.getAuthToken(MainActivity.this);
                 }
-                userInfoService.SaveGoogleToken(authToken, googletoken,oneSignaltoken);
+                userInfoService.SaveGoogleToken(authToken, googletoken, oneSignaltoken);
                 return true;
             }
 
@@ -976,16 +1100,18 @@ public class MainActivity extends BootstrapActivity {
         builder.setMessage(msg).setPositiveButton("باشه", dialogClickListener).setNegativeButton("بستن برنامه", dialogClickListener).show();
     }
 
-    private void refreshSuggestList(){
+    private void refreshSuggestList() {
         Fragment fragment = adapter.getItem(1);
         ((SuggestCardFragment) fragment).refresh();
     }
 
     private void refreshList() {
 //        final FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = adapter.getItem(0);/*fragmentManager.findFragmentByTag(DRIVE_FRAGMENT_TAG);*/
-        ((DriverCardFragment) fragment).refresh();
-        showFab();
+        if (adapter != null) {
+            Fragment fragment = adapter.getItem(0);/*fragmentManager.findFragmentByTag(DRIVE_FRAGMENT_TAG);*/
+            ((DriverCardFragment) fragment).refresh();
+            showFab();
+        }
 
 
         SharedPreferences prefs = this.getSharedPreferences(
@@ -1002,21 +1128,6 @@ public class MainActivity extends BootstrapActivity {
             ((DriverCardFragment) driveFragment).showUserGuideForDriverCardFragment();
         }
     }
-
-    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            switch (which) {
-                case DialogInterface.BUTTON_POSITIVE:
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.update_link)));
-                    startActivity(browserIntent);
-                    break;
-                case DialogInterface.BUTTON_NEGATIVE:
-                    finishAffinity();
-                    break;
-            }
-        }
-    };
 
     public void gotoRouteLists() {
 //        Intent intent = new Intent(this, StationRouteListActivity.class);
@@ -1108,89 +1219,17 @@ public class MainActivity extends BootstrapActivity {
                 .setNegativeButton("بیخیال", suggestSeats).show();
     }
 
-    DialogInterface.OnClickListener suggestSeats = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            switch (which) {
-                case DialogInterface.BUTTON_POSITIVE:
-                    suggestSeat = seat_picker.getValue();
-                    acceptSuggestRouteLast();
-                    break;
-                case DialogInterface.BUTTON_NEGATIVE:
-                    break;
-            }
-        }
-    };
-    
-    public void acceptSuggestRouteLast(){
+    public void acceptSuggestRouteLast() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.confirm_Msg)).setPositiveButton("تعهد می‌دهم", SuggestConfirm)
                 .setNegativeButton("بیخیال", SuggestConfirm).show();
     }
-
-    DialogInterface.OnClickListener SuggestConfirm = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            switch (which) {
-                case DialogInterface.BUTTON_POSITIVE:
-                    final SuggestResponseService suggestService = new SuggestResponseService();
-                    new SafeAsyncTask<Boolean>() {
-                        @Override
-                        public Boolean call() throws Exception {
-                            suggestResponse = suggestService.sendFilterId(authToken, filterId, suggestSeat);
-                            return true;
-                        }
-
-                        @Override
-                        protected void onSuccess(Boolean aBoolean) throws Exception {
-                            super.onSuccess(aBoolean);
-                            Gson gson = new Gson();
-                            for (String tripTimeModel : suggestResponse.Messages) {
-                                TripTimeModel tt = gson.fromJson(tripTimeModel, TripTimeModel.class);
-                                if (tt.IsSubmited) {
-                                    Toast.makeText(MainActivity.this, "سفر با موفقیت اضافه شد", Toast.LENGTH_LONG).show();
-                                    setNotificationAlamManager(tt, (int) filterId);
-                                    tabViewPager.setCurrentItem(0);
-                                    refreshSuggestList();
-                                    refreshList();
-                                }
-                            }
-                            new HandleApiMessagesBySnackbar(parentLayout, suggestResponse).showMessages();
-                        }
-
-                        @Override
-                        protected void onException(Exception e) throws RuntimeException {
-                            super.onException(e);
-                            Toast.makeText(MainActivity.this, getString(R.string.unsuccessfully_submitted), Toast.LENGTH_SHORT).show();
-                        }
-                    }.execute();
-                    break;
-                case DialogInterface.BUTTON_NEGATIVE:
-                    break;
-            }
-        }
-    };
 
     private void showConfirmDisableDialog(String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(msg).setPositiveButton("بله", ConfirmDisableDialogClickListener)
                 .setNegativeButton("خیر", ConfirmDisableDialogClickListener).show();
     }
-
-    DialogInterface.OnClickListener ConfirmDisableDialogClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            switch (which) {
-                case DialogInterface.BUTTON_POSITIVE:
-                    seatPickerVal = 0;
-                    disableTrip();
-                    break;
-                case DialogInterface.BUTTON_NEGATIVE:
-                    dialog.dismiss();
-                    break;
-            }
-        }
-    };
 
     private void showConfirmDialog(String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1199,15 +1238,73 @@ public class MainActivity extends BootstrapActivity {
 
     }
 
-    DialogInterface.OnClickListener ConfirmDialogClickListener = new DialogInterface.OnClickListener() {
+
+
+
+
+
+
+
+    /*private void showSetTime() {
+        *//*LayoutInflater inflater = getLayoutInflater();
+        View alertLayout = inflater.inflate(R.layout.clock_dialog, null);
+        final NumberPicker minute_picker = (NumberPicker) alertLayout.findViewById(R.id.minute_picker);
+        final LinearLayout minute_up = (LinearLayout) alertLayout.findViewById(R.id.minute_up);
+        final LinearLayout minute_down = (LinearLayout) alertLayout.findViewById(R.id.minute_down);
+        final NumberPicker hour_picker = (NumberPicker) alertLayout.findViewById(R.id.hour_picker);
+        final LinearLayout hour_up = (LinearLayout) alertLayout.findViewById(R.id.hour_up);
+        final LinearLayout hour_down = (LinearLayout) alertLayout.findViewById(R.id.hour_down);
+        String[] allHours= new String[]{"5", "6", "7", "8", "9","10","11","12","13","14","15","16","17","18","19","20","21","22"};
+        hour_picker.setMinValue(1);
+        hour_picker.setMaxValue(18);
+        hour_picker.setDisplayedValues(allHours);
+        hour_picker.setWrapSelectorWheel(false);
+        hour_picker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        minutes = new String[]{"00", "15", "30", "45"};
+        minute_picker.setMinValue(1);
+        minute_picker.setMaxValue(4);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.driver_time);
+        builder.setView(alertLayout);
+        builder.setCancelable(false);
+        builder.setPositiveButton("تایید زمان", TimeDialogClickListener)
+                .setNegativeButton("خیر", TimeDialogClickListener).show();*//*
+        //Calendar mcurrentTime = Calendar.getInstance();
+        int hour = selectedRouteTrip.TimingHour;
+        int minute = selectedRouteTrip.TimingMin;
+        TimePickerDialog mTimePicker;
+        mTimePicker = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                if (timePicker.isShown()) {
+                    selectedRouteHour = selectedHour;
+                    selectedRouteMin = selectedMinute;
+                    setEmptySeats();
+                }
+            }
+
+
+        }, hour, minute, true);
+        *//*mTimePicker.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                refreshList();
+            }
+        });*//*
+
+        mTimePicker.setTitle("زمان دقیق حضور در مبدا");
+        mTimePicker.setButton(DialogInterface.BUTTON_POSITIVE, "تایید زمان", mTimePicker);
+        mTimePicker.setButton(DialogInterface.BUTTON_NEGATIVE, "بیخیال", mTimePicker);
+        mTimePicker.show();
+    }
+
+    DialogInterface.OnClickListener TimeDialogClickListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:
-                    //showSetTime();
-//                    Intent userImageIntent = new Intent(getApplicationContext(),UserImageUploadActivity.class);
-//                    startActivity(userImageIntent);
-                    setTripTime();
+                    setEmptySeats();
                     break;
                 case DialogInterface.BUTTON_NEGATIVE:
                     dialog.dismiss();
@@ -1215,8 +1312,7 @@ public class MainActivity extends BootstrapActivity {
                     break;
             }
         }
-    };
-
+    };*/
 
     private void showSetTime() {
         LayoutInflater inflater = getLayoutInflater();
@@ -1404,118 +1500,6 @@ public class MainActivity extends BootstrapActivity {
                 .setNegativeButton("بیخیال", TimeDialogClickListener).show();
     }
 
-
-    DialogInterface.OnClickListener TimeDialogClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            switch (which) {
-                case DialogInterface.BUTTON_POSITIVE:
-//                    int seatPickerVal = hourPicker.getValue();
-                    selectedRouteHour = 28 - hourPicker.getValue();
-                    int minValue = minutePicker.getValue();
-                    switch (minValue) {
-                        case 0:
-                            selectedRouteMin = 0;
-                            break;
-                        case 1:
-                            selectedRouteMin = 45;
-                            break;
-                        case 2:
-                            selectedRouteMin = 30;
-                            break;
-                        case 3:
-                            selectedRouteMin = 15;
-                            break;
-                    }
-
-                    setEmptySeats();
-
-                    break;
-                case DialogInterface.BUTTON_NEGATIVE:
-                    dialog.dismiss();
-//                    refreshList();
-                    break;
-            }
-        }
-    };
-
-
-
-
-
-
-
-
-    /*private void showSetTime() {
-        *//*LayoutInflater inflater = getLayoutInflater();
-        View alertLayout = inflater.inflate(R.layout.clock_dialog, null);
-        final NumberPicker minute_picker = (NumberPicker) alertLayout.findViewById(R.id.minute_picker);
-        final LinearLayout minute_up = (LinearLayout) alertLayout.findViewById(R.id.minute_up);
-        final LinearLayout minute_down = (LinearLayout) alertLayout.findViewById(R.id.minute_down);
-        final NumberPicker hour_picker = (NumberPicker) alertLayout.findViewById(R.id.hour_picker);
-        final LinearLayout hour_up = (LinearLayout) alertLayout.findViewById(R.id.hour_up);
-        final LinearLayout hour_down = (LinearLayout) alertLayout.findViewById(R.id.hour_down);
-        String[] allHours= new String[]{"5", "6", "7", "8", "9","10","11","12","13","14","15","16","17","18","19","20","21","22"};
-        hour_picker.setMinValue(1);
-        hour_picker.setMaxValue(18);
-        hour_picker.setDisplayedValues(allHours);
-        hour_picker.setWrapSelectorWheel(false);
-        hour_picker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
-        minutes = new String[]{"00", "15", "30", "45"};
-        minute_picker.setMinValue(1);
-        minute_picker.setMaxValue(4);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.driver_time);
-        builder.setView(alertLayout);
-        builder.setCancelable(false);
-        builder.setPositiveButton("تایید زمان", TimeDialogClickListener)
-                .setNegativeButton("خیر", TimeDialogClickListener).show();*//*
-        //Calendar mcurrentTime = Calendar.getInstance();
-        int hour = selectedRouteTrip.TimingHour;
-        int minute = selectedRouteTrip.TimingMin;
-        TimePickerDialog mTimePicker;
-        mTimePicker = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                if (timePicker.isShown()) {
-                    selectedRouteHour = selectedHour;
-                    selectedRouteMin = selectedMinute;
-                    setEmptySeats();
-                }
-            }
-
-
-        }, hour, minute, true);
-        *//*mTimePicker.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                refreshList();
-            }
-        });*//*
-
-        mTimePicker.setTitle("زمان دقیق حضور در مبدا");
-        mTimePicker.setButton(DialogInterface.BUTTON_POSITIVE, "تایید زمان", mTimePicker);
-        mTimePicker.setButton(DialogInterface.BUTTON_NEGATIVE, "بیخیال", mTimePicker);
-        mTimePicker.show();
-    }
-
-    DialogInterface.OnClickListener TimeDialogClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            switch (which) {
-                case DialogInterface.BUTTON_POSITIVE:
-                    setEmptySeats();
-                    break;
-                case DialogInterface.BUTTON_NEGATIVE:
-                    dialog.dismiss();
-                    refreshList();
-                    break;
-            }
-        }
-    };*/
-
-
     private void setEmptySeats() {
         LayoutInflater inflater = getLayoutInflater();
         View alertLayout = inflater.inflate(R.layout.seats_dialog, null);
@@ -1555,23 +1539,6 @@ public class MainActivity extends BootstrapActivity {
                 .setNegativeButton("بیخیال", FinalDialogClickListener).show();
     }
 
-    DialogInterface.OnClickListener FinalDialogClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            switch (which) {
-                case DialogInterface.BUTTON_POSITIVE:
-                    seatPickerVal = seat_picker.getValue();
-                    String msg = getString(R.string.confirm_Msg);
-                    showConfirmDialog(msg);
-                    break;
-                case DialogInterface.BUTTON_NEGATIVE:
-                    dialog.dismiss();
-                    refreshList();
-                    break;
-            }
-        }
-    };
-
     private void setTripTime() {
         seatPickerVal = seat_picker.getValue();
         new SafeAsyncTask<Boolean>() {
@@ -1603,9 +1570,9 @@ public class MainActivity extends BootstrapActivity {
                     if (tt.IsSubmited) {
                         setNotificationAlamManager(tt, (int) selectedRouteTrip.DriverRouteId);
 //                        if (userInfoModel.UserImageId == null) {
-                            Intent intent = new Intent(MainActivity.this, UserImageUploadActivity.class);
-                            intent.putExtra(Constants.Auth.AUTH_TOKEN, authToken);
-                            startActivityForResult(intent, USER_PIC_REQUEST);
+                        Intent intent = new Intent(MainActivity.this, UserImageUploadActivity.class);
+                        intent.putExtra(Constants.Auth.AUTH_TOKEN, authToken);
+                        startActivityForResult(intent, USER_PIC_REQUEST);
 //                        }
                     }
                 }
@@ -1686,7 +1653,7 @@ public class MainActivity extends BootstrapActivity {
 //        Intent intent = new Intent(this,UserImageUploadActivity.class);
         //Intent intent = new Intent(this, RatingActivity.class);
         intent.putExtra(Constants.Auth.AUTH_TOKEN, authToken);
-        startActivityForResult(intent,PROFILE_LOGOUT);
+        startActivityForResult(intent, PROFILE_LOGOUT);
     }
 
     public void getUserScore() {

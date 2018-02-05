@@ -4578,8 +4578,8 @@ com.google.android.gms.maps.model.IndoorLevel: int hashCode()
 com.google.android.gms.maps.model.LatLng
 com.google.android.gms.maps.model.LatLng: com.google.android.gms.maps.model.zze CREATOR
 com.google.android.gms.maps.model.LatLng: int mVersionCode
-com.google.android.gms.maps.model.LatLng: double latitude
-com.google.android.gms.maps.model.LatLng: double longitude
+com.google.android.gms.maps.model.LatLng: double stLat
+com.google.android.gms.maps.model.LatLng: double stLng
 com.google.android.gms.maps.model.LatLng: LatLng(int,double,double)
 com.google.android.gms.maps.model.LatLng: LatLng(double,double)
 com.google.android.gms.maps.model.LatLng: int getVersionCode()

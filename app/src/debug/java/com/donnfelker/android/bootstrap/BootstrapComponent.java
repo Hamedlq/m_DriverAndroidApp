@@ -1,5 +1,6 @@
 package com.mibarim.driver;
 
+import com.mibarim.driver.services.SendLocationService;
 import com.mibarim.driver.ui.activities.ContactPassengersActivity;
 import com.mibarim.driver.ui.activities.CreditActivity;
 import com.mibarim.driver.ui.activities.EventMapActivity;
@@ -384,4 +385,5 @@ public interface BootstrapComponent {
 
     void inject(UserProfileActivity target);
 
+    void inject(SendLocationService target);
 }

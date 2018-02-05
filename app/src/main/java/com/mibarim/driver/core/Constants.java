@@ -150,6 +150,7 @@ public final class Constants {
         //public static final String URL_GET_DRIVE_ROUTE_INFO = "/GetDriveRouteInfo";
         public static final String URL_END_TRIP = "/EndTripRequest";
         public static final String URL_SET_TRIP_LOCATION = "/SetTripLocation";
+        public static final String URL_SET_TRIP_LOCATION_LIST = "/SetTripLocationList";
         public static final String URL_GET_TRIP = "/GetUserTrips";
 
         /**
@@ -222,6 +223,7 @@ public final class Constants {
     }
 
     public static final class Service {
+        public static final String IS_SERVICE_RUNNING = "isServiceRunning";
         public static final String SERVICE_PERIOD = "servicePeriod";
         public static final String TripId = "theTripId";
         public static final String autTokenLocation = "autTokenLocation";

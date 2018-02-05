@@ -388,6 +388,7 @@ public class UserDocumentsUploadActivity extends BootstrapActivity implements Vi
                     try {
                         f.createNewFile();
                     } catch (IOException e) {
+
                     }
                     Uri uri = Uri.fromFile(f);
 

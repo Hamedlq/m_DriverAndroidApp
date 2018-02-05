@@ -2,7 +2,11 @@ package com.mibarim.driver.RestInterfaces;
 
 import com.mibarim.driver.core.Constants;
 import com.mibarim.driver.models.ApiResponse;
+import com.mibarim.driver.models.Trip.LocationDataBaseModel;
 
+import java.util.List;
+
+import retrofit.http.Body;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.Header;
@@ -37,6 +41,11 @@ public interface GetTripService {
                              @Field("DriverLng") String lng,
                              @Field("TripId") long tripId,
                              @Field("TripState") int tripState
+    );
+
+    @POST(Constants.Http.URL_SET_TRIP_LOCATION_LIST)
+    ApiResponse SetTripPoints(@Header(Constants.Http.PARAM_AUTHORIZATION) String authToken,
+                              @Body List<LocationDataBaseModel> locations
     );
 
     @POST(Constants.Http.URL_GET_TRIP)

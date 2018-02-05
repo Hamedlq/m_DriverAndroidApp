@@ -167,8 +167,9 @@
             android:name="com.mibarim.driver.ui.activities.MobileActivity"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".ui.activities.UserProfileActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.activities.UserProfileActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.mibarim.driver.ui.activities.EventMapActivity"
             android:label="@string/event"
@@ -315,8 +316,9 @@
         <service android:name="com.mibarim.driver.locationServices.LocationService" />
         <service android:name="com.mibarim.driver.locationServices.GoogleLocationService" />
         <service android:name="com.mibarim.driver.locationServices.LocationSender" />
-        <service android:name=".services.HelloService" />
-        <service android:name=".services.getLocationService"/>
+        <service android:name=".services.SendCurrentLocationService" />
+        <service android:name=".services.GetLocationService" />
+        <service android:name=".services.SendLocationService" />
 
         <receiver android:name="com.mibarim.driver.receiver.LocationReceiver">
             <intent-filter>

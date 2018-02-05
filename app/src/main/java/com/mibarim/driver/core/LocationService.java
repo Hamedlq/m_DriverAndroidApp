@@ -6,13 +6,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.GpsStatus;
+import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.location.Location;
 
 /**
  * Created by Hamed on 3/29/2016.
@@ -26,19 +26,38 @@ public class LocationService implements LocationListener, GpsStatus.Listener {
     private static final long MIN_TIME_BW_UPDATES = 6000;//1000 * 60 * 1; // 1 minute
 
     private final static boolean forceNetwork = false;
-
-    private static LocationService instance = null;
-
-    private LocationManager locationManager;
     public static Location location;
+    private static LocationService instance = null;
     public double longitude;
     public double latitude;
-
     public boolean isGPSEnabled;
     public boolean isNetworkEnabled;
     public boolean locationServiceAvailable;
     public Context localContext;
+    private LocationManager locationManager;
 
+
+    /**
+     * Local constructor
+     */
+    private LocationService(Context context) {
+
+        initLocationService(context);
+        localContext = context;
+        //LogService.log("LocationService created");
+    }
+
+    private LocationService(Activity activity) {
+        if (Build.VERSION.SDK_INT >= 23 &&
+                ContextCompat.checkSelfPermission(activity, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(activity, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(activity,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
+        initLocationService(activity);
+        //LogService.log("LocationService created");
+    }
 
     /**
      * Singleton implementation
@@ -71,29 +90,6 @@ public class LocationService implements LocationListener, GpsStatus.Listener {
             instance = null;
         }
     }
-
-    /**
-     * Local constructor
-     */
-    private LocationService(Context context) {
-
-        initLocationService(context);
-        localContext = context;
-        //LogService.log("LocationService created");
-    }
-
-    private LocationService(Activity activity) {
-        if (Build.VERSION.SDK_INT >= 23 &&
-                ContextCompat.checkSelfPermission(activity, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(activity, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(activity,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        }
-        initLocationService(activity);
-        //LogService.log("LocationService created");
-    }
-
 
     /**
      * Sets up location service after permissions is granted
@@ -146,12 +142,8 @@ public class LocationService implements LocationListener, GpsStatus.Listener {
                     }
                 }
             }
-        } catch (
-                Exception ex
-                )
-
-        {
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

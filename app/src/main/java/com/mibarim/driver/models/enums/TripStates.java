@@ -18,7 +18,7 @@ public enum TripStates {
     private String stringValue;
     private int intValue;
 
-    private TripStates(String toString, int value) {
+    TripStates(String toString, int value) {
         stringValue = toString;
         intValue = value;
     }
