@@ -222,8 +222,8 @@ public class UserImageUploadActivity extends BootstrapActivity implements View.O
             cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
             startActivityForResult(cropIntent, CROP_PIC_REQUEST_CODE);
         }
-        // respond to users whose devices do not support the crop action
         catch (ActivityNotFoundException anfe) {
+            // respond to users whose devices do not support the crop action
             // display an error message
             String errorMessage = "دستگاه شما از کراپ عکس پشتیبانی نمی کند.";
             Toast toast = Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT);

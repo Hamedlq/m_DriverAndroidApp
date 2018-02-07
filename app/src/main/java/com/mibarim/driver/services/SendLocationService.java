@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.IBinder;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -55,7 +56,6 @@ public class SendLocationService extends Service {
         location = LocationService.getLocationManager(this).getLocation();
         preferences = getSharedPreferences("com.mibarim.driver", MODE_PRIVATE);
         authToken = preferences.getString(AUTH_TOKEN, "");
-        preferences.edit().putBoolean(Constants.Service.IS_SERVICE_RUNNING, true).apply();
         getLocation();
     }
 
@@ -113,7 +113,6 @@ public class SendLocationService extends Service {
     }
 
     private void stopService() {
-        preferences.edit().putBoolean(Constants.Service.IS_SERVICE_RUNNING, false).apply();
         db.closeDB();
         stopSelf();
     }

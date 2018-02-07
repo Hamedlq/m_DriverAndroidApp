@@ -223,7 +223,6 @@ public final class Constants {
     }
 
     public static final class Service {
-        public static final String IS_SERVICE_RUNNING = "isServiceRunning";
         public static final String SERVICE_PERIOD = "servicePeriod";
         public static final String TripId = "theTripId";
         public static final String autTokenLocation = "autTokenLocation";

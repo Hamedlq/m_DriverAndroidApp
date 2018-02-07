@@ -44,7 +44,6 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -165,6 +164,53 @@ public class MainActivity extends BootstrapActivity {
             }
         }
     };
+    TextView user_credit;
+    DialogInterface.OnClickListener TimeDialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+//                    int seatPickerVal = hourPicker.getValue();
+                    selectedRouteHour = 28 - hourPicker.getValue();
+                    int minValue = minutePicker.getValue();
+                    switch (minValue) {
+                        case 0:
+                            selectedRouteMin = 0;
+                            break;
+                        case 1:
+                            selectedRouteMin = 45;
+                            break;
+                        case 2:
+                            selectedRouteMin = 30;
+                            break;
+                        case 3:
+                            selectedRouteMin = 15;
+                            break;
+                    }
+
+                    setEmptySeats();
+
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
+                    dialog.dismiss();
+//                    refreshList();
+                    break;
+            }
+        }
+    };
+    DialogInterface.OnClickListener suggestSeats = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    suggestSeat = seat_picker.getValue();
+                    acceptSuggestRouteLast();
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
+                    break;
+            }
+        }
+    };
     private CharSequence title;
     private Toolbar toolbar;
     private ApiResponse deleteRes;
@@ -194,7 +240,6 @@ public class MainActivity extends BootstrapActivity {
     private UserInfoModel userInfoModel;
     private FrameLayout moreInteractionWebviewLayout;
     private ScoreModel scoreModel;
-    TextView user_credit;
     /*    ImageView invite_btn;
         ImageView uploadButton;*/
     private InviteModel inviteModel;
@@ -250,39 +295,6 @@ public class MainActivity extends BootstrapActivity {
             }
         }
     };
-    DialogInterface.OnClickListener TimeDialogClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            switch (which) {
-                case DialogInterface.BUTTON_POSITIVE:
-//                    int seatPickerVal = hourPicker.getValue();
-                    selectedRouteHour = 28 - hourPicker.getValue();
-                    int minValue = minutePicker.getValue();
-                    switch (minValue) {
-                        case 0:
-                            selectedRouteMin = 0;
-                            break;
-                        case 1:
-                            selectedRouteMin = 45;
-                            break;
-                        case 2:
-                            selectedRouteMin = 30;
-                            break;
-                        case 3:
-                            selectedRouteMin = 15;
-                            break;
-                    }
-
-                    setEmptySeats();
-
-                    break;
-                case DialogInterface.BUTTON_NEGATIVE:
-                    dialog.dismiss();
-//                    refreshList();
-                    break;
-            }
-        }
-    };
     private long filterId;
     DialogInterface.OnClickListener SuggestConfirm = new DialogInterface.OnClickListener() {
         @Override
@@ -320,19 +332,6 @@ public class MainActivity extends BootstrapActivity {
                             Toast.makeText(MainActivity.this, getString(R.string.unsuccessfully_submitted), Toast.LENGTH_SHORT).show();
                         }
                     }.execute();
-                    break;
-                case DialogInterface.BUTTON_NEGATIVE:
-                    break;
-            }
-        }
-    };
-    DialogInterface.OnClickListener suggestSeats = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            switch (which) {
-                case DialogInterface.BUTTON_POSITIVE:
-                    suggestSeat = seat_picker.getValue();
-                    acceptSuggestRouteLast();
                     break;
                 case DialogInterface.BUTTON_NEGATIVE:
                     break;
@@ -1567,7 +1566,7 @@ public class MainActivity extends BootstrapActivity {
                 Gson gson = new Gson();
                 for (String tripTimeModel : tripRes.Messages) {
                     TripTimeModel tt = gson.fromJson(tripTimeModel, TripTimeModel.class);
-                    if (tt.IsSubmited) {
+                    if (userInfoModel != null && userInfoModel.UserImageId == null) {
                         setNotificationAlamManager(tt, (int) selectedRouteTrip.DriverRouteId);
 //                        if (userInfoModel.UserImageId == null) {
                         Intent intent = new Intent(MainActivity.this, UserImageUploadActivity.class);

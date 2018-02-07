@@ -317,7 +317,6 @@
         <service android:name="com.mibarim.driver.locationServices.GoogleLocationService" />
         <service android:name="com.mibarim.driver.locationServices.LocationSender" />
         <service android:name=".services.SendCurrentLocationService" />
-        <service android:name=".services.GetLocationService" />
         <service android:name=".services.SendLocationService" />
 
         <receiver android:name="com.mibarim.driver.receiver.LocationReceiver">

@@ -1,6 +1,7 @@
 package com.mibarim.driver.ui.activities;
 
 
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
@@ -252,7 +253,7 @@ public class RidingActivity extends BootstrapActivity {
 
         // View injection with Butterknife
         ButterKnife.bind(this);
-        if (!preferences.getBoolean(Constants.Service.IS_SERVICE_RUNNING, false)) {
+        if (!isServiceRunning()) {
             Intent intent = new Intent(this, SendLocationService.class);
             preferences.edit().putString(AUTH_TOKEN, authToken).apply();
             startService(intent);
@@ -385,6 +386,17 @@ public class RidingActivity extends BootstrapActivity {
         locationList = new ArrayList<>();
         locationDB = new CurrentLocationDataBase(this);
         initScreen();
+    }
+
+    private boolean isServiceRunning() {
+        getClass().getName();
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (SendLocationService.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
