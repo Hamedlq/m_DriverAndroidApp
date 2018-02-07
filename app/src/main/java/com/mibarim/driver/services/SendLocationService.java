@@ -4,9 +4,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.IBinder;
-import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.mibarim.driver.BootstrapApplication;
@@ -68,7 +65,6 @@ public class SendLocationService extends Service {
         thread = new SafeAsyncTask<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                Thread.sleep(10000);
                 tripId = preferences.getLong(Constants.Service.TripId, -1);
                 tripState = preferences.getInt(Constants.Service.TripStateLocation, -1);
                 if (location != null) {
@@ -80,6 +76,7 @@ public class SendLocationService extends Service {
                     if (model.size() > 0)
                         apiResponse = tripService.setTripPoints(authToken, model);
                 }
+                    Thread.sleep(10000);
                 return true;
             }
 
@@ -93,6 +90,11 @@ public class SendLocationService extends Service {
             protected void onException(Exception e) throws RuntimeException {
                 super.onException(e);
                 db.inserting(latLng.lat, latLng.lng, tripId, tripState);
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
             }
 
             @Override
