@@ -50,7 +50,6 @@ public class SendLocationService extends Service {
         latLng = new Location();
         db = new CurrentLocationDataBase(this);
         db.openDB();
-        location = LocationService.getLocationManager(this).getLocation();
         preferences = getSharedPreferences("com.mibarim.driver", MODE_PRIVATE);
         authToken = preferences.getString(AUTH_TOKEN, "");
         getLocation();
@@ -62,6 +61,7 @@ public class SendLocationService extends Service {
     }
 
     private void getLocation() {
+        location = LocationService.getLocationManager(this).getLocation();
         thread = new SafeAsyncTask<Boolean>() {
             @Override
             public Boolean call() throws Exception {
